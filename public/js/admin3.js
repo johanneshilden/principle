@@ -310,6 +310,7 @@ App.init({
         $('#main').html('Cache cleared!');
     },
     onRequestBegin: function() {
+        $('#main').empty();
         $('#info').html('Loading...');
     },
     onRequestEnd: function() {
