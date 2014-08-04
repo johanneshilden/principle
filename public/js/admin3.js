@@ -1489,11 +1489,12 @@ App.init({
                             resource    : 'stock-damage-type/' + id,
                             data        : data,
                             description : 'Edit stock damage type: "' + data.name + '".',
-                            purge       : 'damage-types',
+                            purge       : 'stock-damage-types',
                             hint        : 'The stock damage type could not be updated: ',
                             complete: function() {
                                 window.location.hash = 'damage-types';
-                            }
+                            },
+                            successMsg: 'Stock damage type "' + data.name + '" was updated.'
                         });
 
                     }
@@ -1515,11 +1516,12 @@ App.init({
                         resource    : 'stock-damage-type/' + id,
                         data        : '',
                         description : 'Delete stock damage type "' + damageType.name + '".',
-                        purge       : 'damage-types',
+                        purge       : 'stock-damage-types',
                         hint        : 'Cannot delete damage type: ',
                         complete: function() {
                             window.location.hash = 'damage-types';
-                        }
+                        },
+                        successMsg: 'Stock damage type "' + damageType.name + '" was deleted.'
                     });
                 });
 
@@ -1547,11 +1549,12 @@ App.init({
                         resource    : 'stock-damage-type',
                         data        : data,
                         description : 'Create stock damage type: "' + data.name + '".',
-                        purge       : 'damage-types',
+                        purge       : 'stock-damage-types',
                         hint        : 'The stock damage type could not be created: ',
                         complete: function() {
                             window.location.hash = 'damage-types';
-                        }
+                        },
+                        successMsg: 'Stock damage type "' + data.name + '" was added.'
                     });
 
                 }

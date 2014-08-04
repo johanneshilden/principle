@@ -288,6 +288,8 @@ var Model = {
 
     getDamageTypes: function(yield) {
 
+        Storage.collection('stock-damage-type', 'stock-damage-types', yield);
+
     },
 
     getDamageType: function(id, yield) {
@@ -295,6 +297,10 @@ var Model = {
         if (typeof yield === 'undefined') {
             return _.partial(arguments.callee, id);
         }
+
+        Model.getDamageTypes(function(damageTypes) {
+            Storage.find(id, damageTypes, yield);
+        });
 
     },
 

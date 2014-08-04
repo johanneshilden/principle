@@ -1,0 +1,846 @@
+-------------------------------------------------------------------------------
+-- Areas partition regions into smaller geographic subdivisions.
+-------------------------------------------------------------------------------
+CREATE TABLE area (
+    id           serial,
+    depot_id     bigint,
+    name         character varying                            NOT NULL,
+    region_id    bigint                                       NOT NULL
+);
+
+ALTER TABLE ONLY area
+    ADD CONSTRAINT area_pkey PRIMARY KEY (id);
+
+ALTER TABLE ONLY area
+    ADD CONSTRAINT unique_area_name UNIQUE (name, region_id);
+
+-------------------------------------------------------------------------------
+-- Service and quality complaints: Service complaints are general customer 
+-- complaints detailed by a short description provided by the user responsible 
+-- for receiving the complaint. Quality complaints are further associated with 
+-- a collection of products, defined by the complaint_product relation. 
+-------------------------------------------------------------------------------
+CREATE TABLE complaint (
+    id           serial,
+    created      timestamp without time zone   DEFAULT now()  NOT NULL,
+    customer_id  bigint                                       NOT NULL,
+    description  character varying                            NOT NULL,
+    kind         character varying                            NOT NULL,
+    resolved     timestamp without time zone,
+    user_id      bigint                                       NOT NULL
+);
+
+ALTER TABLE ONLY complaint
+    ADD CONSTRAINT complaint_pkey PRIMARY KEY (id);
+
+-------------------------------------------------------------------------------
+-- Relates a quality complaint to the products concerned by the complaint.
+-------------------------------------------------------------------------------
+CREATE TABLE complaint_product (
+    id           serial,
+    batch_number character varying                            NOT NULL,
+    complaint_id bigint                                       NOT NULL,
+    description  character varying                            NOT NULL,
+    product_id   bigint                                       NOT NULL,
+    quantity     bigint                                       NOT NULL
+);
+
+ALTER TABLE ONLY complaint_product
+    ADD CONSTRAINT complaint_product_pkey PRIMARY KEY (id);
+
+ALTER TABLE ONLY complaint_product
+    ADD CONSTRAINT unique_complaint_product_id UNIQUE (product_id, complaint_id);
+
+ALTER TABLE ONLY complaint_product
+    ADD CONSTRAINT complaint_product_complaint_id_fkey FOREIGN KEY (complaint_id) REFERENCES complaint(id);
+
+-------------------------------------------------------------------------------
+-- Customer main details.
+-------------------------------------------------------------------------------
+CREATE TABLE customer (
+    id           serial,
+    area_id      bigint                                       NOT NULL,
+    created      timestamp without time zone   DEFAULT now()  NOT NULL,
+    is_active    boolean                                      NOT NULL,
+    latitude     double precision                             NOT NULL,
+    longitude    double precision                             NOT NULL,
+    name         character varying                            NOT NULL,
+    phone        character varying                            NOT NULL,
+    price_cat_id bigint                                       NOT NULL,
+    address      character varying(255)                       NOT NULL,
+    tin          character varying                            NOT NULL
+);
+
+ALTER TABLE ONLY customer
+    ADD CONSTRAINT customer_pkey PRIMARY KEY (id);
+
+ALTER TABLE ONLY customer
+    ADD CONSTRAINT customer_area_id_fkey FOREIGN KEY (area_id) REFERENCES area(id);
+
+ALTER TABLE ONLY complaint
+    ADD CONSTRAINT complaint_customer_id_fkey FOREIGN KEY (customer_id) REFERENCES customer(id);
+
+-------------------------------------------------------------------------------
+-- Records customer-related activity.
+-------------------------------------------------------------------------------
+CREATE TABLE customer_activity (
+    id           serial,
+    created      timestamp without time zone   DEFAULT now()  NOT NULL,
+    customer_id  bigint                                       NOT NULL,
+    description  character varying                            NOT NULL,
+    kind         character varying                            NOT NULL,
+    user_id      bigint                                       NOT NULL
+);
+
+ALTER TABLE ONLY customer_activity
+    ADD CONSTRAINT customer_activity_pkey PRIMARY KEY (id);
+
+ALTER TABLE ONLY customer_activity
+    ADD CONSTRAINT customer_activity_customer_id_fkey FOREIGN KEY (customer_id) REFERENCES customer(id);
+
+-------------------------------------------------------------------------------
+-- Additional customer contact information.
+-------------------------------------------------------------------------------
+CREATE TABLE customer_contact (
+    id           serial,
+    customer_id  bigint                                       NOT NULL,
+    datum        character varying                            NOT NULL,
+    kind         character varying                            NOT NULL,
+    meta         character varying
+);
+
+ALTER TABLE ONLY customer_contact
+    ADD CONSTRAINT customer_contact_pkey PRIMARY KEY (id);
+
+ALTER TABLE ONLY customer_contact
+    ADD CONSTRAINT customer_contact_customer_id_fkey FOREIGN KEY (customer_id) REFERENCES customer(id);
+
+-------------------------------------------------------------------------------
+-- A depot services customers in its designated areas.
+-------------------------------------------------------------------------------
+CREATE TABLE depot (
+    id           serial,
+    latitude     double precision                             NOT NULL,
+    longitude    double precision                             NOT NULL,
+    name         character varying                            NOT NULL,
+    region_id    bigint                                       NOT NULL
+);
+
+ALTER TABLE ONLY depot
+    ADD CONSTRAINT depot_pkey PRIMARY KEY (id);
+
+ALTER TABLE ONLY depot
+    ADD CONSTRAINT unique_depot_name UNIQUE (name);
+
+ALTER TABLE ONLY area
+    ADD CONSTRAINT area_depot_id_fkey FOREIGN KEY (depot_id) REFERENCES depot(id);
+
+-------------------------------------------------------------------------------
+-- Order dispatch details.
+-------------------------------------------------------------------------------
+CREATE TABLE dispatch (
+    id           serial,
+    created      timestamp without time zone   DEFAULT now()  NOT NULL,
+    depot_id     bigint                                       NOT NULL,
+    status       character varying                            NOT NULL,
+    vehicle_id   bigint
+);
+
+ALTER TABLE ONLY dispatch
+    ADD CONSTRAINT dispatch_pkey PRIMARY KEY (id);
+
+ALTER TABLE ONLY dispatch
+    ADD CONSTRAINT dispatch_depot_id_fkey FOREIGN KEY (depot_id) REFERENCES depot(id);
+
+-------------------------------------------------------------------------------
+-- Dispatch lifecycle activity log.
+-------------------------------------------------------------------------------
+CREATE TABLE dispatch_activity (
+    id           serial,
+    created      timestamp without time zone   DEFAULT now()  NOT NULL,
+    dispatch_id  bigint                                       NOT NULL,
+    status       character varying                            NOT NULL
+);
+
+ALTER TABLE ONLY dispatch_activity
+    ADD CONSTRAINT dispatch_activity_pkey PRIMARY KEY (id);
+
+ALTER TABLE ONLY dispatch_activity
+    ADD CONSTRAINT dispatch_activity_dispatch_id_fkey FOREIGN KEY (dispatch_id) REFERENCES dispatch(id);
+
+-------------------------------------------------------------------------------
+-- Associates each dispatch with its collection of orders.
+-------------------------------------------------------------------------------
+CREATE TABLE dispatch_order (
+    id           serial,
+    dispatch_id  bigint                                       NOT NULL,
+    order_id     bigint                                       NOT NULL
+);
+
+ALTER TABLE ONLY dispatch_order
+    ADD CONSTRAINT dispatch_order_pkey PRIMARY KEY (id);
+
+ALTER TABLE ONLY dispatch_order
+    ADD CONSTRAINT unique_dispatch_order_id UNIQUE (dispatch_id, order_id);
+
+ALTER TABLE ONLY dispatch_order
+    ADD CONSTRAINT dispatch_order_dispatch_id_fkey FOREIGN KEY (dispatch_id) REFERENCES dispatch(id);
+
+-------------------------------------------------------------------------------
+-- Activity types used to categorize vehicle maintenance.
+-------------------------------------------------------------------------------
+CREATE TABLE maintenance_activity_type (
+    id           serial,
+    name         character varying                            NOT NULL
+);
+
+ALTER TABLE ONLY maintenance_activity_type
+    ADD CONSTRAINT maintenance_activity_type_pkey PRIMARY KEY (id);
+
+ALTER TABLE ONLY maintenance_activity_type
+    ADD CONSTRAINT unique_maintenance_type_name UNIQUE (name);
+
+-------------------------------------------------------------------------------
+-- Status log for order lifecycle tracking.
+-------------------------------------------------------------------------------
+CREATE TABLE order_activity (
+    id           serial,
+    created      timestamp without time zone   DEFAULT now()  NOT NULL,
+    order_id     bigint                                       NOT NULL,
+    status       character varying                            NOT NULL
+);
+
+ALTER TABLE ONLY order_activity
+    ADD CONSTRAINT order_activity_pkey PRIMARY KEY (id);
+
+-------------------------------------------------------------------------------
+-- Main order object.
+-------------------------------------------------------------------------------
+CREATE TABLE order_object (
+    id           serial,
+    created      timestamp without time zone   DEFAULT now()  NOT NULL,
+    customer_id  bigint                                       NOT NULL,
+    last_change  timestamp without time zone                  NOT NULL,
+    status       character varying                            NOT NULL,
+    user_id      bigint                                       NOT NULL
+);
+
+ALTER TABLE ONLY order_object
+    ADD CONSTRAINT order_object_pkey PRIMARY KEY (id);
+
+ALTER TABLE ONLY order_object
+    ADD CONSTRAINT order_object_customer_id_fkey FOREIGN KEY (customer_id) REFERENCES customer(id);
+
+ALTER TABLE ONLY dispatch_order
+    ADD CONSTRAINT dispatch_order_order_id_fkey FOREIGN KEY (order_id) REFERENCES order_object(id);
+
+ALTER TABLE ONLY order_activity
+    ADD CONSTRAINT order_activity_order_id_fkey FOREIGN KEY (order_id) REFERENCES order_object(id);
+
+-------------------------------------------------------------------------------
+-- Gives details of quantity and price for the products contained in each 
+-- order.
+-------------------------------------------------------------------------------
+CREATE TABLE order_product (
+    id           serial,
+    order_id     bigint                                       NOT NULL,
+    price        character varying                            NOT NULL,
+    product_id   bigint                                       NOT NULL,
+    quantity     bigint                                       NOT NULL
+);
+
+ALTER TABLE ONLY order_product
+    ADD CONSTRAINT order_product_pkey PRIMARY KEY (id);
+
+ALTER TABLE ONLY order_product
+    ADD CONSTRAINT unique_order_product_id UNIQUE (order_id, product_id);
+
+ALTER TABLE ONLY order_product
+    ADD CONSTRAINT order_product_order_id_fkey FOREIGN KEY (order_id) REFERENCES order_object(id);
+
+-------------------------------------------------------------------------------
+-- Main product entity table.
+-------------------------------------------------------------------------------
+CREATE TABLE product (
+    id           serial,
+    deleted      boolean                                      NOT NULL,
+    description  character varying                            NOT NULL,
+    name         character varying                            NOT NULL,
+    unit_size    character varying                            NOT NULL
+);
+
+ALTER TABLE ONLY product
+    ADD CONSTRAINT product_pkey PRIMARY KEY (id);
+
+ALTER TABLE ONLY complaint_product
+    ADD CONSTRAINT complaint_product_product_id_fkey FOREIGN KEY (product_id) REFERENCES product(id);
+
+ALTER TABLE ONLY order_product
+    ADD CONSTRAINT order_product_product_id_fkey FOREIGN KEY (product_id) REFERENCES product(id);
+
+-------------------------------------------------------------------------------
+-- Product load limit values for the different vehicle weight categories. This 
+-- value is used to determine the number of products that can be loaded onto a 
+-- certain vehicle.
+-------------------------------------------------------------------------------
+CREATE TABLE product_limit (
+    id           serial,
+    category_id  bigint                                       NOT NULL,
+    load_limit   bigint                                       NOT NULL,
+    product_id   bigint                                       NOT NULL
+);
+
+ALTER TABLE ONLY product_limit
+    ADD CONSTRAINT product_limit_pkey PRIMARY KEY (id);
+
+ALTER TABLE ONLY product_limit
+    ADD CONSTRAINT unique_product_category_id UNIQUE (product_id, category_id);
+
+ALTER TABLE ONLY product_limit
+    ADD CONSTRAINT product_limit_product_id_fkey FOREIGN KEY (product_id) REFERENCES product(id);
+
+-------------------------------------------------------------------------------
+-- Product price data.
+-------------------------------------------------------------------------------
+CREATE TABLE product_price (
+    id           serial,
+    price        character varying                            NOT NULL,
+    price_cat_id bigint                                       NOT NULL,
+    product_id   bigint                                       NOT NULL
+);
+
+ALTER TABLE ONLY product_price
+    ADD CONSTRAINT product_price_pkey PRIMARY KEY (id);
+
+ALTER TABLE ONLY product_price
+    ADD CONSTRAINT unique_product_price_cat_id UNIQUE (product_id, price_cat_id);
+
+ALTER TABLE ONLY product_price
+    ADD CONSTRAINT product_price_product_id_fkey FOREIGN KEY (product_id) REFERENCES product(id);
+
+-------------------------------------------------------------------------------
+-- Product and customer price category.
+-------------------------------------------------------------------------------
+CREATE TABLE product_price_category (
+    id           serial,
+    name         character varying                            NOT NULL
+);
+
+ALTER TABLE ONLY product_price_category
+    ADD CONSTRAINT product_price_category_pkey PRIMARY KEY (id);
+
+ALTER TABLE ONLY product_price_category
+    ADD CONSTRAINT unique_product_price_category_name UNIQUE (name);
+
+ALTER TABLE ONLY customer
+    ADD CONSTRAINT customer_price_cat_id_fkey FOREIGN KEY (price_cat_id) REFERENCES product_price_category(id);
+
+ALTER TABLE ONLY product_price
+    ADD CONSTRAINT product_price_price_cat_id_fkey FOREIGN KEY (price_cat_id) REFERENCES product_price_category(id);
+
+-------------------------------------------------------------------------------
+-- A top-level, geographically coherent land region, which is further divided 
+-- into a number of areas.
+-------------------------------------------------------------------------------
+CREATE TABLE region (
+    id           serial,
+    name         character varying                            NOT NULL
+);
+
+ALTER TABLE ONLY region
+    ADD CONSTRAINT region_pkey PRIMARY KEY (id);
+
+ALTER TABLE ONLY region
+    ADD CONSTRAINT unique_region_name UNIQUE (name);
+
+ALTER TABLE ONLY area
+    ADD CONSTRAINT area_region_id_fkey FOREIGN KEY (region_id) REFERENCES region(id);
+
+ALTER TABLE ONLY depot
+    ADD CONSTRAINT depot_region_id_fkey FOREIGN KEY (region_id) REFERENCES region(id);
+
+-------------------------------------------------------------------------------
+-- Role-based commission rates. 
+-------------------------------------------------------------------------------
+CREATE TABLE role_commission (
+    id           serial,
+    product_id   bigint                                       NOT NULL,
+    role         character varying                            NOT NULL,
+    value        money                                        NOT NULL
+);
+
+ALTER TABLE ONLY role_commission
+    ADD CONSTRAINT role_commission_pkey PRIMARY KEY (id);
+
+ALTER TABLE ONLY role_commission
+    ADD CONSTRAINT role_commission_product_id_fkey FOREIGN KEY (product_id) REFERENCES product(id);
+
+-------------------------------------------------------------------------------
+-- Maintains available and actual stock quantity information for the different 
+-- depots.
+-------------------------------------------------------------------------------
+CREATE TABLE stock (
+    id           serial,
+    actual       bigint                                       NOT NULL,
+    available    bigint                                       NOT NULL,
+    depot_id     bigint                                       NOT NULL,
+    product_id   bigint                                       NOT NULL
+);
+
+ALTER TABLE ONLY stock
+    ADD CONSTRAINT stock_pkey PRIMARY KEY (id);
+
+ALTER TABLE ONLY stock
+    ADD CONSTRAINT unique_stock_depot_product_id UNIQUE (depot_id, product_id);
+
+ALTER TABLE ONLY stock
+    ADD CONSTRAINT stock_depot_id_fkey FOREIGN KEY (depot_id) REFERENCES depot(id);
+
+ALTER TABLE ONLY stock
+    ADD CONSTRAINT stock_product_id_fkey FOREIGN KEY (product_id) REFERENCES product(id);
+
+-------------------------------------------------------------------------------
+-- Stock movement activities categorized by the type of event that initiated 
+-- the movement, e.g., resupply, stock adjustment, or order dispatch.
+-------------------------------------------------------------------------------
+CREATE TABLE stock_activity (
+    id            serial,
+    activity_type character varying                           NOT NULL,
+    created       timestamp without time zone   DEFAULT now() NOT NULL,
+    depot_id      bigint                                      NOT NULL,
+    product_id    bigint                                      NOT NULL,
+    quantity      bigint                                      NOT NULL
+);
+
+ALTER TABLE ONLY stock_activity
+    ADD CONSTRAINT stock_activity_pkey PRIMARY KEY (id);
+
+ALTER TABLE ONLY stock_activity
+    ADD CONSTRAINT stock_activity_depot_id_fkey FOREIGN KEY (depot_id) REFERENCES depot(id);
+
+ALTER TABLE ONLY stock_activity
+    ADD CONSTRAINT stock_activity_product_id_fkey FOREIGN KEY (product_id) REFERENCES product(id);
+
+-------------------------------------------------------------------------------
+CREATE TABLE stock_damage_report (
+    id           serial,
+    activity_id  bigint                                       NOT NULL,
+    damage_type  bigint                                       NOT NULL,
+    description  character varying                            NOT NULL
+);
+
+ALTER TABLE ONLY stock_damage_report
+    ADD CONSTRAINT stock_damage_report_pkey PRIMARY KEY (id);
+
+ALTER TABLE ONLY stock_damage_report
+    ADD CONSTRAINT unique_stock_damage_report_activity_id UNIQUE (activity_id);
+
+ALTER TABLE ONLY stock_damage_report
+    ADD CONSTRAINT stock_damage_report_activity_id_fkey FOREIGN KEY (activity_id) REFERENCES stock_activity(id);
+
+-------------------------------------------------------------------------------
+-- Types of damage that can incur on stock.
+-------------------------------------------------------------------------------
+CREATE TABLE stock_damage_type (
+    id           serial,
+    name         character varying                            NOT NULL
+);
+
+ALTER TABLE ONLY stock_damage_type
+    ADD CONSTRAINT stock_damage_type_pkey PRIMARY KEY (id);
+
+ALTER TABLE ONLY stock_damage_type
+    ADD CONSTRAINT unique_stock_damage_type_name UNIQUE (name);
+
+ALTER TABLE ONLY stock_damage_report
+    ADD CONSTRAINT stock_damage_report_damage_type_fkey FOREIGN KEY (damage_type) REFERENCES stock_damage_type(id);
+
+-------------------------------------------------------------------------------
+-- User information.
+-------------------------------------------------------------------------------
+CREATE TABLE sdrp_user (
+    id           serial,
+    name         character varying                            NOT NULL,
+    password     character varying                            NOT NULL,
+    role         character varying                            NOT NULL,
+    username     character varying                            NOT NULL,
+    depot_id     bigint 
+);
+
+ALTER TABLE ONLY sdrp_user
+    ADD CONSTRAINT sdrp_user_pkey PRIMARY KEY (id);
+
+ALTER TABLE ONLY sdrp_user
+    ADD CONSTRAINT unique_username UNIQUE (username);
+
+ALTER TABLE ONLY customer_activity
+    ADD CONSTRAINT customer_activity_user_id_fkey FOREIGN KEY (user_id) REFERENCES sdrp_user(id);
+
+ALTER TABLE ONLY order_object
+    ADD CONSTRAINT order_object_user_id_fkey FOREIGN KEY (user_id) REFERENCES sdrp_user(id);
+
+ALTER TABLE ONLY sdrp_user
+    ADD CONSTRAINT user_depot_id_fkey FOREIGN KEY (depot_id) REFERENCES depot(id);
+
+-------------------------------------------------------------------------------
+-- Defines field staff and call center area-user relations.
+-------------------------------------------------------------------------------
+CREATE TABLE area_user (
+    id           serial,
+    area_id      bigint                                       NOT NULL,
+    user_id      bigint                                       NOT NULL
+);
+
+ALTER TABLE ONLY area_user
+    ADD CONSTRAINT area_user_pkey PRIMARY KEY (id);
+
+ALTER TABLE ONLY area_user
+    ADD CONSTRAINT area_user_area_id_fkey FOREIGN KEY (area_id) REFERENCES area(id);
+
+ALTER TABLE ONLY area_user
+    ADD CONSTRAINT area_user_user_id_fkey FOREIGN KEY (user_id) REFERENCES sdrp_user(id);
+
+ALTER TABLE ONLY area_user
+    ADD CONSTRAINT unique_area_user UNIQUE (user_id, area_id);
+
+-------------------------------------------------------------------------------
+-- Represents a vehicle operated by the business. 
+-------------------------------------------------------------------------------
+CREATE TABLE vehicle (
+    id            serial,
+    depot_id      bigint                                      NOT NULL,
+    is_available  boolean                                     NOT NULL,
+    make          character varying                           NOT NULL,
+    model         character varying                           NOT NULL,
+    reg_no        character varying                           NOT NULL,
+    status        character varying                           NOT NULL,
+    user_id       bigint,
+    category_id   bigint                                      NOT NULL
+);
+
+ALTER TABLE ONLY vehicle
+    ADD CONSTRAINT vehicle_pkey PRIMARY KEY (id);
+
+ALTER TABLE ONLY vehicle
+    ADD CONSTRAINT unique_reg_no UNIQUE (reg_no);
+
+ALTER TABLE ONLY vehicle
+    ADD CONSTRAINT vehicle_depot_id_fkey FOREIGN KEY (depot_id) REFERENCES depot(id);
+
+ALTER TABLE ONLY vehicle
+    ADD CONSTRAINT vehicle_user_id_fkey FOREIGN KEY (user_id) REFERENCES sdrp_user(id);
+
+ALTER TABLE ONLY dispatch
+    ADD CONSTRAINT dispatch_vehicle_id_fkey FOREIGN KEY (vehicle_id) REFERENCES vehicle(id);
+
+-------------------------------------------------------------------------------
+-- Fuel activity log.
+-------------------------------------------------------------------------------
+CREATE TABLE vehicle_fuel_activity (
+    id            serial,
+    amount        double precision                            NOT NULL,
+    created       timestamp without time zone   DEFAULT now() NOT NULL,
+    meter_reading double precision                            NOT NULL,
+    vehicle_id    bigint                                      NOT NULL
+);
+
+ALTER TABLE ONLY vehicle_fuel_activity
+    ADD CONSTRAINT vehicle_fuel_activity_pkey PRIMARY KEY (id);
+
+ALTER TABLE ONLY vehicle_fuel_activity
+    ADD CONSTRAINT vehicle_fuel_activity_vehicle_id_fkey FOREIGN KEY (vehicle_id) REFERENCES vehicle(id);
+
+-------------------------------------------------------------------------------
+-- Vehicle maintenance activity log.
+-------------------------------------------------------------------------------
+CREATE TABLE vehicle_maintenance_activity (
+    id            serial,
+    description   character varying                           NOT NULL,
+    end_time      timestamp without time zone                 NOT NULL,
+    meter_reading double precision                            NOT NULL,
+    start_time    timestamp without time zone                 NOT NULL,
+    type_id       bigint                                      NOT NULL,
+    vehicle_id    bigint                                      NOT NULL
+);
+
+ALTER TABLE ONLY vehicle_maintenance_activity
+    ADD CONSTRAINT vehicle_maintenance_activity_pkey PRIMARY KEY (id);
+
+ALTER TABLE ONLY vehicle_maintenance_activity
+    ADD CONSTRAINT vehicle_maintenance_activity_type_id_fkey FOREIGN KEY (type_id) REFERENCES maintenance_activity_type(id);
+
+ALTER TABLE ONLY vehicle_maintenance_activity
+    ADD CONSTRAINT vehicle_maintenance_activity_vehicle_id_fkey FOREIGN KEY (vehicle_id) REFERENCES vehicle(id);
+
+-------------------------------------------------------------------------------
+-- Each vehicle belongs to exactly one weight category. Weight categories are
+-- used during order processing to determine the space requirements of a 
+-- product in relation to the dispatched vehicle.
+-------------------------------------------------------------------------------
+CREATE TABLE weight_category (
+    id           serial,
+    name         character varying                            NOT NULL
+);
+
+ALTER TABLE ONLY weight_category
+    ADD CONSTRAINT weight_category_pkey PRIMARY KEY (id);
+
+ALTER TABLE ONLY weight_category
+    ADD CONSTRAINT unique_weight_category_name UNIQUE (name);
+
+ALTER TABLE ONLY product_limit
+    ADD CONSTRAINT product_limit_category_id_fkey FOREIGN KEY (category_id) REFERENCES weight_category(id);
+
+ALTER TABLE ONLY vehicle
+    ADD CONSTRAINT vehicle_category_id_fkey FOREIGN KEY (category_id) REFERENCES weight_category(id);
+
+-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+
+COPY region ( name) FROM stdin;
+Dodoma
+Geita
+Iringa
+Kagera
+Katavi
+Kigoma
+Kilimanjaro
+Manyara
+Mara
+Mbeya
+Morogoro
+Mtwara
+Njombe
+Pemba
+Pemba South
+Pwani
+\.
+
+
+COPY depot (latitude, longitude, name, region_id) FROM stdin;
+0	0	Depot #1	1
+0	0	Depot #2	1
+0	0	Depot #3	2
+0	0	Depot #4	2
+0	0	Depot #5	3
+\.
+
+
+COPY area (depot_id, name, region_id) FROM stdin;
+2	Dar es Salaam - Area #1	1
+\N	Arusha - Area #3	2
+\N	Dar es Salaam - Area #3	1
+\N	Area #1	1
+\N	Dodoma - Area #1	3
+\N	Dodoma - Area #2	3
+3	Dar es Salaam - Area #2	1
+3	Arusha - Area #1	2
+3	Area-8765	2
+\.
+
+
+COPY sdrp_user (username, password, role, name) FROM stdin;
+depotman1	demo	depot-manager	Test User
+demouser	demo	call-center	BoB Dylan
+fstaff	4d6b016465c8d648ca14332f0f7e7fd2b639f3ca	field-staff	Salman Khan
+demo2	demo2	call-center	Nikolai Tesla
+demo3	demo3	call-center	Steven Seagal
+demo4	demo4	call-center	Dolph Lundgren
+demo5	demo5	call-center	Chuck Norris
+demo6	demo6	field-staff	Boris Karloff
+demo7	demo7	field-staff	Nicki Minaj
+driver1	123	driver	Papa Bear
+driver2	123	driver	Yogi Bear
+driver3	123	driver	Rick Hunter
+X	123	depot-manager	X Y
+\.
+
+
+COPY weight_category (name) FROM stdin;
+Class C
+Class A
+Class B
+Class DD
+Class X
+\.
+
+
+COPY product_price_category (name) FROM stdin;
+Wholesale
+Agent
+banan
+faaaaaa
+abc
+xx
+Standard
+\.
+
+
+COPY customer (area_id, created, is_active, latitude, longitude, name, phone, price_cat_id, tin, address) FROM stdin;
+5	2014-04-15 09:42:00.007	t	0	0	Ametek	123-1144455	3		
+7	2014-04-15 09:42:00.007	t	0	0	Able Canopies	123-1144455	3		
+8	2014-04-15 09:42:00.007	t	0	0	ABSL Power Solutions Ltd	123-1144455	2		
+9	2014-04-15 09:42:00.007	t	0	0	AC & DC Powerdrive Systems	123-1144455	1		
+9	2014-04-15 09:42:00.007	t	0	0	Acal Technology Ltd	123-1144455	1		
+9	2014-04-15 09:42:00.007	t	0	0	E-T-A Circuit Breakers Ltd	123-1144455	1		
+8	2014-04-15 09:42:00.007	t	0	0	E2V Technologies	123-1144455	2		
+7	2014-04-15 09:42:00.007	t	0	0	EAO Ltd	123-1144455	1		
+6	2014-04-15 09:42:00.007	t	0	0	Eastman Packaging	123-1144455	2		
+5	2014-04-15 09:42:00.007	t	0	0	Eaton-Williams Group Ltd	123-1144455	2		
+5	2014-04-15 09:42:00.007	t	0	0	Echomaster Marine Ltd	123-1144455	2		
+3	2014-04-15 09:42:00.007	t	0	0	Edmolift UK Ltd	123-1144455	1		
+2	2014-04-15 09:42:00.007	t	0	0	Electron Beam Processes Ltd	123-1144455	1		
+1	2014-04-15 09:42:00.007	t	0	0	Jaguar Land Rover	123-1144455	2		
+2	2014-04-15 09:42:00.007	t	0	0	Jackson Civil Engineering Group Ltd	123-1144455	3		
+3	2014-04-15 09:42:00.007	t	0	0	James Fairley Athena	123-1144455	2		
+4	2014-04-15 09:42:00.007	t	0	0	James G Carrick & Co Ltd	123-1144455	2		
+5	2014-04-15 09:42:00.007	t	0	0	JCB Transmissions	123-1144455	2		
+6	2014-04-15 09:42:00.007	t	0	0	Jetway Associates Ltd	123-1144455	1		
+7	2014-04-15 09:42:00.007	t	0	0	John Lilley & Gillie Ltd	123-1144455	1		
+8	2014-04-15 09:42:00.007	t	0	0	Jon Philips Ltd	123-1144455	2		
+9	2014-04-15 09:42:00.007	t	0	0	JS Humidifiers Plc	123-1144455	3		
+4	2014-04-15 09:42:00.007	t	0	0	JVC Professional Europe Ltd	123-1144455	1		
+\.
+
+
+COPY vehicle (depot_id, user_id, is_available, make, model, reg_no, status, category_id) FROM stdin;
+1	\N	t	Toyota	DYNA TRUCK	TXA-014	VehicleActive	1
+1	\N	t	Toyota	DYNA TRUCK	TXA-015	VehicleActive	1
+1	\N	t	Toyota	DYNA TRUCK	TXA-016	VehicleActive	1
+5	\N	t	Mitsubishi	Canter	T763 BMS	VehicleActive	1
+1	\N	t	Toyota	Canter	TXA-018	VehicleActive	3
+2	\N	t	Ford	Wagon	T843 8BFF	VehicleActive	2
+1	\N	t	Mitsubishi	Canter	T763 BMT	VehicleActive	1
+3	\N	t	Mitsubishi	Canter	T902 AGM	VehicleActive	2
+3	\N	t	Mitsubishi	Canter	T328 BGY	VehicleActive	4
+4	\N	t	Mitsubishi	Canter	T548 9BFM	VehicleActive	2
+4	\N	t	Mitsubishi	Canter	T323 8MNO	VehicleActive	3
+5	\N	t	Mitsubishi	Canter	T538 MNY	VehicleActive	2
+5	\N	t	Mitsubishi	Canter	T672 ULS	VehicleActive	3
+1	11	t	Toyota	DYNA TRUCK	TXA-013	VehicleActive	1
+\.
+
+
+
+COPY product (deleted, description, name, unit_size) FROM stdin;
+f	A light silicone-based creme which provides thermal protection while ironing hair with heat-styling appliances.	One and Only Ceramic Silk Curling Iron Creme Thermal Protection	5.94 oz tube packed 12 to a case
+f	General Mills Honey Nut Cheerios Cereal Bowl. 1 oz individual bowl.	General Mills Honey Nut Cheerios Cereal Bowl	-
+f	Kelloggs Frosted Flakes of Corn Cereal (bowl) 1 oz bowl.	Kelloggs Frosted Flakes of Corn Cereal	-
+f	Freshscent Deodorant Soap wrapped in paper. 3 ounces of bulk discount cheap wholesale bar soap.	3oz. Freshscent Deodorant Soap	-
+f	30 g (1.27 oz) automatic dishwashing detergent in sealed package of 2 pods. 2 loads. Non-toxic. Naturally derived ingredients. No phosphates. Chlorine free wholesale discount cheap bulk dishwash detergent soap. Sparkling clean. Removes greasy stuff. Spotless rinse aid.	Wholesale Grabgreen Auto Dishwash Detergent - Tangerine	-
+f	Soft Scrub Automatic Dish Detergent Soap. 1 oz travel size in individually sealed package. This wholesale discount cheap bulk dish soap is great for camping or traveling.	Soft Scrub Automatic Dish Detergent	-
+f	Eco-friendly, automatic dishwasher gel offers a crisp lemon scent and superior cleaning in your dishwasher for removing dried-on foods. Phosphate-free formula is better for lakes and streams. Gel dissolves quickly without caking and leaves no spots.	Colgate Palmolive, IPD Automatic Dishwashing Gel, 75 oz, Lemon Fresh Scent	-
+f	asdfadfa	test123	abc
+f	asdfadfa	test123	abc
+f	asdfadfa	test123	abc
+f	asdfadfa	test123	abc
+f	asdfadfa	test123	abc
+f	asdfadfa	test123	abc
+f	asdfadfa	test123	abc
+f	asdfadfa	test123	abc
+f	asdfadfa	test123	abc
+f	Personal Care Spike It Xtreme Hold Styling Gel. Great for spiking and scrunching or any hair style that requires extreme hold and control. Alcohol free won't dry or damage your hair and leaves hair with healthy shine. 16 oz bottle.	Personal Care Spike It Xtreme Hold Styling Gel	Case pack: true2 bottles
+f	Salon Grafix Professional Freezing Hair Spray - Mega Hold 1.5 oz 1.5 oz mega hold hair spray in travel size aerosol can. Hold level is 10 on these wholesale bulk cheap discount travel size hair spray.	Salon Grafix Pro Freezing Hair Spray - Mega H	-
+f	Freshscent 3oz Antibacterial Soap is vegetable based. Comes packed with individually wrapped bars of soap per wholesale bulk cheap discount case pack.	Freshscent 3oz Antibacterial Soap	72 bars per case
+f	2 oz Hand Sanitizer is effective at eliminating 99.9% of many common harmful germs and bacteria. Perfect bottle for putting in your briefcase, suitcase, purse or desk. Active Ingredient is Ethyl Alcohol 62% w/w. Also contains moisturizers and aloe. Made in the USA! 96 hand sanitizer bottles per bulk wholesale cheap discount case.	2 oz Hand Sanitizer	-
+f	# 1 Face & Body Bars Soap is Vegetable Based and in a bar form. Comes packed 5 boxes of 100 units (500 total units of bulk wholesale cheap discount bars of soap in a case)	#1 Face & Body Soap	-
+f	Disposable toothbrush. Wholesale bulk toothbrushes are great for Hotels, Institutions and Charitable Giving. Individually wrapped bulk toothbrush with 33 nylon tufts and a blue styrene handle. Length is 6.25 inches. Comes packaged in 10 boxes of 144 (total of 1,440 toothbrushes).	33 Tuft Nylon Bristle Styrene Handle Toothbrush	-
+f	Goji Berries (Lycium barbarum L.) have been used for 6,000 years by herbalists in China, Tibet and India as health foods and supplements. Protects the kidney and liver, helps eyesight, improves sexual function, has anti-fatigue properties, and promotes longevity. Goji Berries are also rich in antioxidants, particularly beta-carotene and zeaxanthin, which has a key role in protecting the retina of the eye.	Gogee 8 fl oz (240 mL.) Goji Berries & Acai Juice	-
+f	Gatorade Perform 02 Powder Packet G - Lemon Lime. 1.34 oz powdered drink mix in packet. Add to 20 fl oz bottle of water. Natural and artificial flavor. Ingredients: sucrose, dextrose, citric acid, natural and artificial flavor, salt, sodium citrate, monopotassium phosphate, modified food starch, calcium silicate, yellow 5.	Gatorade Perform 02 Powder Packet G - Lemon Lime	-
+f	Arizona Mucho Mango Fruit Juice is a vitamin C fortified drink. Enjoy this great tasting fruit juice cocktail. Kids love the mango flavored drink. Trusted Arizona brand name. Net wt 23 oz.	Arizona Mucho Mango w/Vitamin C	24 cans per case.
+f	Motts Hot Spiced Cider Original	Motts Hot Spiced Cider Original	.74 oz package
+f	Arnold Palmer Iced Tea is a delicately delicious combination of iced tea and lemonade and is perfect for refreshing the taste and reviving the senses. Made of half iced tea and half lemonade, this original beverage combination is made of 100 percent natural tea and contains no preservatives and no artificial flavors. Powder in the single-serve packets dissolves instantly into a 16.9 oz. bottle of water to create the refreshing beverage.	Marjack Arnold Palmer Iced Tea Packs, Multi	30/BX
+f	100% All Natural Carbonated Fruit Juice.	Epic Purple (Black Cherry) 100% Juice	24 Pieces per Case
+f	Hawaiian Punch Green Berry Rush 10 oz. Convenient 12 packs can be sold as a 12 pack or broken apart for 12 individual sales. Made with natural fruit juices.	Hawaiian Punch Green Berry Rush 10 oz	12 bottles per case each bottle is 10 oz
+f	Del Monte Tomato & Basil Pasta Sauce. Great for dinners and casseroles.	Del Monte Tomato & Basil Pasta Sauce	There are 12 cans per case - each is 26.5oz
+f	Hy Top Solid Pack Pumpkin.	HyTop Solid Pack Pumpkin	15 oz can, packed 24 per case
+f	Raspberry Lemonade .1 oz packet add to 16.9 oz water. Ingredients: maltodextrin, citric acid, sodium citrate, potassium citrate, natural an artificial flavor, ascorbic acid (vitamin C), sucralose, silicon dioxide, niacinamide (vitamin B3), acesulfame potassium, calcium disodium EDTA (to protect freshness), calcium pantothenate (vitamin B5), vitamin E acetate, pyridoxine hydrochloride (vitamin B6), cyanocobalamin (vitamin B12).	Propel Zero - Raspberry Lemonade	-
+f	Gatorade Perform 02 Powder Packet G2 - Grape. 0.52 oz powdered low calorie drink mix in packet. Add to 20 fl oz bottle of water. Natural and artificial flavor. Ingredients: sucrose, citric acid, natural and artificial flavor, salt, sodium citrate, monopotassium phosphate, modified food starch, calcium silicate, sucralose, acesulfame potassium, red 40, blue 1.	Gatorade Perform 02 Powder Packet G2 - Grape	-
+f	Cascade Dishwashing Powder is formulated for under-counter dishwashers and cabinet-type automatic utensil washers.	Procter & Gamble Commercial Cascade Dishwashing Powder, 20 oz	-
+f	Natural Automatic Dishwasher Gel gets dishes sparkling clean and is gentle on the earth. Dishwasher gel makes effortless work of whatever is waiting in the dishwasher, without the use of phosphates, chlorine or dyes. Nontoxic, plant-derived formula contains enzymes for greater cleaning power, but no NTA or EDTA. Kosher-certified gel formula has not been tested on animals and is safe for septic systems. Dishwasher gel has a lemon scent.	Seventh Generation Dishwasher Gel, 42oz., Non-Toxic, Lemon	-
+f	Provides the same micro-abrasive cleaning power as regular soft scrub liquid cleanser, but without bleach. Gently removes tough stains, soap scum and mildew. Cleans dirt and grime without harsh scratching. Safely cleans virtually any hard surface including pots and pans, counter-tops, tubs and sinks, vinyl siding and more. Contains EPA registered disinfectants. Biodegradable and phosphate-free. Citrus scent. 2 oz bottle.	Soft Scrub Citrus Scent Liquid Dish Soap 2 Ounce	Case pack: 24 bottles
+f	asdfadfa	test123	abc
+f	asdfadfa	test123	abc
+f	asdfadfa	test123	abc
+f	asdfadfa	test123	abc
+f	asdfadfa	test123	abc
+f	asdfadfa	test123	abc
+f	asdfadfa	test123	abc
+f	asdfadfa	test123	abc
+f	asdfadfa	test123	abc
+f	asdfadfa	test123	abc
+f	asdfadfa	test123	abc
+f	asdfadfa	test123	abc
+f	asdfadfa	test123	abc
+f	asdfadfa	test123	abc
+f	asdfadfa	test123	abc
+f	asdfadfa	test123	abc
+f	asdfadfa	test123	abc
+f	asdfadfa	test123	abc
+f	asdfadfa	test123	abc
+f	asdfadfa	test123	abc
+f	asdfadfa	test123	abc
+f	asdfadfa	test123	abc
+f	asdfadfa	test123	abc
+f	asdfadfa	test123	abc
+f	asdfadfa	test123	abc
+f	asdfadfa	test123	abc
+f	asdfadfa	test123	abc
+f	asdfadfa	test123	abc
+f	bbb	1	aaa
+f	bbb	keso	aaa
+f	bbb	bananhatt	aaa
+f	bbb	katt	aaa
+f	XX	A	B
+f	--	Keebler Nutrigrain Cereal Bars	16/BX
+t	bbb	keso	aaa
+t	1	1	1
+t	asdfadfa	test123	abc
+t	1	1	1
+t	asdfadfa	test123	abc
+t	Y	X	Z
+t	hello abcdefg	hello abcdefg	hello abcdefg
+t	xyzxyzxyzxyz	xyzxyzxyzxyz	xyzxyzxyzxyz
+t	asfdsadasdf	myproduct	adsfasdfsdf
+t	x	abc	s
+t	x	abc	s
+t	ef	ab	cd
+t	ef	ab	cd
+t	4	1	23
+\.
+
+
+
+COPY stock (actual, available, depot_id, product_id) FROM stdin;
+100	91	1	3
+100	46	1	2
+94	882	1	1
+100	90	2	1
+100	100	1	4
+100	100	1	5
+\.
+
+COPY stock_damage_type (name) FROM stdin;
+Fire
+Flood
+Explosion
+Sabotage
+Other/Unspecified
+\.
+
+
+CREATE TABLE trombone_keys (
+    id           serial,
+    client       character varying                            NOT NULL,
+    key          character varying                            NOT NULL
+);
+
+ALTER TABLE ONLY trombone_keys
+    ADD CONSTRAINT trombone_keys_pkey PRIMARY KEY (id);
+
+
+COPY trombone_keys (client, key) FROM stdin;
+generic	114ad0ef86bc392b39bad6009113c2a5a8a1d993a
+\.
+
