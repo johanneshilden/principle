@@ -1785,6 +1785,9 @@ App.init({
                             description : 'Update product price category "' + priceCategory.name + '".',
                             purge       : 'price-categories',
                             hint        : 'The product price category could not be updated: ',
+                            feedback    : {
+                                'SQL_UNIQUE_CONSTRAINT_VIOLATION': 'A category with the name "' + data.name + '" already exists.'
+                            },
                             complete: function() {
                                 window.location.hash = 'price-categories';
                             }
@@ -1797,9 +1800,29 @@ App.init({
         });
     },
     deletePriceCategory: function(id) {
+        T.render('admin/price-category/delete', function(t) {
+            Model.getPriceCategory(id, function(priceCategory) {
 
-        $('#main').html('delete price category');
+                var form = $('<form></form>').append(t(priceCategory));
+                $('#main').html(form);
 
+                $('button.confirm').click(function() {
+                    Storage.process({
+                        type        : 'DELETE',
+                        resource    : 'price-category/' + id,
+                        data        : '',
+                        description : 'Delete product price category "' + priceCategory.name + '".',
+                        purge       : 'price-categories',
+                        hint        : 'Cannot delete price category: ',
+                        complete: function() {
+                            window.location.hash = 'price-categories';
+                        },
+                        successMsg: 'The product price category was deleted.'
+                    });
+                });
+
+            });
+        });
     },
     createPriceCategory: function() {
         T.render('admin/price-category/create', function(t) {
@@ -1824,6 +1847,9 @@ App.init({
                         description : 'Create a new product price category named "' + data.name + '".',
                         purge       : 'price-categories',
                         hint        : 'The product price category could not be created: ',
+                        feedback    : {
+                            'SQL_UNIQUE_CONSTRAINT_VIOLATION': 'A category with the name "' + data.name + '" already exists.'
+                        },
                         complete: function() {
                             window.location.hash = 'price-categories';
                         }
