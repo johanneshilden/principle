@@ -1936,7 +1936,8 @@ App.init({
                             hint        : 'The vehicle weight category could not be updated: ',
                             complete: function() {
                                 window.location.hash = 'weight-classes';
-                            }
+                            },
+                            successMsg: 'Vehicle weight category "' + data.name + '" was updated.'
                         });
     
                     }
@@ -1946,9 +1947,29 @@ App.init({
         });
     },
     deleteWeightClass: function(id) {
+        T.render('admin/weight-category/delete', function(t) {
+            Model.getWeightClass(id, function(weightClass) {
 
-        $('#main').html('delete weight class');
+                var form = $('<form></form>').append(t(weightClass));
+                $('#main').html(form);
 
+                $('button.confirm').click(function() {
+                    Storage.process({
+                        type        : 'DELETE',
+                        resource    : 'weight-category/' + id,
+                        data        : '',
+                        description : 'Delete vehicle weight category "' + weightClass.name + '".',
+                        purge       : 'weight-categories',
+                        hint        : 'Cannot delete vehicle weight category: ',
+                        complete: function() {
+                            window.location.hash = 'weight-classes';
+                        },
+                        successMsg: 'The vehicle weight category was deleted.'
+                    });
+                });
+
+            });
+        });
     },
     createWeightClass: function() {
         T.render('admin/weight-category/create', function(t) {
@@ -1975,7 +1996,8 @@ App.init({
                         hint        : 'The vehicle weight category could not be created: ',
                         complete: function() {
                             window.location.hash = 'weight-classes';
-                        }
+                        },
+                        successMsg: 'Vehicle weight category "' + data.name + '" was added.'
                     });
 
                 }
