@@ -1,0 +1,22 @@
+<h2>Complaint history for customer: {{customer.name}}</h2>
+{{#if complaint.length}}
+<table>
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each complaint}}
+        <tr>
+            <td>{{id}}</td>
+            <td><a href="#complaint/{{id}}">{{description}}</a></td>
+            <td>{{#if resolved}}{{resolved}}{{else}}Unresolved{{/if}}</td>
+        </tr>
+        {{/each}}
+     </tbody>
+</table>
+{{else}}
+No complaints
+{{/if}}

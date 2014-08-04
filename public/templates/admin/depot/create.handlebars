@@ -1,0 +1,35 @@
+<h2>Add new depot in {{region.name}} region</h2>
+
+<div>
+<label for="name">Name</label>
+<input type="text" name="name">
+</div>
+<div>
+<label for="name">Latitude</label>
+<input type="text" name="latitude">
+</div>
+<div>
+<label for="name">Longitude</label>
+<input type="text" name="longitude">
+</div>
+
+<div>
+<label for="manager">manager</label>
+<select name="manager">
+    {{#each manager}}
+    <option value="{{id}}">{{name}}</option>
+    {{/each}}
+</select>
+</div>
+
+{{#if area}}
+<h2>Areas serviced by this depot</h2>
+
+{{#each area}}
+<div>
+    <input name="area" data-id="{{id}}" type="checkbox">{{name}}
+</div>
+{{/each}}
+
+{{/if}}
+<input type="submit">

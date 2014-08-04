@@ -1,0 +1,18 @@
+<a href="#price-category/create">Create a new price category</a>
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each category}}
+        <tr>
+            <td>{{name}}</td>
+            <td><a href="#price-category/edit/{{id}}">Edit</a></td>
+            <td><a href="#price-category/delete/{{id}}">Delete</a></td>
+        </tr>
+        {{/each}}
+     </tbody>
+</table>
+

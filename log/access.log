@@ -1,0 +1,6 @@
+[92mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404498335082")]
+[92mStatus: [0m200 . /customer
+[93mGET[0m /customer/21 :: application/json; charset=utf-8
+GET [("_","1404498335083")]
+[93mStatus: [0m200 . /customer/21

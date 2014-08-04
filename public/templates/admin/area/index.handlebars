@@ -1,0 +1,27 @@
+<table>
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th>Field Staff</th>
+            <th>Call Center</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each area}}
+        <tr>
+            <td>{{id}}</td>
+            <td><a href="#area/{{id}}">{{name}}</a></td>
+            <td><a href="#area/edit/{{id}}">Edit</a></td>
+            <td><a href="#area/delete/{{id}}">Delete</a></td>
+            <td><a href="#customers/area/{{id}}">Customers</a></td>
+            <td>{{fieldstaffUser.name}}</td>
+            <td>{{callcenterUser.name}}</td>
+        </tr>
+        {{/each}}
+     </tbody>
+</table>
+

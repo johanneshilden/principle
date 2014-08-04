@@ -1,0 +1,17 @@
+<table>
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Registration</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each vehicle}}
+        <tr>
+            <td>{{id}}</td>
+            <td>{{regNo}}</td>
+            <td><a href="#fuel/manage/vehicle/{{id}}">Manage fuel</a></td>
+       </tr>
+        {{/each}}
+     </tbody>
+</table>

@@ -1,0 +1,36 @@
+<table>
+    <tr>
+        <td>
+            Username
+        </td>
+       <td>
+            {{username}}
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Name
+        </td>
+       <td>
+            {{name}}
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Role
+        </td>
+       <td>
+            {{role}}
+        </td>
+    </tr>
+    {{#if depotName}}
+    <tr>
+        <td>
+            Depot
+        </td>
+       <td>
+           <a href="#depot/{{depotId}}">{{depotName}}</a>
+        </td>
+    </tr>
+    {{/if}}
+</table>

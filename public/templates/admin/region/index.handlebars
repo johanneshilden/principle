@@ -1,0 +1,22 @@
+<a href="#region/create">Create a new region</a>
+<table>
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each region}}
+        <tr>
+            <td>{{id}}</td>
+            <td>{{name}}</td>
+            <td><a href="#region/edit/{{id}}">Edit</a></td>
+            <td><a href="#region/delete/{{id}}">Delete</a></td>
+            <td><a href="#region/{{id}}">View</a></td>
+            <td><a href="#depots/region/{{id}}">Depots</a></td>
+        </tr>
+        {{/each}}
+     </tbody>
+</table>
+

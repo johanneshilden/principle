@@ -1,0 +1,18 @@
+<table>
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each complaint}}
+        <tr>
+            <td>{{id}}</td>
+            <td><a href="#complaint/{{id}}">{{description}}</a></td>
+            <td>{{#if resolved}}{{resolved}}{{else}}Unresolved{{/if}}</td>
+        </tr>
+        {{/each}}
+     </tbody>
+</table>
+

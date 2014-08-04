@@ -1,0 +1,20 @@
+<a href="#weight-class/create">Create a new weight class</a>
+<table>
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each category}}
+        <tr>
+            <td>{{id}}</td>
+            <td>{{name}}</td>
+            <td><a href="#weight-class/edit/{{id}}">Edit</a></td>
+            <td><a href="#weight-class/delete/{{id}}">Delete</a></td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+

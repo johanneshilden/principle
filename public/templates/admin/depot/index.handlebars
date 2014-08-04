@@ -1,0 +1,26 @@
+{{#if depot}}
+<table>
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Region</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each depot}}
+        <tr>
+            <td>{{id}}</td>
+            <td><a href="#depot/{{id}}">{{name}}</a></td>
+            <td>{{regionName}}</td>
+            <td><a href="#depot/edit/{{id}}">Edit</a></td>
+            <td><a href="#depot/delete/{{id}}">Delete</a></td>
+            <td><a href="#vehicles/depot/{{id}}">Vehicles</a></td>
+            <td><a href="#stock/depot/{{id}}">Stock</a></td>
+        </tr>
+        {{/each}}
+     </tbody>
+</table>
+{{else}}
+No depots.
+{{/if}}

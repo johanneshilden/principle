@@ -1,0 +1,9 @@
+<h2>Assign driver to vehicle {{vehicle.regNo}}</h2>
+<select name="driver">
+<option value="">No driver</option>
+{{#each driver}}
+<option value="{{id}}">{{name}}</option>
+{{/each}}
+</select>
+<input type="submit">
+

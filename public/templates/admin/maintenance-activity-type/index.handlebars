@@ -1,0 +1,20 @@
+<a href="#maintenance-type/create">Create maintenance activity type</a>
+<table>
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each type}}
+        <tr>
+            <td>{{id}}</td>
+            <td>{{name}}</td>
+            <td><a href="#maintenance-type/edit/{{id}}">Edit</a></td>
+            <td><a href="#maintenance-type/delete/{{id}}">Delete</a></td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+

@@ -1,0 +1,1817 @@
+[92mGET[0m /customer/4 :: application/json; charset=utf-8
+GET [("_","1404322652135")]
+[92mStatus: [0m200 . /customer/4
+[93mGET[0m /customer/14 :: application/json; charset=utf-8
+GET [("_","1404322652136")]
+[93mStatus: [0m200 . /customer/14
+[92mGET[0m /customer/21 :: application/json; charset=utf-8
+GET [("_","1404498335084")]
+[92mStatus: [0m200 . /customer/21
+[93mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404498335085")]
+[93mStatus: [0m200 . /customer
+[94mGET[0m /customer/6 :: application/json; charset=utf-8
+GET [("_","1404498335086")]
+[94mStatus: [0m200 . /customer/6
+[92mGET[0m /customer :: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+[92mStatus: [0m200 . /customer
+[93mGET[0m /customer/5 :: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+[93mStatus: [0m200 . /customer/5
+[92mGET[0m /customer :: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+[92mStatus: [0m200 . /customer
+[93mGET[0m /customer/5 :: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+[93mStatus: [0m200 . /customer/5
+[94mGET[0m /customer/2 :: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+[94mStatus: [0m200 . /customer/2
+[95mGET[0m /customer/10 :: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+[95mStatus: [0m200 . /customer/10
+[96mGET[0m /customer/1 :: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+[96mStatus: [0m200 . /customer/1
+[92mGET[0m /customer/2 :: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+[92mStatus: [0m200 . /customer/2
+[93mGET[0m /customer/3 :: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+[93mStatus: [0m200 . /customer/3
+[94mGET[0m /customer/4 :: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+[94mStatus: [0m200 . /customer/4
+[95mGET[0m /customer/1111 :: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+[95mStatus: [0m[91m404[0m . /customer/1111
+[96mGET[0m /customer/6 :: application/json; charset=utf-8
+GET [("_","1404498335087")]
+[96mStatus: [0m200 . /customer/6
+[92mGET[0m /customer/11111 :: application/json; charset=utf-8
+GET [("_","1404498335088")]
+[92mStatus: [0m[91m404[0m . /customer/11111
+[93mGET[0m /customer/11 :: application/json; charset=utf-8
+GET [("_","1404498335089")]
+[93mStatus: [0m200 . /customer/11
+[94mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404498335090")]
+[94mStatus: [0m200 . /customer
+[92mGET[0m /customer/1111 :: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+[92mStatus: [0m[91m404[0m . /customer/1111
+[93mGET[0m /customer/1111 :: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+[93mStatus: [0m[91m404[0m . /customer/1111
+[94mGET[0m /bananas.html :: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+[94mStatus: [0m[91m404[0m . /bananas.html
+[95mGET[0m /customer :: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+[95mStatus: [0m200 . /customer
+[96mGET[0m /customer/45 :: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+[96mStatus: [0m[91m404[0m . /customer/45
+[92mGET[0m /customer/4 :: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+[92mStatus: [0m200 . /customer/4
+[92mGET[0m /hello :: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+[92mStatus: [0m200 . /hello
+[92mGET[0m /hello :: */*
+[92mStatus: [0m[91m404[0m . /hello
+[92mOPTIONS[0m /hello :: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+[92mStatus: [0m200 . /hello
+[93mOPTIONS[0m /hello :: */*
+[93mStatus: [0m200 . /hello
+[94mOPTIONS[0m /hello :: */*
+[94mStatus: [0m200 . /hello
+[95mOPTIONS[0m /hello :: */*
+[95mStatus: [0m200 . /hello
+[92mOPTIONS[0m /hello :: */*
+[92mStatus: [0m200 . /hello
+[92mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404505180584")]
+[92mStatus: [0m200 . /customer
+[93mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404505180585")]
+[93mStatus: [0m200 . /customer
+[92mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404505180586")]
+[92mStatus: [0m200 . /customer
+[93mGET[0m /customer/5 :: application/json; charset=utf-8
+GET [("_","1404505180587")]
+[93mStatus: [0m200 . /customer/5
+[94mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404505180588")]
+[94mStatus: [0m200 . /customer
+[95mOPTIONS[0m /hello :: */*
+[95mStatus: [0m[91m401[0m . /hello
+[96mOPTIONS[0m /hello :: application/json; charset=utf-8
+[96mStatus: [0m200 . /hello
+[92mOPTIONS[0m /hello :: */*
+[92mStatus: [0m200 . /hello
+[92mOPTIONS[0m /hello :: application/json; charset=utf-8
+[92mStatus: [0m[91m404[0m . /hello
+[93mOPTIONS[0m /customer :: application/json; charset=utf-8
+[93mStatus: [0m200 . /customer
+[94mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404505180589")]
+[94mStatus: [0m200 . /customer
+[95mGET[0m /customer/5 :: application/json; charset=utf-8
+GET [("_","1404505180590")]
+[95mStatus: [0m200 . /customer/5
+[92mOPTIONS[0m /hello :: */*
+[92mStatus: [0m[91m404[0m . /hello
+[93mOPTIONS[0m /customer :: */*
+[93mStatus: [0m200 . /customer
+[94mOPTIONS[0m /customer/10 :: */*
+[94mStatus: [0m200 . /customer/10
+[95mOPTIONS[0m /customer/10 :: */*
+[95mStatus: [0m200 . /customer/10
+[96mOPTIONS[0m /customer/10111 :: */*
+[96mStatus: [0m200 . /customer/10111
+[92mOPTIONS[0m /customer/10111 :: */*
+[92mStatus: [0m200 . /customer/10111
+[92mOPTIONS[0m /customer/10111 :: */*
+[92mStatus: [0m200 . /customer/10111
+[92mOPTIONS[0m /customer/10111 :: */*
+[92mStatus: [0m200 . /customer/10111
+[93mOPTIONS[0m /customer/5 :: application/json; charset=utf-8
+[93mStatus: [0m200 . /customer/5
+[94mOPTIONS[0m /customer/10111 :: */*
+[94mStatus: [0m200 . /customer/10111
+[95mOPTIONS[0m /customer/10111 :: */*
+[95mStatus: [0m200 . /customer/10111
+[92mOPTIONS[0m /customer/10111 :: */*
+[92mStatus: [0m200 . /customer/10111
+[92mOPTIONS[0m /customer/10111 :: */*
+[92mStatus: [0m200 . /customer/10111
+[93mOPTIONS[0m /customer/10111 :: */*
+[93mStatus: [0m200 . /customer/10111
+[92mOPTIONS[0m /_ :: application/json; charset=utf-8
+[92mStatus: [0m200 . /_
+[92mOPTIONS[0m /_ :: application/json; charset=utf-8
+[92mStatus: [0m200 . /_
+[92mOPTIONS[0m /_ :: application/json; charset=utf-8
+[92mStatus: [0m200 . /_
+[92mOPTIONS[0m / :: application/json; charset=utf-8
+[92mStatus: [0m200 . /
+[93mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404505180591")]
+[93mStatus: [0m200 . /customer
+[94mGET[0m /customer/5 :: application/json; charset=utf-8
+GET [("_","1404505180592")]
+[94mStatus: [0m200 . /customer/5
+[95mOPTIONS[0m / :: application/json; charset=utf-8
+[95mStatus: [0m200 . /
+[92mOPTIONS[0m / :: application/json; charset=utf-8
+[92mStatus: [0m200 . /
+[93mOPTIONS[0m /customer :: */*
+[93mStatus: [0m200 . /customer
+[94mOPTIONS[0m / :: */*
+[94mStatus: [0m200 . /
+[95mOPTIONS[0m / :: */*
+[95mStatus: [0m200 . /
+[92mOPTIONS[0m / :: application/json; charset=utf-8
+[92mStatus: [0m200 . /
+[93mOPTIONS[0m / :: */*
+[93mStatus: [0m200 . /
+[94mOPTIONS[0m / :: */*
+[94mStatus: [0m200 . /
+[92mOPTIONS[0m / :: */*
+[92mStatus: [0m200 . /
+[93mOPTIONS[0m / :: application/json; charset=utf-8
+[93mStatus: [0m200 . /
+[92mOPTIONS[0m / :: application/json; charset=utf-8
+[92mStatus: [0m200 . /
+[93mOPTIONS[0m /customer :: application/json; charset=utf-8
+[93mStatus: [0m200 . /customer
+[94mOPTIONS[0m / :: application/json; charset=utf-8
+[94mStatus: [0m200 . /
+[95mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404505180593")]
+[95mStatus: [0m200 . /customer
+[96mGET[0m /customer/2 :: application/json; charset=utf-8
+GET [("_","1404505180594")]
+[96mStatus: [0m200 . /customer/2
+[92mOPTIONS[0m /customer/2 :: application/json; charset=utf-8
+[92mStatus: [0m200 . /customer/2
+[93mOPTIONS[0m /customer :: application/json; charset=utf-8
+[93mStatus: [0m200 . /customer
+[94mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404505180595")]
+[94mStatus: [0m200 . /customer
+[95mGET[0m /customer/11 :: application/json; charset=utf-8
+GET [("_","1404505180596")]
+[95mStatus: [0m200 . /customer/11
+[92mGET[0m / :: application/json; charset=utf-8
+GET [("_","1404505180597")]
+[92mStatus: [0m200 . /
+[92mGET[0m / :: application/json; charset=utf-8
+GET [("_","1404505180598")]
+[92mStatus: [0m200 . /
+[93mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404505180599")]
+[93mStatus: [0m200 . /customer
+[94mGET[0m /customer/9 :: application/json; charset=utf-8
+GET [("_","1404505180600")]
+[94mStatus: [0m200 . /customer/9
+[92mGET[0m / :: application/json; charset=utf-8
+GET [("_","1404505180601")]
+[92mStatus: [0m200 . /
+[92mGET[0m /banan :: application/json; charset=utf-8
+GET [("_","1404505180614")]
+[92mStatus: [0m200 . /banan
+[93mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404505180615")]
+[93mStatus: [0m200 . /customer
+[92mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404505180616")]
+[92mStatus: [0m200 . /customer
+[93mGET[0m /customer/5 :: application/json; charset=utf-8
+GET [("_","1404505180617")]
+[93mStatus: [0m200 . /customer/5
+[92mGET[0m /user/fstaff/fstaff :: application/json; charset=utf-8
+GET [("_","1404548755345")]
+[92mStatus: [0m[91m404[0m . /user/fstaff/fstaff
+[93mGET[0m /user/fstaff/fstaff :: application/json; charset=utf-8
+GET [("_","1404548755346")]
+[93mStatus: [0m[91m404[0m . /user/fstaff/fstaff
+[94mGET[0m /user/fstaff/fstaff :: application/json; charset=utf-8
+GET [("_","1404548755347")]
+[94mStatus: [0m[91m404[0m . /user/fstaff/fstaff
+[92mGET[0m /customer :: */*
+[92mStatus: [0m200 . /customer
+[93mGET[0m /user/fstaff/fstaff :: application/json; charset=utf-8
+GET [("_","1404548755348")]
+[93mStatus: [0m[91m404[0m . /user/fstaff/fstaff
+[92mGET[0m /user/fstaff/fstaff :: application/json; charset=utf-8
+GET [("_","1404548755349")]
+[92mStatus: [0m200 . /user/fstaff/fstaff
+[92mGET[0m /user/fstaff/fstaff :: application/json; charset=utf-8
+GET [("_","1404548755350")]
+[92mStatus: [0m200 . /user/fstaff/fstaff
+[93mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404548755351")]
+[94mGET[0m /customer/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404548755352")]
+[93mStatus: [0m200 . /customer/count/area/user/3
+[94mStatus: [0m200 . /customer/area/user/3
+[95mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404548755353")]
+[95mStatus: [0m200 . /customer/count/area/user/3
+[96mGET[0m /customer/16 :: application/json; charset=utf-8
+GET [("_","1404548755354")]
+[96mStatus: [0m200 . /customer/16
+[92mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404548755355")]
+[93mGET[0m /customer/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404548755356")]
+[92mStatus: [0m200 . /customer/count/area/user/3
+[93mStatus: [0m200 . /customer/area/user/3
+[94mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404548755357")]
+[95mGET[0m /customer/16 :: application/json; charset=utf-8
+GET [("_","1404548755358")]
+[94mStatus: [0m200 . /customer/count/area/user/3
+[95mStatus: [0m200 . /customer/16
+[96mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404548755360")]
+[92mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404548755359")]
+[96mStatus: [0m200 . /customer
+[92mStatus: [0m200 . /customer/count/area/user/3
+[93mGET[0m /customer/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404548755362")]
+[94mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404548755361")]
+[93mStatus: [0m200 . /customer/area/user/3
+[94mStatus: [0m200 . /customer/count/area/user/3
+[95mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404548755363")]
+[96mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404548755364")]
+[95mStatus: [0m200 . /customer/count/area/user/3
+[96mStatus: [0m200 . /customer
+[92mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404548755365")]
+[93mGET[0m /customer/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404548755366")]
+[92mStatus: [0m200 . /customer/count/area/user/3
+[93mStatus: [0m200 . /customer/area/user/3
+[94mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404548755368")]
+[95mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404548755367")]
+[94mStatus: [0m200 . /customer
+[95mStatus: [0m200 . /customer/count/area/user/3
+[96mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404548755369")]
+[96mStatus: [0m200 . /customer/count/area/user/3
+[92mGET[0m /customer/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404548755370")]
+[92mStatus: [0m200 . /customer/area/user/3
+[93mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404548755372")]
+[94mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404548755371")]
+[93mStatus: [0m200 . /customer
+[94mStatus: [0m200 . /customer/count/area/user/3
+[95mGET[0m /order :: application/json; charset=utf-8
+GET [("_","1404548755373")]
+[95mStatus: [0m[91m404[0m . /order
+[96mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404548755374")]
+[92mGET[0m /customer/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404548755375")]
+[96mStatus: [0m200 . /customer/count/area/user/3
+[92mStatus: [0m200 . /customer/area/user/3
+[93mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404548755376")]
+[94mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404548755377")]
+[93mStatus: [0m200 . /customer/count/area/user/3
+[94mStatus: [0m200 . /customer
+[95mGET[0m /customer/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404548755379")]
+[96mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404548755378")]
+[95mStatus: [0m200 . /customer/area/user/3
+[96mStatus: [0m200 . /customer/count/area/user/3
+[92mGET[0m /stock/fieldstaff/3 :: application/json; charset=utf-8
+GET [("_","1404548755380")]
+[92mStatus: [0m[91m404[0m . /stock/fieldstaff/3
+[93mGET[0m /order :: application/json; charset=utf-8
+GET [("_","1404548755381")]
+[93mStatus: [0m[91m404[0m . /order
+[94mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404548755382")]
+[95mGET[0m /customer/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404548755383")]
+[94mStatus: [0m200 . /customer/count/area/user/3
+[95mStatus: [0m200 . /customer/area/user/3
+[96mGET[0m /order :: application/json; charset=utf-8
+GET [("_","1404548755384")]
+[96mStatus: [0m[91m404[0m . /order
+[92mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404548755385")]
+[92mStatus: [0m200 . /customer/count/area/user/3
+[93mGET[0m /customer/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404548755386")]
+[93mStatus: [0m200 . /customer/area/user/3
+[94mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404548755387")]
+[95mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404548755388")]
+[94mStatus: [0m200 . /customer/count/area/user/3
+[95mStatus: [0m200 . /customer
+[96mGET[0m /customer/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404548755390")]
+[92mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404548755389")]
+[96mStatus: [0m200 . /customer/area/user/3
+[92mStatus: [0m200 . /customer/count/area/user/3
+[93mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404548755392")]
+[94mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404548755391")]
+[93mStatus: [0m200 . /customer
+[94mStatus: [0m200 . /customer/count/area/user/3
+[95mGET[0m /customer/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404548755394")]
+[96mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404548755393")]
+[95mStatus: [0m200 . /customer/area/user/3
+[96mStatus: [0m200 . /customer/count/area/user/3
+[92mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404548755396")]
+[93mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404548755395")]
+[92mStatus: [0m200 . /customer
+[93mStatus: [0m200 . /customer/count/area/user/3
+[94mGET[0m /customer/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404548755398")]
+[95mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404548755397")]
+[94mStatus: [0m200 . /customer/area/user/3
+[95mStatus: [0m200 . /customer/count/area/user/3
+[96mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404548755400")]
+[92mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404548755399")]
+[96mStatus: [0m200 . /customer
+[92mStatus: [0m200 . /customer/count/area/user/3
+[93mGET[0m /customer/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404548755402")]
+[94mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404548755401")]
+[93mStatus: [0m200 . /customer/area/user/3
+[94mStatus: [0m200 . /customer/count/area/user/3
+[95mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404548755403")]
+[96mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404548755404")]
+[95mStatus: [0m200 . /customer/count/area/user/3
+[96mStatus: [0m200 . /customer
+[92mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404548755405")]
+[92mStatus: [0m200 . /customer/count/area/user/3
+[93mGET[0m /area/fieldstaff/3 :: application/json; charset=utf-8
+GET [("_","1404548755406")]
+[93mStatus: [0m200 . /area/fieldstaff/3
+[94mGET[0m /price-category :: application/json; charset=utf-8
+GET [("_","1404548755407")]
+[94mStatus: [0m[91m404[0m . /price-category
+[95mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404548755408")]
+[96mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404548755409")]
+[95mStatus: [0m200 . /customer/count/area/user/3
+[96mStatus: [0m200 . /customer
+[92mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404548755410")]
+[92mStatus: [0m200 . /customer/count/area/user/3
+[93mGET[0m /customer/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404548755411")]
+[93mStatus: [0m200 . /customer/area/user/3
+[94mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404548755413")]
+[95mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404548755412")]
+[94mStatus: [0m200 . /customer
+[95mStatus: [0m200 . /customer/count/area/user/3
+[96mGET[0m /customer/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404548755415")]
+[92mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404548755414")]
+[96mStatus: [0m200 . /customer/area/user/3
+[92mStatus: [0m200 . /customer/count/area/user/3
+[93mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404548755417")]
+[94mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404548755416")]
+[93mStatus: [0m200 . /customer
+[94mStatus: [0m200 . /customer/count/area/user/3
+[95mGET[0m /customer/inactive :: application/json; charset=utf-8
+GET [("_","1404548755419")]
+[96mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404548755418")]
+[95mStatus: [0m200 . /customer/inactive
+[96mStatus: [0m200 . /customer/count/area/user/3
+[92mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404548755420")]
+[93mGET[0m /area/fieldstaff/3 :: application/json; charset=utf-8
+GET [("_","1404548755421")]
+[94mGET[0m /price-category :: application/json; charset=utf-8
+GET [("_","1404548755422")]
+[94mStatus: [0m[91m404[0m . /price-category
+[93mStatus: [0m200 . /area/fieldstaff/3
+[92mStatus: [0m200 . /customer/count/area/user/3
+[95mGET[0m /order :: application/json; charset=utf-8
+GET [("_","1404548755423")]
+[95mStatus: [0m[91m404[0m . /order
+[96mGET[0m /stock/fieldstaff/3 :: application/json; charset=utf-8
+GET [("_","1404548755424")]
+[96mStatus: [0m[91m404[0m . /stock/fieldstaff/3
+[92mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404548755425")]
+[93mGET[0m /customer/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404548755426")]
+[92mStatus: [0m200 . /customer/count/area/user/3
+[93mStatus: [0m200 . /customer/area/user/3
+[92mGET[0m /customer :: */*
+[92mStatus: [0m200 . /customer
+[92mGET[0m /customer :: */*
+[92mStatus: [0m200 . /customer
+[92mGET[0m /customer :: */*
+[92mStatus: [0m200 . /customer
+[93mGET[0m /customer/5 :: */*
+[93mStatus: [0m200 . /customer/5
+[94mOPTIONS[0m / :: */*
+[94mStatus: [0m[91m404[0m . /
+[95mOPTIONS[0m / :: */*
+[95mStatus: [0m[91m404[0m . /
+[92mOPTIONS[0m / :: */*
+[92mStatus: [0m200 . /
+[92mOPTIONS[0m / :: */*
+[92mStatus: [0m[91m404[0m . /
+[93mOPTIONS[0m /customer :: */*
+[93mStatus: [0m200 . /customer
+[92mOPTIONS[0m /customer :: */*
+[92mStatus: [0m200 . /customer
+[92mOPTIONS[0m /customer :: */*
+[92mStatus: [0m200 . /customer
+[92mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404548755427")]
+[93mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404548755428")]
+[93mStatus: [0m200 . /customer
+[92mStatus: [0m200 . /customer/count/area/user/3
+[94mGET[0m /customer/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404548755430")]
+[95mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404548755429")]
+[94mStatus: [0m200 . /customer/area/user/3
+[95mStatus: [0m200 . /customer/count/area/user/3
+[96mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404548755431")]
+[92mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404548755432")]
+[96mStatus: [0m200 . /customer/count/area/user/3
+[92mStatus: [0m200 . /customer
+[93mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404548755433")]
+[94mGET[0m /area/fieldstaff/3 :: application/json; charset=utf-8
+GET [("_","1404548755434")]
+[93mStatus: [0m200 . /customer/count/area/user/3
+[95mGET[0m /price-category :: application/json; charset=utf-8
+GET [("_","1404548755435")]
+[95mStatus: [0m[91m404[0m . /price-category
+[94mStatus: [0m200 . /area/fieldstaff/3
+[96mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404548755436")]
+[92mGET[0m /customer/inactive :: application/json; charset=utf-8
+GET [("_","1404548755437")]
+[96mStatus: [0m200 . /customer/count/area/user/3
+[92mStatus: [0m200 . /customer/inactive
+[93mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404548755438")]
+[93mStatus: [0m200 . /customer/count/area/user/3
+[94mGET[0m /customer/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404548755439")]
+[94mStatus: [0m200 . /customer/area/user/3
+[95mOPTIONS[0m /customer :: */*
+[95mStatus: [0m200 . /customer
+[92mOPTIONS[0m /customer :: */*
+[92mStatus: [0m200 . /customer
+[93mGET[0m /customer/5 :: */*
+[93mStatus: [0m200 . /customer/5
+[94mGET[0m /customer/5 :: */*
+[94mStatus: [0m200 . /customer/5
+[95mGET[0m /customer/5 :: */*
+[95mStatus: [0m200 . /customer/5
+[96mGET[0m /customer/5 :: */*
+[96mStatus: [0m200 . /customer/5
+[92mGET[0m /customer/5 :: */*
+[92mStatus: [0m200 . /customer/5
+[93mGET[0m /customer/5 :: */*
+[93mStatus: [0m200 . /customer/5
+[94mGET[0m /customer/5 :: */*
+[94mStatus: [0m200 . /customer/5
+[95mGET[0m /customer/5 :: */*
+[95mStatus: [0m200 . /customer/5
+[92mGET[0m /customer/5 :: */*
+[92mStatus: [0m200 . /customer/5
+[93mGET[0m /customer/5 :: */*
+[93mStatus: [0m200 . /customer/5
+[94mGET[0m /customer/5 :: */*
+[94mStatus: [0m200 . /customer/5
+[92mPATCH[0m /stock/reduce-available :: application/json; charset=utf-8
+[92mStatus: [0m200 . /stock/reduce-available
+[93mPATCH[0m /stock/reduce-available :: application/json; charset=utf-8
+[93mStatus: [0m200 . /stock/reduce-available
+[94mPATCH[0m /stock/reduce-available :: application/json; charset=utf-8
+[94mStatus: [0m200 . /stock/reduce-available
+[95mOPTIONS[0m /customer :: application/json; charset=utf-8
+[95mStatus: [0m200 . /customer
+[92mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404742807109")]
+[92mStatus: [0m200 . /customer
+[93mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404742807110")]
+[93mStatus: [0m200 . /customer
+[94mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404742810188")]
+[94mStatus: [0m200 . /customer
+[95mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404742807111")]
+[95mStatus: [0m200 . /customer
+[96mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404742832957")]
+[96mStatus: [0m200 . /customer
+[92mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404742837786")]
+[92mStatus: [0m200 . /customer
+[93mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404742837787")]
+[93mStatus: [0m200 . /customer
+[94mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404742837788")]
+[94mStatus: [0m200 . /customer
+[95mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404742865032")]
+[95mStatus: [0m200 . /customer
+[96mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404742884629")]
+[96mStatus: [0m200 . /customer
+[92mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404742884630")]
+[92mStatus: [0m200 . /customer
+[93mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404742884631")]
+[93mStatus: [0m200 . /customer
+[94mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404742884632")]
+[94mStatus: [0m200 . /customer
+[95mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404742884633")]
+[95mStatus: [0m200 . /customer
+[96mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404742884634")]
+[96mStatus: [0m200 . /customer
+[92mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404742947234")]
+[92mStatus: [0m200 . /customer
+[93mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404742947235")]
+[93mStatus: [0m200 . /customer
+[94mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404742947236")]
+[94mStatus: [0m200 . /customer
+[95mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404743157101")]
+[95mStatus: [0m200 . /customer
+[96mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404743157102")]
+[96mStatus: [0m200 . /customer
+[92mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404743656501")]
+[92mStatus: [0m200 . /customer
+[93mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404744364632")]
+[93mStatus: [0m200 . /customer
+[94mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404744364633")]
+[94mStatus: [0m200 . /customer
+[95mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404744387481")]
+[95mStatus: [0m200 . /customer
+[96mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404744387482")]
+[96mStatus: [0m200 . /customer
+[92mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404744387483")]
+[92mStatus: [0m200 . /customer
+[93mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404744387484")]
+[93mStatus: [0m200 . /customer
+[94mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404744387485")]
+[94mStatus: [0m200 . /customer
+[95mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404744443739")]
+[95mStatus: [0m200 . /customer
+[96mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404744443740")]
+[96mStatus: [0m200 . /customer
+[92mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404744443741")]
+[92mStatus: [0m200 . /customer
+[93mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404744443742")]
+[93mStatus: [0m200 . /customer
+[94mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404744443743")]
+[94mStatus: [0m200 . /customer
+[95mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404744443744")]
+[95mStatus: [0m200 . /customer
+[96mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404744443745")]
+[96mStatus: [0m200 . /customer
+[92mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404744537766")]
+[92mStatus: [0m200 . /customer
+[93mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404744537767")]
+[93mStatus: [0m200 . /customer
+[94mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404744537768")]
+[94mStatus: [0m200 . /customer
+[95mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404744537769")]
+[95mStatus: [0m200 . /customer
+[92mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404744799898")]
+[92mStatus: [0m200 . /customer
+[93mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404744799899")]
+[93mStatus: [0m200 . /customer
+[94mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404744799900")]
+[94mStatus: [0m200 . /customer
+[92mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404745624501")]
+[92mStatus: [0m200 . /customer
+[93mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404745624502")]
+[93mStatus: [0m200 . /customer
+[94mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404745829731")]
+[94mStatus: [0m200 . /customer
+[95mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404745829732")]
+[95mStatus: [0m200 . /customer
+[96mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404747962401")]
+[96mStatus: [0m200 . /customer
+[92mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404747962402")]
+[92mStatus: [0m200 . /customer
+[93mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404747962403")]
+[93mStatus: [0m200 . /customer
+[94mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404747962404")]
+[94mStatus: [0m200 . /customer
+[95mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404748052257")]
+[95mStatus: [0m200 . /customer
+[96mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404748052258")]
+[96mStatus: [0m200 . /customer
+[92mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404748052259")]
+[92mStatus: [0m200 . /customer
+[93mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404748052260")]
+[93mStatus: [0m200 . /customer
+[94mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404748052261")]
+[94mStatus: [0m200 . /customer
+[95mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404748052262")]
+[95mStatus: [0m200 . /customer
+[96mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404748052263")]
+[96mStatus: [0m200 . /customer
+[92mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404748052264")]
+[92mStatus: [0m200 . /customer
+[93mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404748052265")]
+[93mStatus: [0m200 . /customer
+[94mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404748052266")]
+[94mStatus: [0m200 . /customer
+[95mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404748052267")]
+[95mStatus: [0m200 . /customer
+[96mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404748052268")]
+[96mStatus: [0m200 . /customer
+[92mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404748052269")]
+[92mStatus: [0m200 . /customer
+[93mGET[0m /user/fstaff/fstaff :: application/json; charset=utf-8
+GET [("_","1404738991772")]
+[93mStatus: [0m200 . /user/fstaff/fstaff
+[94mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404738991773")]
+[95mGET[0m /customer/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404738991774")]
+[94mStatus: [0m200 . /customer/count/area/user/3
+[95mStatus: [0m200 . /customer/area/user/3
+[96mGET[0m /order :: application/json; charset=utf-8
+GET [("_","1404738991775")]
+[96mStatus: [0m[91m404[0m . /order
+[92mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404738991776")]
+[92mStatus: [0m200 . /customer/count/area/user/3
+[93mGET[0m /customer/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404738991777")]
+[93mStatus: [0m200 . /customer/area/user/3
+[94mGET[0m /order :: application/json; charset=utf-8
+GET [("_","1404738991778")]
+[94mStatus: [0m[91m404[0m . /order
+[95mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404738991779")]
+[95mStatus: [0m200 . /customer/count/area/user/3
+[96mGET[0m /customer/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404738991780")]
+[96mStatus: [0m200 . /customer/area/user/3
+[92mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404738991782")]
+[93mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404738991781")]
+[92mStatus: [0m200 . /customer
+[93mStatus: [0m200 . /customer/count/area/user/3
+[94mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404738991783")]
+[95mGET[0m /customer/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404738991784")]
+[94mStatus: [0m200 . /customer/count/area/user/3
+[95mStatus: [0m200 . /customer/area/user/3
+[96mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404738991785")]
+[96mStatus: [0m200 . /customer/count/area/user/3
+[92mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404738991786")]
+[92mStatus: [0m200 . /customer
+[93mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404738991787")]
+[93mStatus: [0m200 . /customer/count/area/user/3
+[94mGET[0m /area/fieldstaff/3 :: application/json; charset=utf-8
+GET [("_","1404738991788")]
+[95mGET[0m /price-category :: application/json; charset=utf-8
+GET [("_","1404738991789")]
+[95mStatus: [0m[91m404[0m . /price-category
+[94mStatus: [0m200 . /area/fieldstaff/3
+[96mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404738991790")]
+[96mStatus: [0m200 . /customer/count/area/user/3
+[92mGET[0m /customer/inactive :: application/json; charset=utf-8
+GET [("_","1404738991791")]
+[92mStatus: [0m200 . /customer/inactive
+[93mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404738991792")]
+[94mGET[0m /price-category :: application/json; charset=utf-8
+GET [("_","1404738991794")]
+[94mStatus: [0m[91m404[0m . /price-category
+[93mStatus: [0m200 . /customer/count/area/user/3
+[95mGET[0m /area/fieldstaff/3 :: application/json; charset=utf-8
+GET [("_","1404738991793")]
+[95mStatus: [0m200 . /area/fieldstaff/3
+[96mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404738991795")]
+[96mStatus: [0m200 . /customer/count/area/user/3
+[92mGET[0m /customer/inactive :: application/json; charset=utf-8
+GET [("_","1404738991796")]
+[92mStatus: [0m200 . /customer/inactive
+[93mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404738991797")]
+[94mGET[0m /customer/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404738991798")]
+[93mStatus: [0m200 . /customer/count/area/user/3
+[94mStatus: [0m200 . /customer/area/user/3
+[95mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404738991799")]
+[96mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404738991800")]
+[95mStatus: [0m200 . /customer/count/area/user/3
+[96mStatus: [0m200 . /customer
+[92mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404738991801")]
+[93mGET[0m /customer/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404738991802")]
+[92mStatus: [0m200 . /customer/count/area/user/3
+[93mStatus: [0m200 . /customer/area/user/3
+[94mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404738991803")]
+[95mGET[0m /area/fieldstaff/3 :: application/json; charset=utf-8
+GET [("_","1404738991804")]
+[94mStatus: [0m200 . /customer/count/area/user/3
+[96mGET[0m /price-category :: application/json; charset=utf-8
+GET [("_","1404738991805")]
+[96mStatus: [0m[91m404[0m . /price-category
+[95mStatus: [0m200 . /area/fieldstaff/3
+[92mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404738991807")]
+[93mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404738991806")]
+[92mStatus: [0m200 . /customer
+[93mStatus: [0m200 . /customer/count/area/user/3
+[94mGET[0m /customer/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404738991809")]
+[95mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404738991808")]
+[94mStatus: [0m200 . /customer/area/user/3
+[95mStatus: [0m200 . /customer/count/area/user/3
+[96mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404738991810")]
+[96mStatus: [0m200 . /customer/count/area/user/3
+[92mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404738991811")]
+[92mStatus: [0m200 . /customer
+[93mGET[0m /order :: application/json; charset=utf-8
+GET [("_","1404738991812")]
+[93mStatus: [0m[91m404[0m . /order
+[94mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404738991813")]
+[95mGET[0m /customer/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404738991814")]
+[94mStatus: [0m200 . /customer/count/area/user/3
+[95mStatus: [0m200 . /customer/area/user/3
+[96mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404738991816")]
+[92mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404738991815")]
+[96mStatus: [0m200 . /customer
+[92mStatus: [0m200 . /customer/count/area/user/3
+[93mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404738991817")]
+[93mStatus: [0m200 . /customer/count/area/user/3
+[94mGET[0m /area/fieldstaff/3 :: application/json; charset=utf-8
+GET [("_","1404738991818")]
+[95mGET[0m /price-category :: application/json; charset=utf-8
+GET [("_","1404738991819")]
+[95mStatus: [0m[91m404[0m . /price-category
+[94mStatus: [0m200 . /area/fieldstaff/3
+[96mGET[0m /customer/inactive :: application/json; charset=utf-8
+GET [("_","1404738991821")]
+[92mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404738991820")]
+[96mStatus: [0m200 . /customer/inactive
+[92mStatus: [0m200 . /customer/count/area/user/3
+[93mGET[0m /area/fieldstaff/3 :: application/json; charset=utf-8
+GET [("_","1404738991823")]
+[94mGET[0m /price-category :: application/json; charset=utf-8
+GET [("_","1404738991824")]
+[94mStatus: [0m[91m404[0m . /price-category
+[95mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404738991822")]
+[93mStatus: [0m200 . /area/fieldstaff/3
+[95mStatus: [0m200 . /customer/count/area/user/3
+[96mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404738991825")]
+[96mStatus: [0m200 . /customer/count/area/user/3
+[92mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404738991826")]
+[92mStatus: [0m200 . /customer
+[93mGET[0m /customer/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404738991828")]
+[94mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404738991827")]
+[93mStatus: [0m200 . /customer/area/user/3
+[94mStatus: [0m200 . /customer/count/area/user/3
+[95mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404738991830")]
+[96mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404738991829")]
+[95mStatus: [0m200 . /customer
+[96mStatus: [0m200 . /customer/count/area/user/3
+[92mGET[0m /customer/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404738991832")]
+[93mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404738991831")]
+[92mStatus: [0m200 . /customer/area/user/3
+[93mStatus: [0m200 . /customer/count/area/user/3
+[94mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404738991833")]
+[95mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404738991834")]
+[94mStatus: [0m200 . /customer/count/area/user/3
+[95mStatus: [0m200 . /customer
+[92mGET[0m /user/fstaff/fstaff :: application/json; charset=utf-8
+GET [("_","1404738991837")]
+[92mStatus: [0m200 . /user/fstaff/fstaff
+[93mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404738991838")]
+[93mStatus: [0m200 . /customer/count/area/user/3
+[94mGET[0m /customer/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404738991839")]
+[94mStatus: [0m200 . /customer/area/user/3
+[95mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404748159757")]
+[95mStatus: [0m200 . /customer
+[96mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404748159758")]
+[96mStatus: [0m200 . /customer
+[92mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404748159759")]
+[92mStatus: [0m200 . /customer
+[93mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404748159760")]
+[93mStatus: [0m200 . /customer
+[92mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404748863195")]
+[92mStatus: [0m200 . /customer
+[93mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404748863196")]
+[93mStatus: [0m200 . /customer
+[94mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404748863197")]
+[94mStatus: [0m200 . /customer
+[95mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404748863198")]
+[95mStatus: [0m200 . /customer
+[96mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404748863199")]
+[96mStatus: [0m200 . /customer
+[92mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404748863200")]
+[92mStatus: [0m200 . /customer
+[93mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404748863201")]
+[93mStatus: [0m200 . /customer
+[94mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404748863202")]
+[94mStatus: [0m200 . /customer
+[95mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404748863203")]
+[95mStatus: [0m200 . /customer
+[96mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404748863204")]
+[96mStatus: [0m200 . /customer
+[92mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404748863205")]
+[92mStatus: [0m200 . /customer
+[93mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404748863206")]
+[93mStatus: [0m200 . /customer
+[94mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404748863207")]
+[94mStatus: [0m200 . /customer
+[95mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404748863208")]
+[95mStatus: [0m200 . /customer
+[96mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404748863209")]
+[96mStatus: [0m200 . /customer
+[92mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404748863210")]
+[92mStatus: [0m200 . /customer
+[93mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404749191744")]
+[93mStatus: [0m200 . /customer
+[94mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404749191745")]
+[94mStatus: [0m200 . /customer
+[95mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404749395885")]
+[95mStatus: [0m200 . /customer
+[96mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404749403327")]
+[96mStatus: [0m200 . /customer
+[92mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404749439619")]
+[92mStatus: [0m200 . /customer
+[93mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404749704207")]
+[93mStatus: [0m200 . /customer
+[94mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404749717927")]
+[94mStatus: [0m200 . /customer
+[95mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404749731348")]
+[95mStatus: [0m200 . /customer
+[96mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404749866637")]
+[96mStatus: [0m200 . /customer
+[92mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404749866638")]
+[92mStatus: [0m200 . /customer
+[93mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404749984006")]
+[93mStatus: [0m200 . /customer
+[94mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404749984007")]
+[94mStatus: [0m200 . /customer
+[95mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404749984008")]
+[95mStatus: [0m200 . /customer
+[96mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404749984009")]
+[96mStatus: [0m200 . /customer
+[92mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404749984010")]
+[92mStatus: [0m200 . /customer
+[93mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404749984011")]
+[93mStatus: [0m200 . /customer
+[94mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404749984012")]
+[94mStatus: [0m200 . /customer
+[95mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404749984013")]
+[95mStatus: [0m200 . /customer
+[96mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404749984014")]
+[96mStatus: [0m200 . /customer
+[92mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404750726600")]
+[92mStatus: [0m200 . /customer
+[93mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404750726601")]
+[93mStatus: [0m200 . /customer
+[94mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404750726602")]
+[94mStatus: [0m200 . /customer
+[95mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404750726603")]
+[95mStatus: [0m200 . /customer
+[96mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404750726604")]
+[96mStatus: [0m200 . /customer
+[92mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404750726605")]
+[92mStatus: [0m200 . /customer
+[93mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404750726606")]
+[93mStatus: [0m200 . /customer
+[94mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404750726607")]
+[94mStatus: [0m200 . /customer
+[95mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404750726608")]
+[95mStatus: [0m200 . /customer
+[96mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404750726609")]
+[96mStatus: [0m200 . /customer
+[92mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404750726610")]
+[92mStatus: [0m200 . /customer
+[93mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404750726611")]
+[93mStatus: [0m200 . /customer
+[92mGET[0m /user/fstaff/fstaff :: application/json; charset=utf-8
+GET [("_","1404750733087")]
+[92mStatus: [0m200 . /user/fstaff/fstaff
+[93mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404750733088")]
+[94mGET[0m /customer/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404750733089")]
+[93mStatus: [0m200 . /customer/count/area/user/3
+[94mStatus: [0m200 . /customer/area/user/3
+[95mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404750733090")]
+[95mStatus: [0m200 . /customer/count/area/user/3
+[96mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404750733091")]
+[96mStatus: [0m200 . /customer
+[92mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404750733092")]
+[92mStatus: [0m200 . /customer/count/area/user/3
+[93mGET[0m /area/fieldstaff/3 :: application/json; charset=utf-8
+GET [("_","1404750733093")]
+[94mGET[0m /price-category :: application/json; charset=utf-8
+GET [("_","1404750733094")]
+[94mStatus: [0m[91m404[0m . /price-category
+[93mStatus: [0m200 . /area/fieldstaff/3
+[95mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404750733095")]
+[95mStatus: [0m200 . /customer/count/area/user/3
+[96mGET[0m /customer/inactive :: application/json; charset=utf-8
+GET [("_","1404750733096")]
+[96mStatus: [0m200 . /customer/inactive
+[92mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404750733097")]
+[93mGET[0m /customer/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404750733098")]
+[92mStatus: [0m200 . /customer/count/area/user/3
+[93mStatus: [0m200 . /customer/area/user/3
+[94mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404750733100")]
+[95mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404750733099")]
+[94mStatus: [0m200 . /customer
+[95mStatus: [0m200 . /customer/count/area/user/3
+[96mGET[0m /area/fieldstaff/3 :: application/json; charset=utf-8
+GET [("_","1404750733102")]
+[96mStatus: [0m200 . /area/fieldstaff/3
+[92mGET[0m /price-category :: application/json; charset=utf-8
+GET [("_","1404750733103")]
+[92mStatus: [0m[91m404[0m . /price-category
+[93mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404750733101")]
+[93mStatus: [0m200 . /customer/count/area/user/3
+[94mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404750733105")]
+[95mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404750733104")]
+[94mStatus: [0m200 . /customer
+[95mStatus: [0m200 . /customer/count/area/user/3
+[96mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404750733106")]
+[92mGET[0m /customer/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404750733107")]
+[96mStatus: [0m200 . /customer/count/area/user/3
+[92mStatus: [0m200 . /customer/area/user/3
+[92mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404752247919")]
+[92mStatus: [0m200 . /customer
+[93mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404752247920")]
+[93mStatus: [0m200 . /customer
+[94mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404752247921")]
+[94mStatus: [0m200 . /customer
+[95mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404752247922")]
+[95mStatus: [0m200 . /customer
+[96mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404752247923")]
+[96mStatus: [0m200 . /customer
+[92mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404752270834")]
+[92mStatus: [0m200 . /customer
+[93mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404752270835")]
+[93mStatus: [0m200 . /customer
+[94mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404752294329")]
+[94mStatus: [0m200 . /customer
+[95mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404752294330")]
+[95mStatus: [0m200 . /customer
+[96mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404752294331")]
+[96mStatus: [0m200 . /customer
+[92mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404752316234")]
+[92mStatus: [0m200 . /customer
+[93mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404752316235")]
+[93mStatus: [0m200 . /customer
+[94mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404752316236")]
+[94mStatus: [0m200 . /customer
+[95mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404752326471")]
+[95mStatus: [0m200 . /customer
+[96mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404752326472")]
+[96mStatus: [0m200 . /customer
+[92mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404752335711")]
+[92mStatus: [0m200 . /customer
+[93mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404752346330")]
+[93mStatus: [0m200 . /customer
+[94mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404752356395")]
+[94mStatus: [0m200 . /customer
+[95mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404752378978")]
+[95mStatus: [0m200 . /customer
+[96mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404752386975")]
+[96mStatus: [0m200 . /customer
+[92mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404752399036")]
+[92mStatus: [0m200 . /customer
+[93mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404752408631")]
+[93mStatus: [0m200 . /customer
+[94mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404752418708")]
+[94mStatus: [0m200 . /customer
+[95mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404752452985")]
+[95mStatus: [0m200 . /customer
+[96mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404752457819")]
+[96mStatus: [0m200 . /customer
+[92mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404752457820")]
+[92mStatus: [0m200 . /customer
+[93mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404752457821")]
+[93mStatus: [0m200 . /customer
+[92mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404753676424")]
+[93mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404753676425")]
+[93mStatus: [0m200 . /customer
+[92mStatus: [0m200 . /customer
+[94mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404753676426")]
+[94mStatus: [0m200 . /customer
+[95mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404753676427")]
+[95mStatus: [0m200 . /customer
+[96mGET[0m /banan :: application/json; charset=utf-8
+GET [("_","1404753725607")]
+[96mStatus: [0m[91m404[0m . /banan
+[92mGET[0m /banan :: application/json; charset=utf-8
+GET [("_","1404753725608")]
+[92mStatus: [0m[91m404[0m . /banan
+[93mGET[0m /banan :: application/json; charset=utf-8
+GET [("_","1404753725609")]
+[93mStatus: [0m[91m404[0m . /banan
+[94mGET[0m /banan :: application/json; charset=utf-8
+GET [("_","1404753725610")]
+[94mStatus: [0m[91m404[0m . /banan
+[95mGET[0m /banan :: application/json; charset=utf-8
+GET [("_","1404753725611")]
+[95mStatus: [0m[91m404[0m . /banan
+[96mGET[0m /banan :: application/json; charset=utf-8
+GET [("_","1404753725612")]
+[96mStatus: [0m[91m404[0m . /banan
+[92mGET[0m /banan :: application/json; charset=utf-8
+GET [("_","1404753725613")]
+[92mStatus: [0m[91m404[0m . /banan
+[93mGET[0m /banan :: application/json; charset=utf-8
+GET [("_","1404753725614")]
+[93mStatus: [0m[91m404[0m . /banan
+[94mGET[0m /banan :: application/json; charset=utf-8
+GET [("_","1404753725615")]
+[94mStatus: [0m[91m404[0m . /banan
+[95mGET[0m /banan :: application/json; charset=utf-8
+GET [("_","1404753725616")]
+[95mStatus: [0m[91m404[0m . /banan
+[96mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404753786752")]
+[96mStatus: [0m200 . /customer
+[92mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404753786753")]
+[92mStatus: [0m200 . /customer
+[93mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404754054372")]
+[93mStatus: [0m200 . /customer
+[94mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404754054373")]
+[94mStatus: [0m200 . /customer
+[95mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404754760869")]
+[95mStatus: [0m200 . /customer
+[96mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404755168000")]
+[96mStatus: [0m200 . /customer
+[92mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404755233760")]
+[92mStatus: [0m200 . /customer
+[93mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404755233761")]
+[93mStatus: [0m200 . /customer
+[94mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404755233762")]
+[94mStatus: [0m200 . /customer
+[95mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404755262761")]
+[95mStatus: [0m200 . /customer
+[96mGET[0m /customer/fieldstaff/a/b :: application/json; charset=utf-8
+GET [("_","1404756953232")]
+[96mStatus: [0m[91m404[0m . /customer/fieldstaff/a/b
+[92mGET[0m /customer/fieldstaff/a/b :: application/json; charset=utf-8
+GET [("_","1404756953233")]
+[92mStatus: [0m[91m404[0m . /customer/fieldstaff/a/b
+[93mGET[0m /customer/fieldstaff/a/b :: application/json; charset=utf-8
+GET [("_","1404756953234")]
+[93mStatus: [0m[91m404[0m . /customer/fieldstaff/a/b
+[94mGET[0m /customer/fieldstaff/a/b :: application/json; charset=utf-8
+GET [("_","1404757017766")]
+[94mStatus: [0m[91m404[0m . /customer/fieldstaff/a/b
+[95mGET[0m /customer/fieldstaff/a/b :: application/json; charset=utf-8
+GET [("_","1404757052337")]
+[95mStatus: [0m[91m404[0m . /customer/fieldstaff/a/b
+[96mGET[0m /customer/fieldstaff/a/b :: application/json; charset=utf-8
+GET [("_","1404757063935")]
+[96mStatus: [0m[91m404[0m . /customer/fieldstaff/a/b
+[92mGET[0m /customer/fieldstaff/a/b :: application/json; charset=utf-8
+GET [("_","1404757154880")]
+[92mStatus: [0m[91m404[0m . /customer/fieldstaff/a/b
+[93mGET[0m /customer/fieldstaff/a/b :: application/json; charset=utf-8
+GET [("_","1404757154881")]
+[93mStatus: [0m[91m404[0m . /customer/fieldstaff/a/b
+[94mGET[0m /customer/fieldstaff/a/b :: application/json; charset=utf-8
+GET [("_","1404757546935")]
+[94mStatus: [0m[91m404[0m . /customer/fieldstaff/a/b
+[92mGET[0m /customer/fieldstaff/a/b :: application/json; charset=utf-8
+GET [("_","1404757744670")]
+[92mStatus: [0m[91m404[0m . /customer/fieldstaff/a/b
+[93mGET[0m /customer/fieldstaff/a/b :: application/json; charset=utf-8
+GET [("_","1404757769444")]
+[93mStatus: [0m[91m404[0m . /customer/fieldstaff/a/b
+[94mGET[0m /customer/fieldstaff/a/b :: application/json; charset=utf-8
+GET [("_","1404757769445")]
+[94mStatus: [0m[91m404[0m . /customer/fieldstaff/a/b
+[95mGET[0m /customer/fieldstaff/a/b :: application/json; charset=utf-8
+GET [("_","1404757769446")]
+[95mStatus: [0m[91m404[0m . /customer/fieldstaff/a/b
+[96mGET[0m /customer/fieldstaff/a/b :: application/json; charset=utf-8
+GET [("_","1404757769447")]
+[96mStatus: [0m[91m404[0m . /customer/fieldstaff/a/b
+[92mGET[0m /customer/fieldstaff/a/b :: application/json; charset=utf-8
+GET [("_","1404757802468")]
+[92mStatus: [0m[91m404[0m . /customer/fieldstaff/a/b
+[93mGET[0m /customer/fieldstaff/a/b :: application/json; charset=utf-8
+GET [("_","1404757965591")]
+[93mStatus: [0m[91m404[0m . /customer/fieldstaff/a/b
+[94mGET[0m /customer/fieldstaff/a/b :: application/json; charset=utf-8
+GET [("_","1404757965592")]
+[94mStatus: [0m[91m404[0m . /customer/fieldstaff/a/b
+[95mGET[0m /customer/fieldstaff/a/b :: application/json; charset=utf-8
+GET [("_","1404757965593")]
+[95mStatus: [0m[91m404[0m . /customer/fieldstaff/a/b
+[96mGET[0m /customer/fieldstaff/a/b :: application/json; charset=utf-8
+GET [("_","1404757965594")]
+[96mStatus: [0m[91m404[0m . /customer/fieldstaff/a/b
+[92mGET[0m /customer/fieldstaff/a/b :: application/json; charset=utf-8
+GET [("_","1404757965595")]
+[92mStatus: [0m[91m404[0m . /customer/fieldstaff/a/b
+[93mGET[0m /customer/fieldstaff/a/b :: application/json; charset=utf-8
+GET [("_","1404757965596")]
+[93mStatus: [0m[91m404[0m . /customer/fieldstaff/a/b
+[94mGET[0m /customer/fieldstaff/a/b :: application/json; charset=utf-8
+GET [("_","1404758106154")]
+[94mStatus: [0m[91m404[0m . /customer/fieldstaff/a/b
+[95mGET[0m /customer/fieldstaff/a/b :: application/json; charset=utf-8
+GET [("_","1404758106155")]
+[95mStatus: [0m[91m404[0m . /customer/fieldstaff/a/b
+[96mGET[0m /customer/fieldstaff/a/b :: application/json; charset=utf-8
+GET [("_","1404758106156")]
+[96mStatus: [0m[91m404[0m . /customer/fieldstaff/a/b
+[92mGET[0m /customer/fieldstaff/a/b :: application/json; charset=utf-8
+GET [("_","1404758106157")]
+[92mStatus: [0m[91m404[0m . /customer/fieldstaff/a/b
+[93mGET[0m /customer/fieldstaff/a/b :: application/json; charset=utf-8
+GET [("_","1404758106158")]
+[93mStatus: [0m[91m404[0m . /customer/fieldstaff/a/b
+[94mGET[0m /customer/fieldstaff/a/b :: application/json; charset=utf-8
+GET [("_","1404758137912")]
+[94mStatus: [0m[91m404[0m . /customer/fieldstaff/a/b
+[95mGET[0m /customer/fieldstaff/a/b :: application/json; charset=utf-8
+GET [("_","1404758137913")]
+[95mStatus: [0m[91m404[0m . /customer/fieldstaff/a/b
+[96mGET[0m /customer/fieldstaff/a/b :: application/json; charset=utf-8
+GET [("_","1404758278948")]
+[96mStatus: [0m[91m404[0m . /customer/fieldstaff/a/b
+[92mGET[0m /customer/fieldstaff/a/b :: application/json; charset=utf-8
+GET [("_","1404758278949")]
+[92mStatus: [0m[91m404[0m . /customer/fieldstaff/a/b
+[93mGET[0m /customer/fieldstaff/a/b :: application/json; charset=utf-8
+GET [("_","1404758293962")]
+[93mStatus: [0m[91m404[0m . /customer/fieldstaff/a/b
+[94mGET[0m /customer/fieldstaff/a/b :: application/json; charset=utf-8
+GET [("_","1404758293963")]
+[94mStatus: [0m[91m404[0m . /customer/fieldstaff/a/b
+[95mGET[0m /customer/fieldstaff/a/b :: application/json; charset=utf-8
+GET [("_","1404758293964")]
+[95mStatus: [0m[91m404[0m . /customer/fieldstaff/a/b
+[96mGET[0m /customer/fieldstaff/a/b :: application/json; charset=utf-8
+GET [("_","1404758293965")]
+[96mStatus: [0m[91m404[0m . /customer/fieldstaff/a/b
+[92mGET[0m /customer/fieldstaff/a/b :: application/json; charset=utf-8
+GET [("_","1404758293966")]
+[92mStatus: [0m[91m404[0m . /customer/fieldstaff/a/b
+[93mGET[0m /customer/fieldstaff/a/b :: application/json; charset=utf-8
+GET [("_","1404758293967")]
+[93mStatus: [0m[91m404[0m . /customer/fieldstaff/a/b
+[94mGET[0m /customer/fieldstaff/a/b :: application/json; charset=utf-8
+GET [("_","1404758293968")]
+[94mStatus: [0m[91m404[0m . /customer/fieldstaff/a/b
+[95mGET[0m /customer/fieldstaff/a/b :: application/json; charset=utf-8
+GET [("_","1404758569799")]
+[95mStatus: [0m[91m404[0m . /customer/fieldstaff/a/b
+[96mGET[0m /customer/fieldstaff/a/b :: application/json; charset=utf-8
+GET [("_","1404758569800")]
+[96mStatus: [0m[91m404[0m . /customer/fieldstaff/a/b
+[92mGET[0m /customer/fieldstaff/a/b :: application/json; charset=utf-8
+GET [("_","1404758569801")]
+[92mStatus: [0m[91m404[0m . /customer/fieldstaff/a/b
+[93mGET[0m /customer/fieldstaff/a/b :: application/json; charset=utf-8
+GET [("_","1404758569802")]
+[93mStatus: [0m[91m404[0m . /customer/fieldstaff/a/b
+[94mGET[0m /customer/fieldstaff/a/b :: application/json; charset=utf-8
+GET [("_","1404758569803")]
+[94mStatus: [0m[91m404[0m . /customer/fieldstaff/a/b
+[95mGET[0m /customer/fieldstaff/a/b :: application/json; charset=utf-8
+GET [("_","1404758569804")]
+[95mStatus: [0m[91m404[0m . /customer/fieldstaff/a/b
+[96mGET[0m /customer/fieldstaff/a/b :: application/json; charset=utf-8
+GET [("_","1404758569805")]
+[96mStatus: [0m[91m404[0m . /customer/fieldstaff/a/b
+[92mGET[0m /customer/fieldstaff/a/b :: application/json; charset=utf-8
+GET [("_","1404758569806")]
+[92mStatus: [0m[91m404[0m . /customer/fieldstaff/a/b
+[93mGET[0m /customer/user/a/b :: application/json; charset=utf-8
+GET [("_","1404758987769")]
+[93mStatus: [0m[91m404[0m . /customer/user/a/b
+[94mGET[0m /customer/user/a/b :: application/json; charset=utf-8
+GET [("_","1404758987770")]
+[94mStatus: [0m[91m404[0m . /customer/user/a/b
+[95mGET[0m /customer/user/fstaff/fstaff :: application/json; charset=utf-8
+GET [("_","1404759044364")]
+[95mStatus: [0m[91m404[0m . /customer/user/fstaff/fstaff
+[96mGET[0m /customer/user/fstaff/fstaff :: application/json; charset=utf-8
+GET [("_","1404759044365")]
+[96mStatus: [0m[91m404[0m . /customer/user/fstaff/fstaff
+[92mGET[0m /customer/user/fstaff/fstaff :: application/json; charset=utf-8
+GET [("_","1404759044366")]
+[92mStatus: [0m[91m404[0m . /customer/user/fstaff/fstaff
+[93mGET[0m /customer/user/fstaff/fstaff :: application/json; charset=utf-8
+GET [("_","1404759104148")]
+[93mStatus: [0m[91m404[0m . /customer/user/fstaff/fstaff
+[94mGET[0m /customer/user/fstaff/fstaff :: application/json; charset=utf-8
+GET [("_","1404759151005")]
+[94mStatus: [0m[91m404[0m . /customer/user/fstaff/fstaff
+[95mGET[0m /customer/user/fstaff/fstaff :: application/json; charset=utf-8
+GET [("_","1404759151006")]
+[95mStatus: [0m[91m404[0m . /customer/user/fstaff/fstaff
+[96mGET[0m /customer/user/fstaff/fstaff :: application/json; charset=utf-8
+GET [("_","1404759151007")]
+[96mStatus: [0m[91m404[0m . /customer/user/fstaff/fstaff
+[92mGET[0m /customer/user/fstaff/fstaff :: application/json; charset=utf-8
+GET [("_","1404759151008")]
+[92mStatus: [0m[91m404[0m . /customer/user/fstaff/fstaff
+[93mGET[0m /customer/user/fstaff/fstaff :: application/json; charset=utf-8
+GET [("_","1404759151009")]
+[93mStatus: [0m[91m404[0m . /customer/user/fstaff/fstaff
+[94mGET[0m /customer/user/fstaff/fstaff :: application/json; charset=utf-8
+GET [("_","1404759151010")]
+[94mStatus: [0m[91m404[0m . /customer/user/fstaff/fstaff
+[95mGET[0m /customer/user/fstaff/fstaff :: application/json; charset=utf-8
+GET [("_","1404759183667")]
+[95mStatus: [0m[91m404[0m . /customer/user/fstaff/fstaff
+[92mGET[0m /customer/user/fstaff/fstaff :: application/json; charset=utf-8
+GET [("_","1404759190353")]
+[92mStatus: [0m[91m404[0m . /customer/user/fstaff/fstaff
+[93mGET[0m /customer/user/fstaff/fstaff :: application/json; charset=utf-8
+GET [("_","1404759190354")]
+[93mStatus: [0m[91m404[0m . /customer/user/fstaff/fstaff
+[92mGET[0m /user/fstaff/fstaff :: application/json; charset=utf-8
+GET [("_","1404766867794")]
+[92mStatus: [0m200 . /user/fstaff/fstaff
+[93mGET[0m /user/fstaff/fstaff :: application/json; charset=utf-8
+GET [("_","1404767446574")]
+[93mStatus: [0m200 . /user/fstaff/fstaff
+[94mGET[0m /customer/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404767544371")]
+[94mStatus: [0m200 . /customer/area/user/3
+[95mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404767544372")]
+[95mStatus: [0m200 . /customer
+[96mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404803009183")]
+[96mStatus: [0m200 . /customer
+[92mGET[0m /user/fstaff/4d6b016465c8d648ca14332f0f7e7fd2b639f3ca :: application/json; charset=utf-8
+GET [("_","1404803092508")]
+[92mStatus: [0m[91m404[0m . /user/fstaff/4d6b016465c8d648ca14332f0f7e7fd2b639f3ca
+[93mGET[0m /user/fstaff/4d6b016465c8d648ca14332f0f7e7fd2b639f3ca :: application/json; charset=utf-8
+GET [("_","1404803092509")]
+[93mStatus: [0m[91m404[0m . /user/fstaff/4d6b016465c8d648ca14332f0f7e7fd2b639f3ca
+[94mGET[0m /user/fstaff/4d6b016465c8d648ca14332f0f7e7fd2b639f3ca :: application/json; charset=utf-8
+GET [("_","1404803149332")]
+[94mStatus: [0m200 . /user/fstaff/4d6b016465c8d648ca14332f0f7e7fd2b639f3ca
+[95mGET[0m /customer/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404803149333")]
+[95mStatus: [0m200 . /customer/area/user/3
+[92mGET[0m /user/fstaff/fstaff :: application/json; charset=utf-8
+GET [("_","1404810117205")]
+[92mStatus: [0m[91m404[0m . /user/fstaff/fstaff
+[93mGET[0m /user/fstaff/fstaff :: application/json; charset=utf-8
+GET [("_","1404810117206")]
+[93mStatus: [0m[91m404[0m . /user/fstaff/fstaff
+[92mGET[0m /user/fstaff/fstaff :: application/json; charset=utf-8
+GET [("_","1404810198439")]
+[92mStatus: [0m200 . /user/fstaff/fstaff
+[93mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404810198440")]
+[94mGET[0m /customer/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404810198441")]
+[94mStatus: [0m200 . /customer/area/user/3
+[93mStatus: [0m200 . /customer/count/area/user/3
+[95mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404810198442")]
+[96mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404810198443")]
+[95mStatus: [0m200 . /customer/count/area/user/3
+[96mStatus: [0m200 . /customer
+[92mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404810198444")]
+[92mStatus: [0m200 . /customer/count/area/user/3
+[93mGET[0m /area/fieldstaff/3 :: application/json; charset=utf-8
+GET [("_","1404810198445")]
+[94mGET[0m /price-category :: application/json; charset=utf-8
+GET [("_","1404810198446")]
+[94mStatus: [0m[91m404[0m . /price-category
+[93mStatus: [0m200 . /area/fieldstaff/3
+[95mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404810198447")]
+[96mGET[0m /customer/inactive :: application/json; charset=utf-8
+GET [("_","1404810198448")]
+[95mStatus: [0m200 . /customer/count/area/user/3
+[96mStatus: [0m200 . /customer/inactive
+[92mGET[0m /customer/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404810198450")]
+[93mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404810198449")]
+[92mStatus: [0m200 . /customer/area/user/3
+[93mStatus: [0m200 . /customer/count/area/user/3
+[94mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404810198452")]
+[95mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404810198451")]
+[94mStatus: [0m200 . /customer
+[95mStatus: [0m200 . /customer/count/area/user/3
+[96mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404810198453")]
+[96mStatus: [0m200 . /customer/count/area/user/3
+[92mGET[0m /area/fieldstaff/3 :: application/json; charset=utf-8
+GET [("_","1404810198454")]
+[92mStatus: [0m200 . /area/fieldstaff/3
+[93mGET[0m /price-category :: application/json; charset=utf-8
+GET [("_","1404810198455")]
+[93mStatus: [0m[91m404[0m . /price-category
+[94mGET[0m /customer/inactive :: application/json; charset=utf-8
+GET [("_","1404810198457")]
+[95mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404810198456")]
+[94mStatus: [0m200 . /customer/inactive
+[95mStatus: [0m200 . /customer/count/area/user/3
+[96mGET[0m /area/fieldstaff/3 :: application/json; charset=utf-8
+GET [("_","1404810198459")]
+[92mGET[0m /price-category :: application/json; charset=utf-8
+GET [("_","1404810198460")]
+[92mStatus: [0m[91m404[0m . /price-category
+[93mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404810198458")]
+[96mStatus: [0m200 . /area/fieldstaff/3
+[93mStatus: [0m200 . /customer/count/area/user/3
+[94mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404810198461")]
+[95mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404810198462")]
+[94mStatus: [0m200 . /customer/count/area/user/3
+[95mStatus: [0m200 . /customer
+[96mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404810198463")]
+[96mStatus: [0m200 . /customer/count/area/user/3
+[92mGET[0m /customer/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404810198464")]
+[92mStatus: [0m200 . /customer/area/user/3
+[93mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404810198466")]
+[94mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404810198465")]
+[93mStatus: [0m200 . /customer
+[94mStatus: [0m200 . /customer/count/area/user/3
+[95mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404810198467")]
+[96mGET[0m /customer/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404810198468")]
+[95mStatus: [0m200 . /customer/count/area/user/3
+[96mStatus: [0m200 . /customer/area/user/3
+[93mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404810198470")]
+[92mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404810198469")]
+[93mStatus: [0m200 . /customer
+[92mStatus: [0m200 . /customer/count/area/user/3
+[94mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404810198471")]
+[95mGET[0m /customer/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404810198472")]
+[95mStatus: [0m200 . /customer/area/user/3
+[94mStatus: [0m200 . /customer/count/area/user/3
+[96mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404810198473")]
+[96mStatus: [0m200 . /customer/count/area/user/3
+[92mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404810198474")]
+[92mStatus: [0m200 . /customer
+[93mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404810198475")]
+[93mStatus: [0m200 . /customer/count/area/user/3
+[94mGET[0m /area/fieldstaff/3 :: application/json; charset=utf-8
+GET [("_","1404810198476")]
+[95mGET[0m /price-category :: application/json; charset=utf-8
+GET [("_","1404810198477")]
+[95mStatus: [0m[91m404[0m . /price-category
+[94mStatus: [0m200 . /area/fieldstaff/3
+[96mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404810198478")]
+[92mGET[0m /customer/inactive :: application/json; charset=utf-8
+GET [("_","1404810198479")]
+[96mStatus: [0m200 . /customer/count/area/user/3
+[92mStatus: [0m200 . /customer/inactive
+[93mGET[0m /area/fieldstaff/3 :: application/json; charset=utf-8
+GET [("_","1404810198481")]
+[94mGET[0m /price-category :: application/json; charset=utf-8
+GET [("_","1404810198482")]
+[94mStatus: [0m[91m404[0m . /price-category
+[95mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404810198480")]
+[93mStatus: [0m200 . /area/fieldstaff/3
+[95mStatus: [0m200 . /customer/count/area/user/3
+[96mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404810198484")]
+[92mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404810198483")]
+[96mStatus: [0m200 . /customer
+[92mStatus: [0m200 . /customer/count/area/user/3
+[93mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404810198485")]
+[94mGET[0m /customer/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404810198486")]
+[93mStatus: [0m200 . /customer/count/area/user/3
+[94mStatus: [0m200 . /customer/area/user/3
+[95mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404810198488")]
+[96mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404810198487")]
+[95mStatus: [0m200 . /customer
+[96mStatus: [0m200 . /customer/count/area/user/3
+[92mGET[0m /area/fieldstaff/3 :: application/json; charset=utf-8
+GET [("_","1404810198490")]
+[93mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404810198489")]
+[92mStatus: [0m200 . /area/fieldstaff/3
+[94mGET[0m /price-category :: application/json; charset=utf-8
+GET [("_","1404810198491")]
+[94mStatus: [0m[91m404[0m . /price-category
+[93mStatus: [0m200 . /customer/count/area/user/3
+[95mGET[0m /customer/inactive :: application/json; charset=utf-8
+GET [("_","1404810198493")]
+[96mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404810198492")]
+[95mStatus: [0m200 . /customer/inactive
+[96mStatus: [0m200 . /customer/count/area/user/3
+[92mGET[0m /customer/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404810198495")]
+[93mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404810198494")]
+[92mStatus: [0m200 . /customer/area/user/3
+[93mStatus: [0m200 . /customer/count/area/user/3
+[94mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404810198497")]
+[95mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404810198496")]
+[94mStatus: [0m200 . /customer
+[95mStatus: [0m200 . /customer/count/area/user/3
+[96mGET[0m /customer/1 :: application/json; charset=utf-8
+GET [("_","1404810198499")]
+[92mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404810198498")]
+[92mStatus: [0m200 . /customer/count/area/user/3
+[96mStatus: [0m200 . /customer/1
+[93mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404810198501")]
+[94mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404810198500")]
+[93mStatus: [0m200 . /customer
+[94mStatus: [0m200 . /customer/count/area/user/3
+[95mGET[0m /area/fieldstaff/3 :: application/json; charset=utf-8
+GET [("_","1404810198503")]
+[96mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404810198502")]
+[95mStatus: [0m200 . /area/fieldstaff/3
+[96mStatus: [0m200 . /customer/count/area/user/3
+[92mGET[0m /price-category :: application/json; charset=utf-8
+GET [("_","1404810198504")]
+[92mStatus: [0m[91m404[0m . /price-category
+[93mGET[0m /customer/inactive :: application/json; charset=utf-8
+GET [("_","1404810198506")]
+[94mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404810198505")]
+[93mStatus: [0m200 . /customer/inactive
+[94mStatus: [0m200 . /customer/count/area/user/3
+[95mGET[0m /area/fieldstaff/3 :: application/json; charset=utf-8
+GET [("_","1404810198508")]
+[96mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404810198507")]
+[92mGET[0m /price-category :: application/json; charset=utf-8
+GET [("_","1404810198509")]
+[92mStatus: [0m[91m404[0m . /price-category
+[95mStatus: [0m200 . /area/fieldstaff/3
+[96mStatus: [0m200 . /customer/count/area/user/3
+[93mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404810198510")]
+[94mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404810198511")]
+[93mStatus: [0m200 . /customer/count/area/user/3
+[94mStatus: [0m200 . /customer
+[95mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404810198512")]
+[96mGET[0m /price-category :: application/json; charset=utf-8
+GET [("_","1404810198514")]
+[96mStatus: [0m[91m404[0m . /price-category
+[92mGET[0m /area/fieldstaff/3 :: application/json; charset=utf-8
+GET [("_","1404810198513")]
+[95mStatus: [0m200 . /customer/count/area/user/3
+[92mStatus: [0m200 . /area/fieldstaff/3
+[93mGET[0m /customer/inactive :: application/json; charset=utf-8
+GET [("_","1404810198516")]
+[94mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404810198515")]
+[93mStatus: [0m200 . /customer/inactive
+[94mStatus: [0m200 . /customer/count/area/user/3
+[95mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404810198517")]
+[95mStatus: [0m200 . /customer/count/area/user/3
+[96mGET[0m /customer/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404810198518")]
+[96mStatus: [0m200 . /customer/area/user/3
+[92mGET[0m /stock/fieldstaff/3 :: application/json; charset=utf-8
+GET [("_","1404810198519")]
+[92mStatus: [0m[91m404[0m . /stock/fieldstaff/3
+[93mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404810198520")]
+[94mGET[0m /customer/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404810198521")]
+[93mStatus: [0m200 . /customer/count/area/user/3
+[94mStatus: [0m200 . /customer/area/user/3
+[96mGET[0m /area/fieldstaff/3 :: application/json; charset=utf-8
+GET [("_","1404810198523")]
+[92mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404810198522")]
+[95mGET[0m /price-category :: application/json; charset=utf-8
+GET [("_","1404810198524")]
+[95mStatus: [0m[91m404[0m . /price-category
+[96mStatus: [0m200 . /area/fieldstaff/3
+[92mStatus: [0m200 . /customer/count/area/user/3
+[93mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404810198526")]
+[94mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404810198525")]
+[94mStatus: [0m200 . /customer/count/area/user/3
+[93mStatus: [0m200 . /customer
+[95mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404810198527")]
+[95mStatus: [0m200 . /customer/count/area/user/3
+[96mGET[0m /area/fieldstaff/3 :: application/json; charset=utf-8
+GET [("_","1404810198528")]
+[92mGET[0m /price-category :: application/json; charset=utf-8
+GET [("_","1404810198529")]
+[92mStatus: [0m[91m404[0m . /price-category
+[96mStatus: [0m200 . /area/fieldstaff/3
+[93mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404810198530")]
+[94mGET[0m /customer :: application/json; charset=utf-8
+GET [("_","1404810198531")]
+[93mStatus: [0m200 . /customer/count/area/user/3
+[94mStatus: [0m200 . /customer
+[95mGET[0m /customer/count/area/user/3 :: application/json; charset=utf-8
+GET [("_","1404810198532")]
+[96mGET[0m /area/fieldstaff/3 :: application/json; charset=utf-8
+GET [("_","1404810198533")]
+[92mGET[0m /price-category :: application/json; charset=utf-8
+GET [("_","1404810198534")]
+[95mStatus: [0m200 . /customer/count/area/user/3
+[92mStatus: [0m[91m404[0m . /price-category
+[96mStatus: [0m200 . /area/fieldstaff/3

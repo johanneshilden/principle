@@ -1,0 +1,26 @@
+<label for="reg-no">Registration no.</label><br>
+<input type="text" name="reg-no" value="{{regNo}}"><br>
+<label for="make">Make</label><br>
+<input type="text" name="make" value="{{make}}"><br>
+<label for="model">Model</label><br>
+<input type="text" name="model" value="{{model}}"><br>
+
+<label for="weight-class">Weight class</label><br>
+<select name="weight-class">
+    {{#each weightClass}}
+    <option value="{{id}}">{{name}}</option>
+    {{/each}}
+</select>
+
+<br>
+<label for="depot">Depot</label><br>
+<select name="depot">
+    {{#each depot}}
+    <option value="{{id}}">{{name}}</option>
+    {{/each}}
+</select>
+
+<input type="checkbox" name="active">Is active?
+<br>
+
+<input type="submit">

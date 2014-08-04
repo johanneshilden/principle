@@ -1,0 +1,14 @@
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+       </tr>
+    </thead>
+    <tbody>
+        {{#each product}}
+        <tr>
+            <td>{{name}} <a href="javascript:" class="product-recover" data-id="{{id}}">Recover</a></td>
+        </tr>
+        {{/each}}
+     </tbody>
+</table>

@@ -1,0 +1,21 @@
+<h2>{{name}}</h2>
+<div>
+Position: {{latitude}} : {{longitude}}
+</div>
+<div>
+{{#if depotManager}}
+Manager: <a href="#user/{{depotManager.id}}">{{depotManager.name}}</a>
+{{else}}
+No manager assigned. <a href="#depot/edit/{{id}}">Edit</a>
+{{/if}}
+</div>
+<div>
+{{#if area}}
+<h3>Areas serviced by this depot</h3>
+{{#each area}}
+<div>
+{{name}}
+</div>
+{{/each}}
+{{/if}}
+

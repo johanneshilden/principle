@@ -1,0 +1,55 @@
+
+<div>
+Name
+<input type="text" name="name">
+</div>
+
+<div>
+Address
+<input type="text" name="address">
+</div>
+
+<div>
+Latitude
+<input type="text" name="latitude">
+</div>
+
+<div>
+Longitude
+<input type="text" name="longitude">
+</div>
+
+<div>
+TIN
+<input type="text" name="tin">
+</div>
+
+<div>
+Phone
+<input type="text" name="phone">
+</div>
+
+<div>
+Active
+<input type="checkbox" name="is-active">
+</div>
+
+<div>
+Area: 
+<select name="area">
+    {{#each area}}
+    <option value="{{id}}">{{name}}</option>
+    {{/each}}
+</select>
+</div>
+
+<div>
+Price category: 
+<select name="price-category">
+    {{#each priceCategory}}
+    <option value="{{id}}">{{name}}</option>
+    {{/each}}
+</select>
+</div>
+
+<input type="submit">

@@ -1,0 +1,29 @@
+<a href="#vehicle/create">Create new vehicle</a>
+{{#if vehicle}}
+<table>
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Registration</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each vehicle}}
+        <tr>
+            <td>{{id}}</td>
+            <td>{{regNo}}</td>
+            <td><a href="#vehicle/{{id}}">View</a></td>
+            <td><a href="#vehicle/edit/{{id}}">Edit</a></td>
+            <td><a href="#vehicle/delete/{{id}}">Delete</a></td>
+            <!--
+            <td><a href="#driver/assign/vehicle/{{id}}">Assign driver</a></td>
+            <td><a href="#fuel/manage/vehicle/{{id}}">Fuel management</a></td>
+            <td><a href="#maintenance/vehicle/{{id}}">Maintenance</a></td>
+            -->
+        </tr>
+        {{/each}}
+     </tbody>
+</table>
+{{else}}
+No vehicles.
+{{/if}}

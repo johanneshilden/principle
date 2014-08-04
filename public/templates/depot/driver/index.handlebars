@@ -1,0 +1,21 @@
+<table>
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Username</th>
+            <th>Vehicle</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each driver}}
+        <tr>
+            <td>{{id}}</td>
+            <td>{{name}}</td>
+            <td>{{username}}</td>
+            <td>{{#if vehicleId}}<a href="#!d/vehicle/{{vehicleId}}">{{vehicleRegNo}}</a>{{/if}}</td>
+        </tr>
+        {{/each}}
+     </tbody>
+</table>
+

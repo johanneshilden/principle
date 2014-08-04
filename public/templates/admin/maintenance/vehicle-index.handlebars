@@ -1,0 +1,17 @@
+<table>
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Registration</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each vehicle}}
+        <tr>
+            <td>{{id}}</td>
+            <td>{{regNo}}</td>
+            <td><a href="#maintenance/vehicle/{{id}}">Maintenance</a></td>
+       </tr>
+        {{/each}}
+     </tbody>
+</table>

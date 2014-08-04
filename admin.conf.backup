@@ -1,0 +1,628 @@
+# -----------------------------------------------------------------------------
+#      Authenticate a user.
+# -----------------------------------------------------------------------------
+GET    /user/:username/:password     ->                                      \
+       \                                                                     \
+       \ select id                                                           \
+       \      , username                                                     \
+       \      , role                                                         \
+       \      , password                                                     \
+       \ from sdrp_user                                                      \
+       \ where username = {{:username}}                                      \
+       \   and password = {{:password}}                                      
+
+# -----------------------------------------------------------------------------
+#      Retrieve all field staff users.
+# -----------------------------------------------------------------------------
+GET    /user/fieldstaff              >>  (id, username, name, areaId)        \
+       \                                                                     \
+       \ select sdrp_user.id                                                 \
+       \      , sdrp_user.username                                           \
+       \      , sdrp_user.name                                               \
+       \      , user_area.area_id                                            \
+       \ from sdrp_user                                                      \
+       \   left join user_area                                               \
+       \     on user_area.user_id = sdrp_user.id                             \
+       \ where role = 'fieldstaff'                                           \
+       \ order by                                                            \
+       \   sdrp_user.id
+
+# -----------------------------------------------------------------------------
+#      Retrieve all call center users.
+# -----------------------------------------------------------------------------
+GET    /user/callcenter              >>  (id, username, name, areaId)        \
+       \                                                                     \
+       \ select sdrp_user.id                                                 \
+       \      , sdrp_user.username                                           \
+       \      , sdrp_user.name                                               \
+       \      , user_area.area_id                                            \
+       \ from sdrp_user                                                      \
+       \   left join user_area                                               \
+       \     on user_area.user_id = sdrp_user.id                             \
+       \ where role = 'callcenter'                                           \
+       \ order by                                                            \
+       \   sdrp_user.id
+
+# -----------------------------------------------------------------------------
+#      Retrieve a list of all areas.
+# -----------------------------------------------------------------------------
+GET    /area                         >>                                      \
+       \                                                                     \
+       \ select id                                                           \
+       \      , region_id                                                    \
+       \      , name                                                         \
+       \      , depot_id                                                     \
+       \ from area                                                           \
+       \ order by id
+
+# -----------------------------------------------------------------------------
+#      Create a new area.
+# -----------------------------------------------------------------------------
+POST   /area                         <>                                      \
+       \                                                                     \
+       \ insert into area                                                    \
+       \   ( region_id, name, depot_id )                                     \
+       \ values                                                              \
+       \   ( {{regionId}}                                                    \
+       \   , {{name}}                                                        \
+       \   , {{depotId}}                                                     \
+       \   )                        
+
+# -----------------------------------------------------------------------------
+#      Delete an area.
+# -----------------------------------------------------------------------------
+DELETE /area/:id                     --                                      \
+       \                                                                     \
+       \ delete from area                                                    \
+       \   where id = {{:id}}
+
+# -----------------------------------------------------------------------------
+#      Update an area.
+# -----------------------------------------------------------------------------
+PUT    /area/:id                     ><                                      \
+       \                                                                     \
+       \ update area set name  = {{name}}                                    \
+       \           , region_id = {{regionId}}                                \
+       \           , depot_id  = {{depotId}}                                 \
+       \   where id = {{:id}}
+
+# -----------------------------------------------------------------------------
+#      Retrieve a list of all depots.
+# -----------------------------------------------------------------------------
+GET    /depot                        >>                                      \
+       \                                                                     \
+       \ select *                                                            \
+       \ from depot                                                          \
+       \ order by id
+
+# -----------------------------------------------------------------------------
+#      Retrieve a list of all customers.
+# -----------------------------------------------------------------------------
+GET    /customer                     >>                                      \
+       \                                                                     \
+       \ ( id                                                                \
+       \ , name                                                              \
+       \ , streetAddress                                                     \
+       \ , created                                                           \
+       \ , latitude                                                          \
+       \ , longitude                                                         \
+       \ , tin                                                               \
+       \ , phone                                                             \
+       \ , isActive                                                          \
+       \ , areaId                                                            \
+       \ , priceCatId                                                        \
+       \ , areaName                                                          \
+       \ , priceCategory                                                     \
+       \ )                                                                   \
+       \                                                                     \
+       \ select customer.id                                                  \
+       \      , customer.name                                                \
+       \      , customer.street_address                                      \
+       \      , customer.created                                             \
+       \      , customer.latitude                                            \
+       \      , customer.longitude                                           \
+       \      , customer.tin                                                 \
+       \      , customer.phone                                               \
+       \      , customer.is_active                                           \
+       \      , customer.area_id                                             \
+       \      , customer.price_cat_id                                        \
+       \      , area.name                                                    \
+       \      , product_price_category.name                                  \
+       \ from customer                                                       \
+       \   join area                                                         \
+       \     on area.id = customer.area_id                                   \
+       \   join product_price_category                                       \
+       \     on product_price_category.id = customer.price_cat_id            \
+       \ order by                                                            \
+       \   customer.id
+
+# -----------------------------------------------------------------------------
+#      Get all contact details for a customer.
+# -----------------------------------------------------------------------------
+GET    /contact/customer/:id         >>                                      \
+       \                                                                     \
+       \ select *                                                            \
+       \ from customer_contact                                               \
+       \   where customer_id = {{:id}}                                       \
+       \ group by                                                            \
+       \   id, kind                                                          \
+       \ order by id 
+
+# -----------------------------------------------------------------------------
+#      Insert a new customer.
+# -----------------------------------------------------------------------------
+POST   /customer                     <>                                      \
+       \                                                                     \
+       \ insert into customer                                                \
+       \ ( name                                                              \
+       \ , street_address                                                    \
+       \ , latitude                                                          \
+       \ , longitude                                                         \
+       \ , tin                                                               \
+       \ , phone                                                             \
+       \ , is_active                                                         \
+       \ , area_id                                                           \
+       \ , price_cat_id                                                      \
+       \ ) values                                                            \
+       \   ( {{name}}                                                        \
+       \   , {{streetAddress}}                                               \
+       \   , {{latitude}}                                                    \
+       \   , {{longitude}}                                                   \
+       \   , {{tin}}                                                         \
+       \   , {{phone}}                                                       \
+       \   , {{isActive}}                                                    \
+       \   , {{areaId}}                                                      \
+       \   , {{priceCatId}}                                                  \
+       \ )
+
+# -----------------------------------------------------------------------------
+#      Get all product price categories.
+# -----------------------------------------------------------------------------
+GET    /price-category               >>                                      \
+       \                                                                     \
+       \ select id, name                                                     \
+       \ from product_price_category                                         \
+       \ order by id
+
+# -----------------------------------------------------------------------------
+#      Set role assignments for an area.
+# -----------------------------------------------------------------------------
+PATCH  /user-area/fieldstaff/:id     ><                                      \
+       \                                                                     \
+       \ insert into user_area                                               \
+       \   ( user_id, area_id )                                              \
+       \   ( select {{userId}}                                               \
+       \          , {{:id}}                                                  \
+       \     from sdrp_user                                                  \
+       \       where role = 'fieldstaff'                                     \
+       \         and id = {{userId}}                                         \
+       \   )
+
+PATCH  /user-area/callcenter/:id     ><                                      \
+       \                                                                     \
+       \ insert into user_area                                               \
+       \   ( user_id, area_id )                                              \
+       \   ( select {{userId}}                                               \
+       \          , {{:id}}                                                  \
+       \     from sdrp_user                                                  \
+       \       where role = 'callcenter'                                     \
+       \         and id = {{userId}}                                         \
+       \   )
+
+# -----------------------------------------------------------------------------
+#      Delete all role assignments for an area.
+# -----------------------------------------------------------------------------
+DELETE /user-area/:id                --                                      \
+       \                                                                     \
+       \ delete from user_area                                               \
+       \   where area_id = {{:id}}
+
+# -----------------------------------------------------------------------------
+# {
+#   "name"           : string,
+#   "depotId"        : number,
+#   "regionId"       : number,
+#   "fieldstaffUser" : number | null,
+#   "callcenterUser" : number | null
+# }
+# -----------------------------------------------------------------------------
+PUT    /!area/:id                    |>  
+{
+    "processors": [
+        {
+            "id"     : 1,
+            "method" : "PUT",
+            "uri"    : "/area/:id",
+            "fields" : ["name", "regionId", "depotId"]
+        },
+        {
+            "id"     : 2,
+            "method" : "DELETE",
+            "uri"    : "/user-area/:id",
+            "fields" : ["status"]
+        },
+        {
+            "id"     : 3,
+            "method" : "PATCH",
+            "uri"    : "/user-area/fieldstaff/:id",
+            "fields" : ["status", "userId"]
+        },
+        {
+            "id"     : 4,
+            "method" : "PATCH",
+            "uri"    : "/user-area/callcenter/:id",
+            "fields" : ["status", "userId"]
+        }
+    ],
+    "connections": [
+        {
+            "destination": 1,
+            "filters": [],
+            "transformers": []
+        },
+        {
+            "source": 1,
+            "destination": 2,
+            "filters": [
+                {
+                    "property": "status",
+                    "predicate": "equalTo",
+                    "value": true
+                }
+            ],
+            "transformers": [
+                {
+                    "action": "include",
+                    "arguments": ["status"]
+                }
+            ]
+        },
+        {
+            "source": 1,
+            "destination": 3,
+            "filters": [
+                {
+                    "property": "status",
+                    "predicate": "equalTo",
+                    "value": true
+                }
+            ],
+            "transformers": [
+                {
+                    "action": "include",
+                    "arguments": ["status"]
+                }
+            ]
+        },
+        {
+            "source": 1,
+            "destination": 4,
+            "filters": [
+                {
+                    "property": "status",
+                    "predicate": "equalTo",
+                    "value": true
+                }
+            ],
+            "transformers": [
+                {
+                    "action": "include",
+                    "arguments": ["status"]
+                }
+            ]
+        },
+        {
+            "destination": 2,
+            "filters": [],
+            "transformers": [
+                {
+                    "action": "include",
+                    "arguments": [":id"]
+                }
+            ]
+        },
+        {
+            "destination": 3,
+            "filters": [],
+            "transformers": [
+                {
+                    "action": "include",
+                    "arguments": [":id", "userId"]
+                },
+                {
+                    "action": "rename",
+                    "arguments": ["fieldstaffUser", "userId"]
+                }
+            ]
+        },
+        {
+            "destination": 4,
+            "filters": [],
+            "transformers": [
+                {
+                    "action": "include",
+                    "arguments": [":id", "userId"]
+                },
+                {
+                    "action": "rename",
+                    "arguments": ["callcenterUser", "userId"]
+                }
+            ]
+        },
+        {
+            "source": 1,
+            "filters": [],
+            "transformers": []
+        },
+        {
+            "source": 3,
+            "filters": [],
+            "transformers": []
+        },
+        {
+            "source": 4,
+            "filters": [],
+            "transformers": []
+        }
+    ]
+}
+
+
+#  #
+#  # -----------------------------------------------------------------------------
+#  # @@ product
+#  # -----------------------------------------------------------------------------
+#  #      @Get a list of all active products.
+#  GET    /product                      >>  select * from product where deleted = false order by id
+#  #      @Get a list of all deleted products.
+#  GET    /product/deleted              >>  select * from product where deleted = true order by id
+#  #      @Acquire a single product.
+#  GET    /product/:id                  ->  select * from product where id = {{:id}}
+#  #      @Create a product entity.
+#  POST   /product                      <>  insert into product (name, description, unit_size, deleted) values ({{name}}, {{description}}, {{unitSize}}, 'false')
+#  #      @Update a product entity.
+#  PUT    /product/:id                  ><  update product set name = {{name}}, unit_size = {{unitSize}}, description = {{description}}, deleted = {{deleted}} where id = {{:id}}
+#  #      @Delete a product or recover a deleted product.
+#  PATCH  /product/:id                  --  update product set deleted = {{deleted}} where id = {{:id}}
+#  
+#  # -----------------------------------------------------------------------------
+#  # {
+#  #   "name"        : string,
+#  #   "unitSize"    : string,
+#  #   "description" : string,
+#  #   "prices": [
+#  #      {
+#  #        "priceCatId"  : number,
+#  #        "price"       : number
+#  #      }
+#  #   ],
+#  #   "limits": [
+#  #      {
+#  #        "weightCatId" : number,
+#  #        "limit"       : number
+#  #      }
+#  #   ]
+#  # }
+#  POST   /!product                     ||  create-product
+#  
+#  # -----------------------------------------------------------------------------
+#  # @@ product-price
+#  # -----------------------------------------------------------------------------
+#  #      @Get price information for a product.
+#  GET    /product-price/product/:id    >>  (price, priceCatId, productId, priceCategory) select product_price.price, product_price.price_cat_id, product_price.product_id, product_price_category.name from product_price join product_price_category on product_price_category.id = product_price.price_cat_id where product_id = {{:id}}
+#  #      @Get price information for a collection of products.
+#  POST   /product-price/products       >>  (price, priceCatId, productId, priceCategory) select product_price.price, product_price.price_cat_id, product_price.product_id, product_price_category.name from product_price join product_price_category on product_price_category.id = product_price.price_cat_id where product_id in ({{products}}) order by product_price.product_id, product_price_category.id
+#  #      @Insert a product price.
+#  POST   /product-price                <>  insert into product_price (product_id, price_cat_id, price) values ({{productId}}, {{priceCatId}}, {{price}})
+#  
+#  # -----------------------------------------------------------------------------
+#  # @@ product-limit
+#  # -----------------------------------------------------------------------------
+#  #      @Return all load limits for a product.
+#  GET    /product-limit/product/:id    >>  select * from product_limit where product_id = {{:id}}
+#  #      @Insert a product load limit.
+#  POST   /product-limit                <>  insert into product_limit (product_id, weight_cat_id, "limit") values ({{productId}}, {{weightCatId}}, {{limit}})
+#  
+#  # -----------------------------------------------------------------------------
+#  # @@ product-price-category
+#  # -----------------------------------------------------------------------------
+#  #      @Get a list of all price categories.
+#  GET    /price-category               >>  select * from product_price_category order by id
+#  
+#  # -----------------------------------------------------------------------------
+#  # @@ region
+#  # -----------------------------------------------------------------------------
+#  #      @Get a list of all regions.
+#  GET    /region                       >>  select * from region order by id
+#  #      @Acquire a single region.
+#  GET    /region/:id                   ->  select * from region where id = {{:id}}
+#  #      @Create a new region.
+#  POST   /region                       <>  insert into region (name) values ({{name}})
+#  #      @Update a region.
+#  PUT    /region/:id                   ><  update region set name = {{name}} where id = {{:id}}
+#  
+#  # -----------------------------------------------------------------------------
+#  # @@ area
+#  # -----------------------------------------------------------------------------
+#  #      @Get a list of all areas.
+#  GET    /area                         >>  select * from area order by id
+#  #      @Acquire a single area.
+#  GET    /area/:id                     ->  (id, name, regionId, depotId, depotName)  select area.id, area.name, area.region_id, area.depot_id, depot.name from area join depot on depot.id = area.depot_id where area.id = {{:id}}
+#  #      @Create a new area.
+#  POST   /area                         <>  insert into area (name, region_id, depot_id) values ({{name}}, {{regionId}}, {{depotId}})
+#  #      @Update an area.
+#  PUT    /area/:id                     ><  update area set name = {{name}}, region_id = {{regionId}}, depot_id = {{depotId}} where id = {{:id}}
+#  #      @Delete an area.
+#  DELETE /area/:id                     --  delete from area where id = {{:id}}
+#  
+#  # -----------------------------------------------------------------------------
+#  # {
+#  #   "name"           : string,
+#  #   "depotId"        : number,
+#  #   "regionId"       : number,
+#  #   "fieldstaffUser" : number | null,
+#  #   "callcenterUser" : number | null
+#  # }
+#  PUT    /!area/:id                    ||  update-area
+#  
+#  # -----------------------------------------------------------------------------
+#  # @@ depot
+#  # -----------------------------------------------------------------------------
+#  #      @Get a list of all depots.
+#  GET    /depot                        >>  select * from depot order by id
+#  #      @Get a list of all depots in a region.
+#  GET    /depot/region/:id             >>  select * from depot where region_id = {{:id}} order by id
+#  
+#  # -----------------------------------------------------------------------------
+#  # @@ stock
+#  # -----------------------------------------------------------------------------
+#  #      @Get stock availability information for a depot. 
+#  GET    /stock/depot/:id              >>  (productId, actual, available, productName) select stock.product_id, stock.actual, stock.available, product.name from stock join product on product.id = stock.product_id where depot_id = {{:id}} order by stock.id
+#  
+#  # -----------------------------------------------------------------------------
+#  # @@ stock-damage-type
+#  # -----------------------------------------------------------------------------
+#  #      @Get a list of all stock damage types.
+#  GET    /stock-damage-type            >>  select * from stock_damage_type order by id
+#  #      @Acquire a single stock damage type.
+#  GET    /stock-damage-type/:id        ->  select * from stock_damage_type where id = {{:id}}
+#  #      @Insert a new stock damage type.
+#  POST   /stock-damage-type            <>  insert into stock_damage_type (name) values ({{name}})
+#  #      @Update a stock damage type.
+#  PUT    /stock-damage-type/:id        ><  update stock_damage_type set name = {{name}} where id = {{:id}}
+#  #      @Delete stock damage type.
+#  DELETE /stock-damage-type/:id        --  delete from stock_damage_type where id = {{:id}}
+#  
+#  # -----------------------------------------------------------------------------
+#  # @@ vehicle
+#  # -----------------------------------------------------------------------------
+#  GET    /vehicle                      >>  select * from vehicle order by id
+#  
+#  # -----------------------------------------------------------------------------
+#  # @@ weight-category
+#  # -----------------------------------------------------------------------------
+#  #      @Get a list of all vehicle weight categories.
+#  GET    /weight-category              >>  select * from weight_category order by id
+#  #      @Acquire a single vehicle weight category.
+#  GET    /weight-category/:id          ->  select * from weight_category where id = {{:id}}
+#  #      @Insert a new vehicle weight category.
+#  POST   /weight-category              <>  insert into weight_category (name) values ({{name}})
+#  #      @Update a vehicle weight category.
+#  PUT    /weight-category/:id          ><  update weight_category set name = {{name}} where id = {{:id}}
+#  
+#  # -----------------------------------------------------------------------------
+#  # @@ vehicle-maintenance-activity
+#  # -----------------------------------------------------------------------------
+#  
+#  # -----------------------------------------------------------------------------
+#  # @@ maintenance-activity-type
+#  # -----------------------------------------------------------------------------
+#  #      @Get a list of all vehicle maintenance activity types.
+#  GET    /maintenance-activity-type    >>  select * from maintenance_activity_type order by id
+#  
+#  # -----------------------------------------------------------------------------
+#  # @@ vehicle-fuel-activity
+#  # -----------------------------------------------------------------------------
+#  
+#  # -----------------------------------------------------------------------------
+#  # @@ sdrp-user
+#  # -----------------------------------------------------------------------------
+#  #      @Get a list of all users.
+#  GET    /user                         >>  select * from sdrp_user order by id
+#  #      @Retrieve all users who belong to a specific role.
+#  GET    /user/role/:role              >>  (id, username, role, name, area_id) \
+#         \                                                                     \
+#         \ select sdrp_user.id                                                 \
+#         \      , sdrp_user.username                                           \
+#         \      , sdrp_user.role                                               \
+#         \      , sdrp_user.name                                               \
+#         \      , user_area.area_id                                            \
+#         \ from sdrp_user                                                      \
+#         \   join user_area                                                    \
+#         \     on user_area.user_id = sdrp_user.id                             \
+#         \ where role = {{:role}}                                              \
+#         \ order by                                                            \
+#         \   sdrp_user.id
+#  
+#  #      @Get a list of all users belonging to the given role, associated with an area.
+#  GET    /user/area/:id/role/:role     >>  (id, userId, areaId, username, role, name)  select user_area.id, user_area.user_id, user_area.area_id, sdrp_user.username, sdrp_user.role, sdrp_user.name from user_area join sdrp_user on sdrp_user.id = user_area.user_id where user_area.area_id = {{:id}} and sdrp_user.role = {{:role}} 
+#  #      @Get a list of all users belonging to the given role, associated with any of the areas in the list.
+#  POST   /user/area/:id/role/:role     >>  (id, userId, areaId, username, role, name)  select user_area.id, user_area.user_id, user_area.area_id, sdrp_user.username, sdrp_user.role, sdrp_user.name from user_area join sdrp_user on sdrp_user.id = user_area.user_id where user_area.area_id in ({{areas}}) and sdrp_user.role = {{:role}} 
+#  #      @Get a list of all users associated with an area, regardless of role.
+#  GET    /user/area/:id                >>  (id, userId, areaId, username, role, name)  select user_area.id, user_area.user_id, user_area.area_id, sdrp_user.username, sdrp_user.role, sdrp_user.name from user_area join sdrp_user on sdrp_user.id = user_area.user_id where user_area.area_id = {{:id}}
+#  #      @Authenticate a user.
+#  GET    /user/:username/:password     ->  select id, username, role, password from sdrp_user where username = {{:username}} and password = {{:password}}
+#  
+#  # @todo .. support something like this...
+#  #
+#  # GET         /stuff               select * from user\
+#  #                                \ where id = {{id}
+#  #        lines "abc\ndef"
+#  #        strip white space at the end and beginning of each line
+#  
+#  # -----------------------------------------------------------------------------
+#  # @@ user-area
+#  # -----------------------------------------------------------------------------
+#  #      @Delete all role assignments for an area.
+#  DELETE /user-area/:id                --  delete from user_area where area_id = {{:id}}
+#  #      @Set role assignments for an area.
+#  PATCH  /user-area/fieldstaff/:id     ><  insert into user_area (user_id, area_id) (select {{userId}}, {{:id}} from sdrp_user where role = 'fieldstaff' and id = {{userId}})
+#  PATCH  /user-area/callcenter/:id     ><  insert into user_area (user_id, area_id) (select {{userId}}, {{:id}} from sdrp_user where role = 'callcenter' and id = {{userId}})
+#  
+#  # -----------------------------------------------------------------------------
+#  # @@ user-depot
+#  # -----------------------------------------------------------------------------
+#  
+#  # -----------------------------------------------------------------------------
+#  # @@ customer
+#  # -----------------------------------------------------------------------------
+#  #      @Get a list of all customers.
+#  GET    /customer                     >>  ( id,                  \
+#                                           \ name,                \
+#                                           \ streetAddress,       \
+#                                           \ created,             \
+#                                           \ latitude,            \
+#                                           \ longitude,           \
+#                                           \ tin,                 \
+#                                           \ phone,               \
+#                                           \ isActive,            \
+#                                           \ areaId,              \
+#                                           \ priceCatId,          \
+#                                           \ areaName,            \
+#                                           \ priceCategory        \
+#                                           \ )                    \
+#                                           \ select customer.id, customer.name, customer.street_address, customer.created, customer.latitude, customer.longitude, customer.tin, customer.phone, customer.is_active, customer.area_id, customer.price_cat_id, area.name, product_price_category.name from customer join area on area.id = customer.area_id join product_price_category on product_price_category.id = customer.price_cat_id order by customer.id
+#  
+#  #      @Retrieve all customers ina specific area.
+#  GET    /customer/area/:id            >>  (id, name, streetAddress, created, latitude, longitude, tin, phone, isActive, areaId, priceCatId, areaName, priceCategory)  select customer.id, customer.name, customer.street_address, customer.created, customer.latitude, customer.longitude, customer.tin, customer.phone, customer.is_active, customer.area_id, customer.price_cat_id, area.name, product_price_category.name from customer join area on area.id = customer.area_id join product_price_category on product_price_category.id = customer.price_cat_id where area_id = {{:id}} order by customer.id
+#  #      @Acquire a single customer.
+#  GET    /customer/:id                 ->  (id, name, streetAddress, created, latitude, longitude, tin, phone, isActive, areaId, priceCatId, areaName, priceCategory)  select customer.id, customer.name, customer.street_address, customer.created, customer.latitude, customer.longitude, customer.tin, customer.phone, customer.is_active, customer.area_id, customer.price_cat_id, area.name, product_price_category.name from customer join area on area.id = customer.area_id join product_price_category on product_price_category.id = customer.price_cat_id where customer.id = {{:id}}
+#  #      @Update a customer.
+#  PUT    /customer/:id                 ><  update customer set name = {{name}}, street_address = {{streetAddress}}, latitude = {{latitude}}, longitude = {{longitude}}, tin = {{tin}}, phone = {{phone}}, is_active = {{isActive}}, area_id = {{areaId}}, price_cat_id = {{priceCatId}} where id = {{:id}}
+#  #      @Insert a new customer.
+#  POST   /customer                     <>  insert into customer (name, street_address, latitude, longitude, tin, phone, is_active, area_id, price_cat_id) values ({{name}}, {{streetAddress}}, {{latitude}}, {{longitude}}, {{tin}}, {{phone}}, {{isActive}}, {{areaId}}, {{priceCatId}})
+#  
+#  # -----------------------------------------------------------------------------
+#  # @@ customer-contact
+#  # -----------------------------------------------------------------------------
+#  #      @Get contact information for a customer.
+#  GET    /contact/customer/:id         >>  select * from customer_contact where customer_id = {{:id}} group by id, kind order by id 
+#  #      @Acquire a single contact entity.
+#  GET    /contact/:id                  ->  select * from customer_contact where id = {{:id}}
+#  #      @Insert a new customer contact.
+#  POST   /contact                      <>  insert into customer_contact (customer_id, kind, body, meta) values ({{customerId}}, {{kind}}, {{body}}, {{meta}})
+#  #      @ Update a customer contact.
+#  PUT    /contact/:id                  ><  update customer_contact set customer_id = {{customerId}}, kind = {{kind}}, body = {{body}}, meta = {{meta}} where id = {{:id}}
+#  
+#  # -----------------------------------------------------------------------------
+#  # @@ complaint
+#  # -----------------------------------------------------------------------------
+#  #      @Get a list of all customer complaints.
+#  GET    /complaint                    >>  select * from complaint order by id
+#  #      @Get a list of all complaints for a specific customer.
+#  GET    /complaint/customer/:id       >>  select * from complaint where customer_id = {{:id}} and resolved is null order by id
+#  #      @Acquire a single complaint.
+#  GET    /complaint/:id                ->  select * from complaint where id = {{:id}}
+#  #      @Resolve a complaint.
+#  PATCH  /complaint/resolve/:id        --  update complaint set resolved = 'now()' where id = {{:id}}
+#  

@@ -1,0 +1,26 @@
+<a href="#user/create">Create user</a>
+<table>
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Username</th>
+            <th>Role</th>
+            <th>Depot</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each user}}
+        <tr>
+            <td>{{id}}</td>
+            <td>{{name}}</td>
+            <td><a href="#user/{{id}}">{{username}}</a></td>
+            <td>{{role}}</td>
+            <td>{{#if depotName}}{{depotName}}{{else}}-{{/if}}</td>
+            <td><a href="#user/edit/{{id}}">Edit</a></td>
+            <td><a href="#user/delete/{{id}}">Delete</a></td>
+        </tr>
+        {{/each}}
+     </tbody>
+</table>
+

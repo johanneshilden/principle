@@ -1,0 +1,24 @@
+<a href="#product/create">Add a product</a>
+| <a href="#products/deleted">Recover deleted</a>
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            {{#each category}}
+            <th>{{name}}</th>
+            {{/each}}
+        </tr>
+    </thead>
+    <tbody>
+        {{#each product}}
+        <tr>
+            <td><a href="#product/{{id}}">{{name}}</a></td>
+            {{#each category}}
+            <td>{{price}}</td>
+            {{/each}}
+            <td><a href="#product/edit/{{id}}">Edit</a></td>
+            <td><a href="javascript:" class="product-delete" data-id="{{id}}">Delete</a></td>
+        </tr>
+        {{/each}}
+     </tbody>
+</table>

@@ -1,0 +1,16 @@
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each depot}}
+        <tr>
+            <td><a href="#stock/depot/{{id}}">{{name}}</a></td>
+            <td><a href="#stock-activity/depot/{{id}}">Activity</a></td>
+        </tr>
+        {{/each}}
+     </tbody>
+</table>
+

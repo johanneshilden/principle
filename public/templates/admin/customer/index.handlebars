@@ -1,0 +1,34 @@
+<a href="#customer/create">Create new customer</a>
+{{#if customer}}
+<table>
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Position</th>
+            <th>Street</th>
+            <th>TIN</th>
+            <th>Phone</th>
+            <th>Active</th>
+            <th>Price class</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each customer}}
+        <tr>
+            <td>{{id}}</td>
+            <td><a href="#customer/{{id}}">{{name}}</a></td>
+            <td>{{latitude}}:{{longitude}}</td>
+            <td>{{streetAddress}}</td>
+            <td>{{tin}}</td>
+            <td>{{phone}}</td>
+            <td>{{#if isActive}}active{{else}}inactive{{/if}}</td>
+            <td>{{priceCategory}}</td>
+            <td><a href="#customer/edit/{{id}}">Edit</a></td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+{{else}}
+No customers.
+{{/if}}

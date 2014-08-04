@@ -1,0 +1,16 @@
+<h2>{{name}}</h2>
+{{#if fieldstaffUser}}
+<div>
+Field Staff: {{fieldstaffUser.name}}
+</div>
+{{/if}}
+<div>
+Region: <a href="#region/{{regionId}}">{{regionName}}</a>
+</div>
+
+{{#if callcenterUser}}
+<div>
+Call Center Rep.: {{callcenterUser.name}}
+</div>
+{{/if}}
+

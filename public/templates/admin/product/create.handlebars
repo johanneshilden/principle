@@ -1,0 +1,26 @@
+<div>
+<input type="text" name="name">
+</div>
+<div>
+<input type="text" name="unit-size">
+</div>
+<div>
+<textarea name="description"></textarea>
+</div>
+<h2>Prices</h2>
+{{#each priceCategory}}
+<div>
+    {{name}}
+    <input type="text" class="price[{{id}}]" data-id="{{id}}">
+</div>
+{{/each}}
+<h2>Load limits</h2>
+{{#each weightCategory}}
+<div>
+    {{name}}
+    <input type="text" name="limit[{{id}}]" data-id="{{id}}">
+</div>
+{{/each}}
+<div>
+<input type="submit">
+</div>

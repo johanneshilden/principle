@@ -1,0 +1,23 @@
+<h2>Edit area</h2>
+<select name="depot">
+    <option value="">No depot assigned</option>
+    {{#each depot}}
+    <option value="{{id}}">{{name}}</option>
+    {{/each}}
+</select>
+<input type="text" name="name" value="{{name}}">
+<h3>Call center user</h3>
+<select name="callcenter-user">
+    <option value="">None</option>
+    {{#each callcenter}}
+    <option value="{{id}}">{{name}}</option>
+    {{/each}}
+</select>
+<h3>Field staff user</h3>
+<select name="fieldstaff-user">
+    <option value="">None</option>
+    {{#each fieldstaff}}
+    <option value="{{id}}">{{name}}</option>
+    {{/each}}
+</select>
+<input type="submit">

@@ -1,0 +1,38 @@
+<h1>Customer information</h1>
+<h2>{{name}}</h2>
+<div>
+Area:    {{areaName}}
+</div>
+<div>
+Street:    {{streetAddress}}
+</div>
+<div>
+Created:    {{created}}
+</div>
+<div>
+Price cat:    {{priceCategory}}
+</div>
+<div>
+Lat:    {{latitude}}
+</div>
+<div>
+Long:    {{longitude}}
+</div>
+<div>
+TIN:    {{tin}}
+</div>
+<div>
+contacts
+{{#if contact.length}}
+<table>
+{{#each contact}}
+<tr>
+    <td>{{kind}}</td>
+    <td>{{body}}</td>
+{{/each}}
+</table>
+{{else}}
+- No contacts -
+{{/if}}
+</div>
+

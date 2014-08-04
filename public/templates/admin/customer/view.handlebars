@@ -1,0 +1,46 @@
+<h1>Customer information</h1>
+<h2>{{name}}</h2>
+<div>
+Area:    {{areaName}}
+</div>
+<div>
+Street:    {{address}}
+</div>
+<div>
+Created:    {{created}}
+</div>
+<div>
+Price cat:    {{priceCategory}}
+</div>
+<div>
+Lat:    {{latitude}}
+</div>
+<div>
+Long:    {{longitude}}
+</div>
+<div>
+TIN:    {{tin}}
+</div>
+<div>
+contacts
+{{#if contact.length}}
+<table>
+{{#each contact}}
+<tr>
+    <td>{{kind}}</td>
+    <td>{{datum}}</td>
+    <td><a href="#contact/{{id}}/edit">Edit</a></td>
+    <td><a href="#contact/{{id}}/delete">Delete</a></td>
+{{/each}}
+</table>
+{{else}}
+- No contacts -
+{{/if}}
+</div>
+<a href="#contact/customer/{{id}}/create">Add a contact</a>
+<!--
+<a href="#complaints/customer/{{id}}">Complaint history</a>
+<a href="#activity/customer/{{id}}">Call activity</a>
+<a href="#service-complaint/create/customer/{{id}}">Register service complaint</a>
+<a href="#quality-complaint/create/customer/{{id}}">Register quality complaint</a>
+-->

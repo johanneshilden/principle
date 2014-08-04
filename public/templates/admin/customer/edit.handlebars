@@ -1,0 +1,69 @@
+
+<div>
+Name
+<input type="text" name="name" value="{{name}}">
+</div>
+
+<div>
+Street address
+<input type="text" name="address" value="{{address}}">
+</div>
+
+<div>
+Latitude
+<input type="text" name="latitude" value="{{latitude}}">
+</div>
+
+<div>
+Longitude
+<input type="text" name="longitude" value="{{longitude}}">
+</div>
+
+<div>
+TIN
+<input type="text" name="tin" value="{{tin}}">
+</div>
+
+<div>
+Phone
+<input type="text" name="phone" value="{{phone}}">
+</div>
+
+<div>
+Active
+<input type="checkbox"{{#if isActive}} checked{{/if}} name="is-active">
+</div>
+
+<div>
+Area: 
+<select name="area">
+    {{#each area}}
+    <option value="{{id}}">{{name}}</option>
+    {{/each}}
+</select>
+</div>
+
+<div>
+Price category: 
+<select name="price-category">
+    {{#each priceCat}}
+    <option value="{{id}}">{{name}}</option>
+    {{/each}}
+</select>
+</div>
+
+{{#if contact.length}}
+<table>
+{{#each contact}}
+<tr>
+    <td>{{kind}}</td>
+    <td>{{body}}</td>
+    <td><a href="#contact/{{id}}/edit">Edit</a></td>
+    <td><a href="#contact/{{id}}/delete">Delete</a></td>
+{{/each}}
+</table>
+{{else}}
+- No contacts -
+{{/if}}
+
+<input type="submit">
