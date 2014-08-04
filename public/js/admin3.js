@@ -2019,6 +2019,9 @@ App.init({
                         description : 'Delete vehicle weight category "' + weightClass.name + '".',
                         purge       : 'weight-categories',
                         hint        : 'Cannot delete vehicle weight category: ',
+                        feedback    : {
+                            'SQL_FOREIGN_KEY_CONSTRAINT_VIOLATION': 'Vehicles are currently assigned to "' + weightClass.name + '".'
+                        },
                         complete: function() {
                             window.location.hash = 'weight-classes';
                         },
