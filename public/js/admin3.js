@@ -933,84 +933,110 @@ App.init({
     },
     editArea: function(id) {
         T.render('admin/area/edit', function(t) {
+            T.render('admin/user/select', function(t_) {
 
-            Storage.chain(Model.getArea(id))
-                   .chain(Model.getUsersByRole('field-staff'))
-                   .chain(Model.getUsersByRole('call-center'))
-                   .chain(Model.getDepots)
-                   .using(function(area, fieldstaff, callcenter, depots) {
+                Storage.chain(Model.getArea(id))
+                       .chain(Model.getUsersByRole('field-staff'))
+                       .chain(Model.getUsersByRole('call-center'))
+                       .chain(Model.getDepots)
+                       .using(function(area, fieldstaff, callcenter, depots) {
+    
+                    // Inject region id into user collections
+    
+                    _.each(fieldstaff, function(staff) {
+                        staff.regionId = depots.hasOwnProperty(staff.depotId) ? depots[staff.depotId].regionId : null;
+                    });
+    
+                    _.each(callcenter, function(staff) {
+                        staff.regionId = depots.hasOwnProperty(staff.depotId) ? depots[staff.depotId].regionId : null;
+                    });
+    
+                    var filterByRegion = function(item) {
+                        return item.regionId == area.regionId;
+                    };
+    
+                    // All field staff in the region
+                    var regionFieldstaff = _.filter(fieldstaff, filterByRegion);
+                    // All call center users in the region
+                    var regionCallcenter = _.filter(callcenter, filterByRegion);
+    
+                    area.depot = _.filter(depots, filterByRegion);
+    
+                    var form = $('<form></form>').append(t(area));
+                    $('#main').html(form);
+    
+                    // ... //
+    
+                    var updateDropDown = function(sel, users, depotId) {
+                        $(sel).html(t_({
+                            user : _.filter(users, function(item) {
+                                return item.depotId == depotId;
+                            })
+                        }));
+                    };
 
-                // Inject region id in user collections
+                    updateDropDown('#area-edit-select-callcenter', regionCallcenter, area.depotId);
+                    updateDropDown('#area-edit-select-fieldstaff', regionFieldstaff, area.depotId);
+    
+                    $('select[name="depot"]').change(function(a) {
+                        var depotId = $(this).val();
+                        updateDropDown('#area-edit-select-callcenter', regionCallcenter, depotId);
+                        updateDropDown('#area-edit-select-fieldstaff', regionFieldstaff, depotId);
+                     });
 
-                _.each(fieldstaff, function(staff) {
-                    staff.regionId = depots.hasOwnProperty(staff.depotId) ? depots[staff.depotId].regionId : null;
-                });
-
-                _.each(callcenter, function(staff) {
-                    staff.regionId = depots.hasOwnProperty(staff.depotId) ? depots[staff.depotId].regionId : null;
-                });
-
-                var filterByRegion = function(item) {
-                    return item.regionId == area.regionId;
-                };
-
-                area.fieldstaff = _.filter(fieldstaff, filterByRegion);
-                area.callcenter = _.filter(callcenter, filterByRegion);
-                area.depot      = _.filter(depots, filterByRegion);
-
-                var form = $('<form></form>').append(t(area));
-                $('#main').html(form);
-
-                var u = area.callcenterUser ? area.callcenterUser.id : '';
-                $('select[name="callcenter-user"]').val(u);
-
-                u = area.fieldstaffUser ? area.fieldstaffUser.id : '';
-                $('select[name="fieldstaff-user"]').val(u);
-
-                $('select[name="depot"]').val(area.depotId);
-
-                form.validate({
-                    rules: {
-                        "name": "required"
-                    },
-                    submitHandler: function(form) {
-
-                        var data = {
-                            name     : form['name'].value,
-                            depotId  : form['depot'].value, 
-                            regionId : area.regionId 
-                        };
-
-                        var user = form['callcenter-user'].value;
-                        if (user) {
-                            data.callcenterUser = user;
+                    // ... //
+    
+                    var u = area.callcenterUser ? area.callcenterUser.id : '';
+                    $('select[name="callcenter-user"]').val(u);
+    
+                    u = area.fieldstaffUser ? area.fieldstaffUser.id : '';
+                    $('select[name="fieldstaff-user"]').val(u);
+    
+                    $('select[name="depot"]').val(area.depotId);
+    
+                    form.validate({
+                        rules: {
+                            "name": "required"
+                        },
+                        submitHandler: function(form) {
+    
+                            var data = {
+                                name     : form['name'].value,
+                                depotId  : form['depot'].value || null, 
+                                regionId : area.regionId 
+                            };
+    
+                            var user = form['callcenter-user'].value;
+                            if (user) {
+                                data.callcenterUser = user;
+                            }
+                            user = form['fieldstaff-user'].value;
+                            if (user) {
+                                data.fieldstaffUser = user;
+                            }
+    
+                            Storage.process({
+                                type        : 'PUT',
+                                resource    : '!area/' + id,
+                                data        : data,
+                                description : 'Edit area "' + area.name + '".',
+                                purge       : ['areas', 'users'],
+                                hint        : 'The area could not be updated: ', 
+                                feedback    : {
+                                    'SQL_UNIQUE_CONSTRAINT_VIOLATION': 'An area with the name "' + data.name + '" already exists in the same region.'
+                                },
+                                complete: function() {
+                                    window.location.hash = 'areas';
+                                },
+                                successMsg: 'Area "' + area.name + '" was successfully updated.'
+                            });
+    
                         }
-                        user = form['fieldstaff-user'].value;
-                        if (user) {
-                            data.fieldstaffUser = user;
-                        }
-
-                        Storage.process({
-                            type        : 'PUT',
-                            resource    : '!area/' + id,
-                            data        : data,
-                            description : 'Edit area "' + area.name + '".',
-                            purge       : ['areas', 'users'],
-                            hint        : 'The area could not be updated: ', 
-                            feedback    : {
-                                'SQL_UNIQUE_CONSTRAINT_VIOLATION': 'An area with the name "' + data.name + '" already exists in the same region.'
-                            },
-                            complete: function() {
-                                window.location.hash = 'areas';
-                            },
-                            successMsg: 'Area "' + area.name + '" was successfully updated.'
-                        });
-
-                    }
+                    });
+    
                 });
-
+    
             });
-
         });
     },
     deleteArea: function(id) {
