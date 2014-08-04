@@ -362,6 +362,8 @@ var Model = {
 
     getMaintenanceTypes: function(yield) {
 
+        Storage.collection('maintenance-activity-type', 'maintenance-types', yield);
+
     },
 
     getMaintenanceType: function(id, yield) {
@@ -369,6 +371,10 @@ var Model = {
         if (typeof yield === 'undefined') {
             return _.partial(arguments.callee, id);
         }
+
+        Model.getMaintenanceTypes(function(types) {
+            Storage.find(id, types, yield);
+        });
 
     },
 

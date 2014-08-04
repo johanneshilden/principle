@@ -1079,14 +1079,68 @@ App.init({
         });
     },
     editMaintenanceActivityType: function(id) {
+        T.render('admin/maintenance-activity-type/edit', function(t) {
+            Model.getMaintenanceType(id, function(activityType) {
 
-        $('#main').html('edit maintenance');
+                var form = $('<form></form>').append(t(activityType));
+                $('#main').html(form);
 
+                form.validate({
+                    rules: {
+                        "name": "required"
+                    },
+                    submitHandler: function(form) {
+
+                        var data = {
+                            name: form['name'].value
+                        };
+    
+                        Storage.process({
+                            type        : 'PUT',
+                            resource    : 'maintenance-activity-type/' + id,
+                            data        : data,
+                            description : 'Update vehicle maintenance activity type "' + activityType.name + '".',
+                            purge       : 'maintenance-types',
+                            hint        : 'The maintenance activity type could not be updated: ',
+                            feedback    : {
+                                'SQL_UNIQUE_CONSTRAINT_VIOLATION': 'An item with the name "' + data.name + '" already exists.'
+                            },
+                            complete: function() {
+                                window.location.hash = 'maintenance-types';
+                            },
+                            successMsg: 'Vehicle maintenance activity type "' + data.name + '" was updated.'
+                        });
+    
+                    }
+                });
+
+            });
+        });
     },
     deleteMaintenanceActivityType: function(id) {
+        T.render('admin/maintenance-activity-type/delete', function(t) {
+            Model.getMaintenanceType(id, function(activityType) {
 
-        $('#main').html('delete maintenance type');
+                var form = $('<form></form>').append(t(activityType));
+                $('#main').html(form);
 
+                $('button.confirm').click(function() {
+                    Storage.process({
+                        type        : 'DELETE',
+                        resource    : 'maintenance-activity-type/' + id,
+                        data        : '',
+                        description : 'Delete vehicle maintenance activity type "' + activityType.name + '".',
+                        purge       : 'maintenance-types',
+                        hint        : 'Cannot delete maintenance activity type: ',
+                        complete: function() {
+                            window.location.hash = 'maintenance-types';
+                        },
+                        successMsg: 'The vehicle maintenance activity type was deleted.'
+                    });
+                });
+
+            });
+        });
     },
     createMaintenanceActivityType: function() {
         T.render('admin/maintenance-activity-type/create', function(t) {
@@ -1109,11 +1163,12 @@ App.init({
                         resource    : 'maintenance-activity-type',
                         data        : data,
                         description : 'Create a new vehicle maintenance activity type named "' + data.name + '".',
-                        purge       : 'maintenance-activity-types',
+                        purge       : 'maintenance-types',
                         hint        : 'The vehicle maintenance activity type could not be created: ',
                         complete: function() {
                             window.location.hash = 'maintenance-types';
-                        }
+                        },
+                        successMsg: 'Maintenance activity type "' + data.name + '" was added to the system.'
                     });
 
                 }
@@ -1794,7 +1849,8 @@ App.init({
                             },
                             complete: function() {
                                 window.location.hash = 'price-categories';
-                            }
+                            },
+                            successMsg: 'Price category "' + data.name + '" was updated.'
                         });
     
                     }
@@ -1856,7 +1912,8 @@ App.init({
                         },
                         complete: function() {
                             window.location.hash = 'price-categories';
-                        }
+                        },
+                        successMsg: 'Price category "' + data.name + '" was created.'
                     });
 
                 }
