@@ -57,6 +57,7 @@ App.init({
         // customer                     :
         // ---------------------------- :
         "customers"                     : "showCustomers",
+        "customers/category/:id"        : "showCustomersForPriceCat",
         "customers/area/:id"            : "showCustomersForArea",
         "customer/edit/:id"             : "editCustomer",
         "customer/create"               : "createCustomer",
@@ -117,7 +118,7 @@ App.init({
         // product                      :
         // ---------------------------- :
         "products"                      : "showProducts",
-        "products/deleted"              : "showDeletedProducts",
+        "products/recover"              : "showDeletedProducts",
         "product/edit/:id"              : "editProduct",
         "product/create"                : "createProduct",
         "product/:id"                   : "viewProduct",
@@ -299,7 +300,9 @@ App.init({
         });
     },
     offline: function() {
-        $('#main').html('offline');
+        T.render('admin/offline', function(t) {
+            $('#main').html(t());
+        });
     },
     notify: function(msg, type) {
         msg = type + ': ' + msg;
@@ -349,7 +352,9 @@ App.init({
             var queue = Storage.queue.get();
             delete(queue.last);
 
-            $('#main').html(t(_.isEmpty(queue) ? null : queue));
+            $('#main').html(t({
+                item: queue
+            }));
 
             $('a.queue-item-process').click(function() {
                 Storage.queue.process($(this).data('id'), function() {
@@ -364,15 +369,22 @@ App.init({
 
             $('button.queue-process').click(function() {
 
-                var i = 0, items = $('input[name="queue-item"]:checked');
+                var items = $('input[name="queue-item"]:checked');
+                var ids = [];
                 _.each(items, function(el) {
-                    var index = $(el).data('id');
-                    Storage.queue.process(index, function() {
-                        if (++i === items.length) {
-                            App.refresh();
-                        }
-                    });
+                    ids.push($(el).data('id'));
                 });
+
+                var process = function() {
+                    if (ids.length) {
+                        var index = ids[0];
+                        ids = _.tail(ids);
+                        Storage.queue.process(index, process);
+                    } else {
+                        App.refresh();
+                    }
+                }
+                process();
 
             });
 
@@ -380,11 +392,11 @@ App.init({
     },
     showUserProfile: function() {
         T.render('admin/user/view', function(t) {
-            var user = App.user();
-
-            user.role = Model.readableRoleName(user.role);
-
-            $('#main').html(t(user)).append('<a href="#user/password">Update password</a>');
+            var appUser = App.user();
+            Model.getUser(appUser.id, function(user) {
+                user.role = Model.readableRoleName(user.role);
+                $('#main').html(t(user)).append('<a href="#user/password">Update password</a>');
+            });
         });
     },
     updatePassword: function() {
@@ -414,40 +426,38 @@ App.init({
                         pass  = CryptoJS.HmacSHA1(form['old'].value, token), 
                         local = store.get('sdrp.db.user/' + user.username);
 
-                    if (local) {
-                        try {
-                            var msg = CryptoJS.AES.decrypt(local, pass.toString()),
-                                obj = JSON.parse(msg.toString(CryptoJS.enc.Utf8));
+                    try {
+                        var msg = CryptoJS.AES.decrypt(local, pass.toString()),
+                            obj = JSON.parse(msg.toString(CryptoJS.enc.Utf8));
 
-                            if (obj.username === user.username) {
+                        if (obj.username === user.username) {
 
-                                var data = { 
-                                    password : CryptoJS.HmacSHA1(form['new'].value, token).toString()
-                                };
-        
-                                Storage.process({
-                                    type        : 'PATCH',
-                                    resource    : 'user/' + user.id + '/password',
-                                    data        : data,
-                                    description : 'Change the password for "' + user.username + '".',
-                                    purge       : 'user/' + user.username,
-                                    success: function() {
-                                        // All cached data becomes invalid on password change!
-                                        store.clear();
-                                        App.notify('The password has been changed.');
-                                    },
-                                    complete: function() {
-                                        window.location.hash = 'profile';
-                                    }
-                                });
+                            var data = { 
+                                password : CryptoJS.HmacSHA1(form['new'].value, token).toString()
+                            };
+    
+                            Storage.process({
+                                type        : 'PATCH',
+                                resource    : 'user/' + user.id + '/password',
+                                data        : data,
+                                description : 'Change the password for "' + user.username + '".',
+                                purge       : 'user/' + user.username,
+                                success: function() {
+                                    // All cached data becomes invalid on password change!
+                                    store.clear();
+                                    App.notify('The password has been changed.');
+                                },
+                                complete: function() {
+                                    window.location.hash = 'profile';
+                                }
+                            });
 
-                            } else {
-                                throw "Authentication error.";
-                            }
-                            
-                        } catch(e) {
-                            App.notify('Invalid password.', 'error');
+                        } else {
+                            throw "Authentication error.";
                         }
+                        
+                    } catch(e) {
+                        App.notify('Invalid password.', 'error');
                     }
 
                 }
@@ -532,7 +542,7 @@ App.init({
                         purge       : 'regions',
                         hint        : 'Cannot delete region: ',
                         feedback    : {
-                            'SQL_FOREIGN_KEY_CONSTRAINT_VIOLATION': 'Areas/depots still present in the region.'
+                            'SQL_FOREIGN_KEY_CONSTRAINT_VIOLATION': '<a href="#areas">Areas</a>/<a href="#depots/region/' + id + '">depots</a> still present in the region.'
                         },
                         complete: function() {
                             window.location.hash = 'regions';
@@ -599,8 +609,15 @@ App.init({
     },
     showDepotsForRegion: function(regionId) {
         T.render('admin/depot/index', function(t) {
-            Model.getDepotsForRegion(regionId, function(depots) {
-                $('#main').html(t({depot: depots}));
+            Model.getRegion(regionId, function(region) {
+                Model.getDepotsForRegion(regionId, function(depots) {
+
+                    $('#main').html(t({
+                        region : region,
+                        depot  : depots
+                    }));
+
+                });
             });
         });
     },
@@ -627,8 +644,8 @@ App.init({
                     form.validate({
                         rules: {
                             "name"           : "required",
-                            "latitude"       : "required",
-                            "longitude"      : "required"
+                            "latitude"       : "required number",
+                            "longitude"      : "required number"
                         },
                         submitHandler: function(form) {
 
@@ -725,8 +742,8 @@ App.init({
                 form.validate({
                     rules: {
                         "name"           : "required",
-                        "latitude"       : "required",
-                        "longitude"      : "required"
+                        "latitude"       : "required number",
+                        "longitude"      : "required number"
                     },
                     submitHandler: function(form) {
 
@@ -752,7 +769,7 @@ App.init({
                             resource    : '!depot',
                             data        : data,
                             description : 'Create depot "' + data.name + '".',
-                            purge       : ['depots', 'areas'],
+                            purge       : ['depots', 'areas', 'users'],
                             hint        : 'The depot could not be created: ', 
                             complete: function() {
                                 window.location.hash = 'depots';
@@ -957,11 +974,11 @@ App.init({
                     };
     
                     // All field staff in the region
-                    var regionFieldstaff = _.filter(fieldstaff, filterByRegion);
+                    var regionFieldstaff = Model.filter(fieldstaff, filterByRegion);
                     // All call center users in the region
-                    var regionCallcenter = _.filter(callcenter, filterByRegion);
+                    var regionCallcenter = Model.filter(callcenter, filterByRegion);
     
-                    area.depot = _.filter(depots, filterByRegion);
+                    area.depot = Model.filter(depots, filterByRegion);
     
                     var form = $('<form></form>').append(t(area));
                     $('#main').html(form);
@@ -970,7 +987,7 @@ App.init({
     
                     var updateDropDown = function(sel, users, depotId) {
                         $(sel).html(t_({
-                            user : _.filter(users, function(item) {
+                            user : Model.filter(users, function(item) {
                                 return item.depotId == depotId;
                             })
                         }));
@@ -1029,7 +1046,7 @@ App.init({
                                 complete: function() {
                                     window.location.hash = 'areas';
                                 },
-                                successMsg: 'Area "' + area.name + '" was successfully updated.'
+                                successMsg: 'Area "' + data.name + '" was successfully updated.'
                             });
     
                         }
@@ -1165,6 +1182,9 @@ App.init({
                         description : 'Create a new vehicle maintenance activity type named "' + data.name + '".',
                         purge       : 'maintenance-types',
                         hint        : 'The vehicle maintenance activity type could not be created: ',
+                        feedback    : {
+                            'SQL_UNIQUE_CONSTRAINT_VIOLATION': 'An item with the name "' + data.name + '" already exists.'
+                        },
                         complete: function() {
                             window.location.hash = 'maintenance-types';
                         },
@@ -1176,18 +1196,44 @@ App.init({
 
         });
     },
+    showCustomersForPriceCat: function(priceCatId) {
+        T.render('admin/customer/index', function(t) {
+
+            Model.getPriceCategory(priceCatId, function(priceCategory) {
+                Model.getCustomers(function(customers) {
+
+                    // Filter customers by price category
+                    var catCustomers = Model.filter(customers, function(item) {
+                        return item.priceCatId == priceCatId;
+                    });
+
+                    $('#main').html(t({
+                        priceCategory : priceCategory,
+                        customer      : catCustomers
+                    }));
+
+                });
+            });
+
+        });
+    },
     showCustomersForArea: function(areaId) {
         T.render('admin/customer/index', function(t) {
             
-            Model.getCustomers(function(customers) {
-
-                // Filter customers by area id
-                var areaCustomers = _.filter(customers, function(item) {
-                    return item.areaId == areaId;
+            Model.getArea(areaId, function(area) {
+                Model.getCustomers(function(customers) {
+    
+                    // Filter customers by area id
+                    var areaCustomers = Model.filter(customers, function(item) {
+                        return item.areaId == areaId;
+                    });
+    
+                    $('#main').html(t({
+                        area     : area,
+                        customer : areaCustomers
+                    }));
+    
                 });
-
-                $('#main').html(t({customer: areaCustomers}));
-
             });
 
         });
@@ -1221,10 +1267,12 @@ App.init({
             Storage.chain(Model.getAreas)
                    .chain(Model.getPriceCategories)
                    .chain(Model.getCustomer(id))
-                   .using(function(areas, priceCategories, customer) {
+                   .chain(Model.getContactsForCustomer(id))
+                   .using(function(areas, priceCategories, customer, contacts) {
 
-                customer.area = areas;
+                customer.area     = areas;
                 customer.priceCat = priceCategories;
+                customer.contact  = contacts;
 
                 var form = $('<form></form>').append(t(customer));
                 $('#main').html(form);
@@ -1371,7 +1419,7 @@ App.init({
                             complete: function() {
                                 window.location.hash = 'customer/' + customerId;
                             },
-                            successMsg: 'The customer contact information was added to customer "' + customer.name + '".'
+                            successMsg: 'The customer contact information was added to customer "<a href="#customer/' + customerId + '">' + customer.name + '</a>".'
                         });
                     }
                 });
@@ -1418,7 +1466,7 @@ App.init({
                             complete: function() {
                                 window.location.hash = 'customer/' + customerId;
                             },
-                            successMsg: 'The customer contact information was updated for customer "' + contact.customerName + '".'
+                            successMsg: 'The customer contact information was updated for customer "<a href="#customer/' + customerId + '">' + contact.customerName + '</a>".'
                         });
 
                     }
@@ -1470,7 +1518,7 @@ App.init({
             Model.getCustomer(customerId, function(customer) {
                 Model.getComplaints(function(complaints) {
     
-                    var customerComplaints = _.filter(complaints, function(item) {
+                    var customerComplaints = Model.filter(complaints, function(item) {
                         return item.customerId == customerId;
                     });
 
@@ -1636,26 +1684,34 @@ App.init({
     },
     showStockForDepot: function(depotId) {
         T.render('admin/stock/summary', function(t) {
-            Model.getStockForDepot(depotId, function(stock) {
+            Model.getDepot(depotId, function(depot) {
+                Model.getStockForDepot(depotId, function(stock) {
 
-                $('#main').html(t({
-                    depotId  : depotId, 
-                    item     : stock
-                }));
+                    $('#main').html(t({
+                        depotId  : depotId, 
+                        depot    : depot,
+                        item     : stock
+                    }));
 
+                });
             });
         });
     },
     showVehiclesForDepot: function(depotId) {
         T.render('admin/vehicle/index', function(t) {
-            Model.getVehicles(function(vehicles) {
+            Model.getDepot(depotId, function(depot) {
+                Model.getVehicles(function(vehicles) {
 
-                var depotVehicles = _.filter(vehicles, function(item) {
-                    return item.depotId == depotId;
+                    var depotVehicles = Model.filter(vehicles, function(item) {
+                        return item.depotId == depotId;
+                    });
+    
+                    $('#main').html(t({
+                        depot   : depot,
+                        vehicle : depotVehicles
+                    }));
+    
                 });
-
-                $('#main').html(t({vehicle: depotVehicles}));
-
             });
         });
     },
@@ -1874,6 +1930,9 @@ App.init({
                         description : 'Delete product price category "' + priceCategory.name + '".',
                         purge       : 'price-categories',
                         hint        : 'Cannot delete price category: ',
+                        feedback    : {
+                            'SQL_FOREIGN_KEY_CONSTRAINT_VIOLATION': '<a href="#customers/category/' + id + '">Customers are currently assigned</a> to the price category "' + priceCategory.name + '".'
+                        },
                         complete: function() {
                             window.location.hash = 'price-categories';
                         },
@@ -1933,31 +1992,238 @@ App.init({
                     category : priceCategories
                 }));
 
+                $('.product-delete').click(function() {
+
+                    var productId = $(this).data('id');
+
+                    Model.getProduct(productId, function(product) {
+                        Storage.process({
+                            type        : 'DELETE',
+                            resource    : 'product/' + productId,
+                            data        : '',
+                            description : 'Delete product "' + product.name + '".',
+                            purge       : 'products',
+                            hint        : 'Cannot delete product: ',
+                            complete: function() {
+                                window.location.hash = 'products';
+                                App.refresh();
+                            },
+                            successMsg: 'Product "' + product.name + '" was deleted. <a href="#products/recover">Recover deleted products</a>.'
+                        });
+                    });
+
+                });
+
             });
 
         });
     },
     showDeletedProducts: function() {
-        T.render('admin/product/deleted', function(t) {
+        T.render('admin/product/recover', function(t) {
             Model.getDeletedProducts(function(products) {
+
                 $('#main').html(t({product: products}));
+
+                $('.product-recover').click(function() {
+
+                    var productId = $(this).data('id');
+
+                    Model.getProduct(productId, function(product) {
+                        Storage.process({
+                            type        : 'PATCH',
+                            resource    : 'product/recover/' + productId,
+                            data        : '',
+                            description : 'Recover product "' + product.name + '".',
+                            purge       : 'products',
+                            hint        : 'Cannot recover product: ',
+                            complete: function() {
+                                window.location.hash = 'products';
+                            },
+                            successMsg: 'Product "' + product.name + '" was recovered.'
+                        });
+                    });
+
+                });
+
             });
         });
     },
     editProduct: function(id) {
+        T.render('admin/product/edit', function(t) {
 
-        $('#main').html('edit product');
+            Storage.chain(Model.getProduct(id))
+                   .chain(Model.getPriceCategories)
+                   .chain(Model.getWeightClasses)
+                   .using(function(product, priceCategories, weightClasses) {
 
+                product.priceCategory  = priceCategories;
+                product.weightCategory = weightClasses;
+
+                var form = $('<form></form>').append(t(product));
+                $('#main').html(form);
+
+                var rules = {
+                    "name"        : "required",
+                    "unit-size"   : "required",
+                    "description" : "required"
+                };
+
+                // Add validation rules for each price item
+                _.each(priceCategories, function(cat) {
+                    rules['price-' + cat.id] = "required number";
+                    // Populate form with current value
+                    if (product.category && product.category.hasOwnProperty(cat.id)) {
+                        $('input[name="price-' + cat.id + '"]').val(product.category[cat.id].price);
+                    }
+                });
+                
+                // Add validation rules for each load limit
+                _.each(weightClasses, function(cat) {
+                    rules['limit-' + cat.id] = "required digits";
+                    // Populate form with current value
+                    if (product.limit && product.limit.hasOwnProperty(cat.id)) {
+                        $('input[name="limit-' + cat.id + '"]').val(product.limit[cat.id].limit);
+                    }
+                });
+
+                if (product.deleted == true) {
+                    $('input[name="deleted"]').attr('checked', 'checked');
+                }
+ 
+                form.validate({
+                    rules: rules,
+                    submitHandler: function(form) {
+
+                        var limits = [];
+                        var prices = [];
+
+                        _.each($('input[name^="limit"]'), function(el) {
+                            limits.push({
+                                categoryId : $(el).data('id'),
+                                limit      : el.value
+                            });
+                        });
+
+                        _.each($('input[name^="price"]'), function(el) {
+                            prices.push({
+                                priceCatId : $(el).data('id'),
+                                price      : el.value
+                            });
+                        });
+
+                        var data = {
+                            name        : form['name'].value,
+                            unitSize    : form['unit-size'].value,
+                            description : form['description'].value,
+                            deleted     : $('input[name="deleted"]:checked').val() ? true : false,
+                            limits      : limits,
+                            prices      : prices
+                        };
+
+                        Storage.process({
+                            type        : 'PUT',
+                            resource    : '!product/' + id,
+                            data        : data,
+                            description : 'Update product: "' + data.name + '".',
+                            purge       : 'products',
+                            hint        : 'The product could not be updated: ',
+                            complete: function() {
+                                window.location.hash = 'products';
+                            },
+                            successMsg: 'The product "' + data.name + '" was updated.'
+                        });
+    
+                    }
+                });
+
+            });
+
+        });
     },
     createProduct: function() {
+        T.render('admin/product/create', function(t) {
 
-        $('#main').html('create product');
+            Storage.chain(Model.getPriceCategories)
+                   .chain(Model.getWeightClasses)
+                   .using(function(priceCategories, weightClasses) {
 
+                var form = $('<form></form>').append(t({
+                    priceCategory  : priceCategories,
+                    weightCategory : weightClasses
+                }));
+    
+                $('#main').html(form);
+    
+                var rules = {
+                    "name"        : "required",
+                    "unit-size"   : "required",
+                    "description" : "required"
+                };
+
+                // Add validation rules for each price item
+                _.each(priceCategories, function(cat) {
+                    rules['price-' + cat.id] = "required number";
+                });
+                
+                // Add validation rules for each load limit
+                _.each(weightClasses, function(cat) {
+                    rules['limit-' + cat.id] = "required digits";
+                });
+
+                form.validate({
+                    rules: rules,
+                    submitHandler: function(form) {
+    
+                        var limits = [];
+                        var prices = [];
+
+                        _.each($('input[name^="limit"]'), function(el) {
+                            limits.push({
+                                categoryId : $(el).data('id'),
+                                limit      : el.value
+                            });
+                        });
+
+                        _.each($('input[name^="price"]'), function(el) {
+                            prices.push({
+                                priceCatId : $(el).data('id'),
+                                price      : el.value
+                            });
+                        });
+
+                        var data = {
+                            name        : form['name'].value,
+                            unitSize    : form['unit-size'].value,
+                            description : form['description'].value,
+                            prices      : prices,
+                            limits      : limits 
+                        };
+
+                        Storage.process({
+                            type        : 'POST',
+                            resource    : '!product',
+                            data        : data,
+                            description : 'Create new product: "' + data.name + '".',
+                            purge       : 'products',
+                            hint        : 'The product could not be created: ',
+                            complete: function() {
+                                window.location.hash = 'products';
+                            },
+                            successMsg: 'The product "' + data.name + '" was successfully created.'
+                        });
+    
+                    }
+                });
+
+            });
+        });
     },
     viewProduct: function(id) {
         T.render('admin/product/view', function(t) {
             Model.getProduct(id, function(product) {
+
                 $('#main').html(t(product));
+
             });
         });
     },
@@ -2103,7 +2369,8 @@ App.init({
         
                             var data = {
                                 name    : form['name'].value,
-                                depotId : form['depot'].value
+                                depotId : form['depot'].value,
+                                role    : user.role
                             };
         
                             Storage.process({
@@ -2116,7 +2383,7 @@ App.init({
                                 complete: function() {
                                     window.location.hash = 'users';
                                 },
-                                successMsg: 'The user "' + user.username + '" was updated.'
+                                successMsg: 'User "' + user.username + '" was updated.'
                             });
         
                         }
@@ -2266,7 +2533,7 @@ App.init({
             Model.getAreaForFieldstaffUser(function(areaId) {
                 Model.getCustomers(function(customers) {
     
-                    var areaCustomers = _.filter(customers, function(item) {
+                    var areaCustomers = Model.filter(customers, function(item) {
                         return item.areaId === areaId;
                     });
     
@@ -2290,7 +2557,7 @@ App.init({
             Model.getAreaForFieldstaffUser(function(areaId) {
                 Model.getOrders(function(orders) {
 
-                    var areaOrders = _.filter(orders, function(item) {
+                    var areaOrders = Model.filter(orders, function(item) {
                         return item.customerAreaId == areaId;
                     });
 
@@ -2326,7 +2593,7 @@ App.init({
                 Model.getAreaForCallcenterUser(function(areaId) {
 
                     // Filter customers by area id
-                    var areaCustomers = _.filter(customers, function(item) {
+                    var areaCustomers = Model.filter(customers, function(item) {
                         return item.areaId == areaId;
                     });
 

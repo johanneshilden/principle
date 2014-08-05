@@ -52,12 +52,13 @@ Price category:
 </select>
 </div>
 
-{{#if contact.length}}
+{{#if contact}}
 <table>
 {{#each contact}}
 <tr>
     <td>{{kind}}</td>
-    <td>{{body}}</td>
+    <td>{{datum}}</td>
+    <td>{{meta}}</td>
     <td><a href="#contact/{{id}}/edit">Edit</a></td>
     <td><a href="#contact/{{id}}/delete">Delete</a></td>
 {{/each}}
@@ -65,5 +66,6 @@ Price category:
 {{else}}
 - No contacts -
 {{/if}}
+<a href="#contact/customer/{{id}}/create">Add a contact</a>
 
 <input type="submit">

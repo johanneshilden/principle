@@ -830,6 +830,260 @@ Other/Unspecified
 \.
 
 
+COPY product (deleted, description, name, unit_size) FROM stdin;
+f	A light silicone-based creme which provides thermal protection while ironing hair with heat-styling appliances.	One and Only Ceramic Silk Curling Iron Creme Thermal Protection	5.94 oz tube packed 12 to a case
+f	General Mills Honey Nut Cheerios Cereal Bowl. 1 oz individual bowl.	General Mills Honey Nut Cheerios Cereal Bowl	-
+f	Kelloggs Frosted Flakes of Corn Cereal (bowl) 1 oz bowl.	Kelloggs Frosted Flakes of Corn Cereal	-
+f	Freshscent Deodorant Soap wrapped in paper. 3 ounces of bulk discount cheap wholesale bar soap.	3oz. Freshscent Deodorant Soap	-
+f	30 g (1.27 oz) automatic dishwashing detergent in sealed package of 2 pods. 2 loads. Non-toxic. Naturally derived ingredients. No phosphates. Chlorine free wholesale discount cheap bulk dishwash detergent soap. Sparkling clean. Removes greasy stuff. Spotless rinse aid.	Wholesale Grabgreen Auto Dishwash Detergent - Tangerine	-
+f	Soft Scrub Automatic Dish Detergent Soap. 1 oz travel size in individually sealed package. This wholesale discount cheap bulk dish soap is great for camping or traveling.	Soft Scrub Automatic Dish Detergent	-
+f	Eco-friendly, automatic dishwasher gel offers a crisp lemon scent and superior cleaning in your dishwasher for removing dried-on foods. Phosphate-free formula is better for lakes and streams. Gel dissolves quickly without caking and leaves no spots.	Colgate Palmolive, IPD Automatic Dishwashing Gel, 75 oz, Lemon Fresh Scent	-
+f	Personal Care Spike It Xtreme Hold Styling Gel. Great for spiking and scrunching or any hair style that requires extreme hold and control. Alcohol free won't dry or damage your hair and leaves hair with healthy shine. 16 oz bottle.	Personal Care Spike It Xtreme Hold Styling Gel	Case pack: true2 bottles
+f	Salon Grafix Professional Freezing Hair Spray - Mega Hold 1.5 oz 1.5 oz mega hold hair spray in travel size aerosol can. Hold level is 10 on these wholesale bulk cheap discount travel size hair spray.	Salon Grafix Pro Freezing Hair Spray - Mega H	-
+f	Freshscent 3oz Antibacterial Soap is vegetable based. Comes packed with individually wrapped bars of soap per wholesale bulk cheap discount case pack.	Freshscent 3oz Antibacterial Soap	72 bars per case
+f	2 oz Hand Sanitizer is effective at eliminating 99.9% of many common harmful germs and bacteria. Perfect bottle for putting in your briefcase, suitcase, purse or desk. Active Ingredient is Ethyl Alcohol 62% w/w. Also contains moisturizers and aloe. Made in the USA! 96 hand sanitizer bottles per bulk wholesale cheap discount case.	2 oz Hand Sanitizer	-
+f	# 1 Face & Body Bars Soap is Vegetable Based and in a bar form. Comes packed 5 boxes of 100 units (500 total units of bulk wholesale cheap discount bars of soap in a case)	#1 Face & Body Soap	-
+f	Disposable toothbrush. Wholesale bulk toothbrushes are great for Hotels, Institutions and Charitable Giving. Individually wrapped bulk toothbrush with 33 nylon tufts and a blue styrene handle. Length is 6.25 inches. Comes packaged in 10 boxes of 144 (total of 1,440 toothbrushes).	33 Tuft Nylon Bristle Styrene Handle Toothbrush	-
+f	Goji Berries (Lycium barbarum L.) have been used for 6,000 years by herbalists in China, Tibet and India as health foods and supplements. Protects the kidney and liver, helps eyesight, improves sexual function, has anti-fatigue properties, and promotes longevity. Goji Berries are also rich in antioxidants, particularly beta-carotene and zeaxanthin, which has a key role in protecting the retina of the eye.	Gogee 8 fl oz (240 mL.) Goji Berries & Acai Juice	-
+f	Gatorade Perform 02 Powder Packet G - Lemon Lime. 1.34 oz powdered drink mix in packet. Add to 20 fl oz bottle of water. Natural and artificial flavor. Ingredients: sucrose, dextrose, citric acid, natural and artificial flavor, salt, sodium citrate, monopotassium phosphate, modified food starch, calcium silicate, yellow 5.	Gatorade Perform 02 Powder Packet G - Lemon Lime	-
+f	Arizona Mucho Mango Fruit Juice is a vitamin C fortified drink. Enjoy this great tasting fruit juice cocktail. Kids love the mango flavored drink. Trusted Arizona brand name. Net wt 23 oz.	Arizona Mucho Mango w/Vitamin C	24 cans per case.
+f	Motts Hot Spiced Cider Original	Motts Hot Spiced Cider Original	.74 oz package
+f	Arnold Palmer Iced Tea is a delicately delicious combination of iced tea and lemonade and is perfect for refreshing the taste and reviving the senses. Made of half iced tea and half lemonade, this original beverage combination is made of 100 percent natural tea and contains no preservatives and no artificial flavors. Powder in the single-serve packets dissolves instantly into a 16.9 oz. bottle of water to create the refreshing beverage.	Marjack Arnold Palmer Iced Tea Packs, Multi	30/BX
+f	100% All Natural Carbonated Fruit Juice.	Epic Purple (Black Cherry) 100% Juice	24 Pieces per Case
+f	Hawaiian Punch Green Berry Rush 10 oz. Convenient 12 packs can be sold as a 12 pack or broken apart for 12 individual sales. Made with natural fruit juices.	Hawaiian Punch Green Berry Rush 10 oz	12 bottles per case each bottle is 10 oz
+f	Del Monte Tomato & Basil Pasta Sauce. Great for dinners and casseroles.	Del Monte Tomato & Basil Pasta Sauce	There are 12 cans per case - each is 26.5oz
+f	Hy Top Solid Pack Pumpkin.	HyTop Solid Pack Pumpkin	15 oz can, packed 24 per case
+f	Raspberry Lemonade .1 oz packet add to 16.9 oz water. Ingredients: maltodextrin, citric acid, sodium citrate, potassium citrate, natural an artificial flavor, ascorbic acid (vitamin C), sucralose, silicon dioxide, niacinamide (vitamin B3), acesulfame potassium, calcium disodium EDTA (to protect freshness), calcium pantothenate (vitamin B5), vitamin E acetate, pyridoxine hydrochloride (vitamin B6), cyanocobalamin (vitamin B12).	Propel Zero - Raspberry Lemonade	-
+f	Gatorade Perform 02 Powder Packet G2 - Grape. 0.52 oz powdered low calorie drink mix in packet. Add to 20 fl oz bottle of water. Natural and artificial flavor. Ingredients: sucrose, citric acid, natural and artificial flavor, salt, sodium citrate, monopotassium phosphate, modified food starch, calcium silicate, sucralose, acesulfame potassium, red 40, blue 1.	Gatorade Perform 02 Powder Packet G2 - Grape	-
+f	Cascade Dishwashing Powder is formulated for under-counter dishwashers and cabinet-type automatic utensil washers.	Procter & Gamble Commercial Cascade Dishwashing Powder, 20 oz	-
+f	Natural Automatic Dishwasher Gel gets dishes sparkling clean and is gentle on the earth. Dishwasher gel makes effortless work of whatever is waiting in the dishwasher, without the use of phosphates, chlorine or dyes. Nontoxic, plant-derived formula contains enzymes for greater cleaning power, but no NTA or EDTA. Kosher-certified gel formula has not been tested on animals and is safe for septic systems. Dishwasher gel has a lemon scent.	Seventh Generation Dishwasher Gel, 42oz., Non-Toxic, Lemon	-
+f	Provides the same micro-abrasive cleaning power as regular soft scrub liquid cleanser, but without bleach. Gently removes tough stains, soap scum and mildew. Cleans dirt and grime without harsh scratching. Safely cleans virtually any hard surface including pots and pans, counter-tops, tubs and sinks, vinyl siding and more. Contains EPA registered disinfectants. Biodegradable and phosphate-free. Citrus scent. 2 oz bottle.	Soft Scrub Citrus Scent Liquid Dish Soap 2 Ounce	Case pack: 24 bottles
+\.
+
+
+COPY product_price (price, price_cat_id, product_id) FROM stdin;
+24000	1	1
+28000	2	1
+35000	3	1
+24000	1	2
+28000	2	2
+35000	3	2
+24000	1	3
+28000	2	3
+35000	3	3
+24000	1	4
+28000	2	4
+35000	3	4
+24000	1	5
+28000	2	5
+35000	3	5
+24000	1	6
+28000	2	6
+35000	3	6
+24000	1	7
+28000	2	7
+35000	3	7
+24000	1	8
+28000	2	8
+35000	3	8
+24000	1	9
+28000	2	9
+35000	3	9
+24000	1	10
+28000	2	10
+35000	3	10
+24000	1	11
+28000	2	11
+35000	3	11
+24000	1	12
+28000	2	12
+35000	3	12
+100	1	29
+100	2	29
+1000	1	41
+1000	2	41
+1000	1	42
+1000	2	42
+1000	1	43
+1000	2	43
+1000	1	44
+1000	2	44
+1000	1	45
+1000	2	45
+1000	1	46
+1000	2	46
+1000	1	47
+1000	2	47
+1000	1	48
+1000	2	48
+1000	1	49
+1000	2	49
+1000	1	50
+1000	2	50
+1000	1	51
+1000	2	51
+1000	1	52
+1000	2	52
+1000	1	56
+1000	2	56
+1000	1	61
+1000	2	61
+1000	1	62
+1000	2	62
+1000	1	63
+1000	2	63
+1000	1	64
+1000	2	64
+1000	1	65
+1000	2	65
+1000	1	66
+1000	2	66
+1000	1	67
+1000	2	67
+1000	1	68
+1000	2	68
+1000	1	69
+1000	2	69
+1000	1	70
+1000	2	70
+1000	1	71
+1000	2	71
+1	1	72
+1	2	72
+1	3	72
+1000	1	73
+1000	2	73
+1	1	74
+1	2	74
+111	3	74
+1000	1	75
+1000	2	75
+100	1	77
+200	2	77
+300	3	77
+1	1	78
+1	2	78
+2	3	78
+123	1	79
+444	2	79
+555	3	79
+1	1	80
+2	2	80
+2	3	80
+1	1	81
+2	2	81
+2	3	81
+12	1	82
+6	2	82
+7	3	82
+12	1	83
+6	2	83
+7	3	83
+\.
+
+
+COPY product_limit (load_limit, product_id, category_id) FROM stdin;
+200	1	1
+250	1	2
+300	1	3
+200	2	1
+250	2	2
+300	2	3
+200	3	1
+250	3	2
+300	3	3
+200	4	1
+250	4	2
+300	4	3
+200	5	1
+250	5	2
+300	5	3
+200	6	1
+250	6	2
+300	6	3
+200	7	1
+250	7	2
+300	7	3
+200	8	1
+250	8	2
+300	8	3
+200	9	1
+250	9	2
+300	9	3
+200	10	1
+250	10	2
+300	10	3
+200	11	1
+250	11	2
+300	11	3
+200	12	1
+250	12	2
+300	12	3
+100	63	1
+55	64	1
+75	64	2
+55	65	1
+75	65	2
+55	66	1
+75	66	2
+10	67	1
+10	67	2
+10	68	1
+10	68	2
+10	69	1
+10	69	2
+10	70	1
+10	70	2
+10	71	1
+10	71	2
+1	72	1
+1	72	2
+1	72	3
+1	72	4
+55	73	1
+75	73	2
+1	74	1
+1	74	2
+1	74	3
+1	74	4
+55	75	1
+75	75	2
+1	77	1
+2	77	2
+3	77	3
+4	77	4
+1	78	1
+1	78	2
+1	78	3
+1	78	4
+12	79	1
+123	79	2
+123	79	3
+132	79	4
+22	80	1
+2	80	2
+2	80	3
+2	80	4
+22	81	1
+2	81	2
+2	81	3
+2	81	4
+8	82	1
+8	82	2
+8	82	3
+8	82	4
+8	83	1
+8	83	2
+8	83	3
+8	83	4
+2	84	1
+2	84	2
+3	84	3
+2	84	4
+\.
+
+
+
 CREATE TABLE trombone_keys (
     id           serial,
     client       character varying                            NOT NULL,

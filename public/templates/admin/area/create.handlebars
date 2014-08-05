@@ -1,4 +1,4 @@
-{{#if depot}}
+{{#when depot}}
 <h2>Create area in {{regionName}} region</h2>
 <input type="text" name="name">
 <select name="depot">
@@ -10,5 +10,5 @@
 {{else}}
 This region does not have any depots.
 <a href="#depot/create/region/{{regionId}}">Create a depot</a>
-{{/if}}
+{{/when}}
 

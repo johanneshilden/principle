@@ -30,10 +30,11 @@
             <li><a href="#maintenance-types">Maintenance Activity Types</a></li>
             <li><h4 style="margin:0">Customer Management</h4></li>
             <li><a href="#customers">Customers</a></li>
-            <li><a href="#price-categories">Price Categories</a></li>
             <li><h4 style="margin:0">Stock</h4></li>
             <li><a href="#damage-types">Stock damage types</a></li>
             <li><h4 style="margin:0">Product Management</h4></li>
+            <li><a href="#products">Products</a></li>
+            <li><a href="#price-categories">Price Categories</a></li>
         </ul>
 
 
@@ -158,11 +159,94 @@
                 else return opts.inverse(this);
             });
 
+            Handlebars.registerHelper('when', function(a, opts) {
+                if (a && !_.isEmpty(a)) return opts.fn(this);
+                else return opts.inverse(this);
+            });
 
             $('.notifications').delegate('.note-dismiss', 'click', function() {
                 $(this).parent().parent().remove();
             });
 
+            T.prefetch('admin/error');
+            T.prefetch('admin/login');
+            T.prefetch('admin/queue');
+            T.prefetch('admin/offline');
+
+            T.prefetch('admin/area/create');
+            T.prefetch('admin/area/delete');
+            T.prefetch('admin/area/edit');
+            T.prefetch('admin/area/index');
+            T.prefetch('admin/area/view');
+
+            T.prefetch('admin/complaint/customer');
+            T.prefetch('admin/complaint/index');
+            T.prefetch('admin/complaint/view');
+
+            T.prefetch('admin/contact/create');
+            T.prefetch('admin/contact/delete');
+            T.prefetch('admin/contact/edit');
+
+            T.prefetch('admin/customer/create');
+            T.prefetch('admin/customer/edit');
+            T.prefetch('admin/customer/index');
+            T.prefetch('admin/customer/view');
+
+            T.prefetch('admin/depot/create');
+            T.prefetch('admin/depot/delete');
+            T.prefetch('admin/depot/edit');
+            T.prefetch('admin/depot/index');
+            T.prefetch('admin/depot/view');
+
+            T.prefetch('admin/maintenance-activity-type/create');
+            T.prefetch('admin/maintenance-activity-type/delete');
+            T.prefetch('admin/maintenance-activity-type/edit');
+            T.prefetch('admin/maintenance-activity-type/index');
+
+            T.prefetch('admin/price-category/create');
+            T.prefetch('admin/price-category/delete');
+            T.prefetch('admin/price-category/edit');
+            T.prefetch('admin/price-category/index');
+
+            T.prefetch('admin/product/create');
+            T.prefetch('admin/product/recover');
+            T.prefetch('admin/product/edit');
+            T.prefetch('admin/product/index');
+            T.prefetch('admin/product/view');
+
+            T.prefetch('admin/region/create');
+            T.prefetch('admin/region/delete');
+            T.prefetch('admin/region/edit');
+            T.prefetch('admin/region/index');
+            T.prefetch('admin/region/view');
+
+            T.prefetch('admin/stock-damage-type/create');
+            T.prefetch('admin/stock-damage-type/delete');
+            T.prefetch('admin/stock-damage-type/edit');
+            T.prefetch('admin/stock-damage-type/index');
+
+            T.prefetch('admin/stock/summary');
+
+            T.prefetch('admin/user/create');
+            T.prefetch('admin/user/delete');
+            T.prefetch('admin/user/edit');
+            T.prefetch('admin/user/index');
+            T.prefetch('admin/user/view');
+            T.prefetch('admin/user/password');
+            T.prefetch('admin/user/select');
+
+            T.prefetch('admin/vehicle/create');
+            T.prefetch('admin/vehicle/delete');
+            T.prefetch('admin/vehicle/edit');
+            T.prefetch('admin/vehicle/index');
+            T.prefetch('admin/vehicle/view');
+
+            T.prefetch('admin/weight-category/create');
+            T.prefetch('admin/weight-category/delete');
+            T.prefetch('admin/weight-category/edit');
+            T.prefetch('admin/weight-category/index');
+
         </script>
+
     </body>
 </html>

@@ -33,7 +33,7 @@ var Model = {
             }
     
             Model.getUsers(function(users) {
-                yield(_.filter(users, function(item) {
+                yield(Model.filter(users, function(item) {
                     return item.role == role;
                 }));
             });
@@ -105,7 +105,7 @@ var Model = {
         }
 
         Model.getAreas(function(areas) {
-            yield(_.filter(areas, function(item) {
+            yield(Model.filter(areas, function(item) {
                 return item.regionId == regionId;
             }));
         });
@@ -119,7 +119,7 @@ var Model = {
         }
 
         Model.getAreas(function(areas) {
-            yield(_.filter(areas, function(item) {
+            yield(Model.filter(areas, function(item) {
                 return item.depotId == depotId;
             }));
         });
@@ -177,7 +177,7 @@ var Model = {
     getDepots: function(yield) {
         Model.getUsers(function(users) {
 
-            var managers = _.filter(users, function(user) {
+            var managers = Model.filter(users, function(user) {
                 return user.role == 'depot-manager';
             });
 
@@ -219,7 +219,7 @@ var Model = {
         }
 
         Model.getDepots(function(depots) {
-            yield(_.filter(depots, function(depot) {
+            yield(Model.filter(depots, function(depot) {
                 return depot.regionId == regionId;
             }));
         });
@@ -276,6 +276,8 @@ var Model = {
 
     getComplaints: function(id, yield) {
 
+        Storage.collection('complaint', 'complaints', yield);
+
     },
 
     getComplaint: function(id, yield) {
@@ -283,6 +285,10 @@ var Model = {
         if (typeof yield === 'undefined') {
             return _.partial(arguments.callee, id);
         }
+
+        Model.getComplaints(function(complaints) {
+            Storage.find(id, complaints, yield);
+        });
 
     },
 
@@ -324,13 +330,55 @@ var Model = {
 
     getProducts: function(yield) {
     
+        var resources = {
+            products : 'product',
+            prices   : 'product-price',
+            limits   : 'product-limit'
+        };
+
+        var decorator = function(resp) {
+
+            var products = Storage.toMap(resp.products);
+
+            // Insert product prices
+            _.each(resp.prices, function(item) {
+                var a = products[item.productId]['category'] || {};
+                a[item.priceCatId] = item;
+                products[item.productId]['category'] = a;
+            });
+            
+            // ... and load limits
+            _.each(resp.limits, function(item) {
+                var a = products[item.productId]['limit'] || {};
+                a[item.categoryId] = item;
+                products[item.productId]['limit'] = a;
+            });
+ 
+            return products;
+
+        };
+
+        Storage.load(resources, 'products', yield, decorator);
+
     },
 
     getActiveProducts: function(yield) {
 
+        Model.getProducts(function(products) {
+            yield(Model.filter(products, function(item) {
+                return item.deleted == false;
+            }));
+        });
+
     },
 
     getDeletedProducts: function(yield) {
+
+        Model.getProducts(function(products) {
+            yield(Model.filter(products, function(item) {
+                return item.deleted == true;
+            }));
+        });
 
     },
 
@@ -339,6 +387,10 @@ var Model = {
         if (typeof yield === 'undefined') {
             return _.partial(arguments.callee, id);
         }
+
+        Model.getProducts(function(products) {
+            Storage.find(id, products, yield);
+        });
 
     },
 
@@ -411,6 +463,17 @@ var Model = {
             default:
                 return 'Unknown';
         }
+    },
+
+    filter: function(objs, fun) {
+        var res = {};
+        for (key in objs) {
+            var obj = objs[key];
+            if (fun(obj)) {
+                res[key] = obj; 
+            }
+        }
+        return res;
     }
 
 };

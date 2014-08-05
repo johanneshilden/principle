@@ -23,7 +23,7 @@ TIN:    {{tin}}
 </div>
 <div>
 contacts
-{{#if contact.length}}
+{{#if contact}}
 <table>
 {{#each contact}}
 <tr>
@@ -38,7 +38,7 @@ contacts
 - No contacts -
 {{/if}}
 </div>
-<a href="#contact/customer/{{id}}/create">Add a contact</a>
+<a href="#customer/edit/{{id}}">Edit customer</a> | <a href="#contact/customer/{{id}}/create">Add a contact</a>
 <!--
 <a href="#complaints/customer/{{id}}">Complaint history</a>
 <a href="#activity/customer/{{id}}">Call activity</a>

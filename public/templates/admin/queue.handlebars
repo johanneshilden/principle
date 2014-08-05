@@ -1,11 +1,11 @@
 <h2>Offline request queue</h2>
-{{#if .}}
+{{#when item}}
 <ul>
-{{#each .}}
+{{#each item}}
 <li><input type="checkbox" name="queue-item" data-id={{@key}}> {{description}} <a href="javascript:" class="queue-item-process" data-id="{{@key}}">Process</a> | <a href="javascript:" class="queue-item-remove" data-id={{@key}}>Delete</a></li>
 {{/each}}
 </ul>
 <button class="queue-process">Process selected</button>
 {{else}}
 <p>Queue is empty</p>
-{{/if}}
+{{/when}}
