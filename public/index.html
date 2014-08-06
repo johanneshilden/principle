@@ -31,6 +31,7 @@
             <li><h4 style="margin:0">Customer Management</h4></li>
             <li><a href="#customers">Customers</a></li>
             <li><h4 style="margin:0">Stock</h4></li>
+            <li><a href="#stock">Stock</a></li>
             <li><a href="#damage-types">Stock damage types</a></li>
             <li><h4 style="margin:0">Product Management</h4></li>
             <li><a href="#products">Products</a></li>
@@ -225,6 +226,7 @@
             T.prefetch('admin/stock-damage-type/edit');
             T.prefetch('admin/stock-damage-type/index');
 
+            T.prefetch('admin/stock/depot-select');
             T.prefetch('admin/stock/summary');
 
             T.prefetch('admin/user/create');

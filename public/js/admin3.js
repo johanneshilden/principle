@@ -1668,18 +1668,36 @@ App.init({
         });
     },
     showStockActivityForDepot: function(depotId) {
-        T.render('admin/stock/depots', function(t) {
-            Storage.load('stock-activity/depot/' + depotId, 'depot-' + depotId + '-stock-activity', function(activity) {
 
-                $('#main').html(t({activity: activity}));
-
-            });
-        });
     },
     manageStock: function() {
-        T.render('admin/stock/depots', function(t) {
-            Model.getDepots(function(depots) {
-                $('#main').html(t({depot: depots}));
+        T.render('admin/stock/depot-select', function(t) {
+            T.render('admin/stock/summary', function(t_) {
+
+                Model.getDepots(function(depots) {
+
+                    $('#main').html(t({depot: depots}));
+
+                    $('select[name="stock-depot-select"]').change(function() {
+                        var depotId = this.value;
+                        if (depotId) {
+                            Storage.find(depotId, depots, function(depot) {
+                                Model.getStockForDepot(depotId, function(stock) {
+
+                                    $('#stock-summary').html(t_({
+                                        depotId  : depotId, 
+                                        depot    : depot,
+                                        item     : stock
+                                    }));
+
+                                });
+                            });
+                        } else {
+                            $('#stock-summary').empty();
+                        }
+                    });
+    
+                });
             });
         });
     },
