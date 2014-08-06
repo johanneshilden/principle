@@ -119,6 +119,7 @@ App.init({
         // ---------------------------- :
         "products"                      : "showProducts",
         "products/recover"              : "showDeletedProducts",
+        "products/incomplete"           : "showIncompleteProducts",
         "product/edit/:id"              : "editProduct",
         "product/create"                : "createProduct",
         "product/:id"                   : "viewProduct",
@@ -1987,8 +1988,12 @@ App.init({
                    .chain(Model.getActiveProducts)
                    .using(function(priceCategories, products) {
 
+                var complete = Model.filter(products, function(product) {
+                    return product.incomplete == false;
+                });
+ 
                 $('#main').html(t({
-                    product  : products,
+                    product  : complete,
                     category : priceCategories
                 }));
 
@@ -2046,6 +2051,23 @@ App.init({
                 });
 
             });
+        });
+    },
+    showIncompleteProducts: function() {
+        T.render('admin/product/index', function(t) {
+
+            Model.getProducts(function(products) {
+
+                var incompleteProducts = Model.filter(products, function(product) {
+                    return product.incomplete == true;
+                });
+                
+                $('#main').html(t({
+                    product  : incompleteProducts
+                }));
+
+            });
+
         });
     },
     editProduct: function(id) {

@@ -331,14 +331,21 @@ var Model = {
     getProducts: function(yield) {
     
         var resources = {
-            products : 'product',
-            prices   : 'product-price',
-            limits   : 'product-limit'
+            products        : 'product',
+            prices          : 'product-price',
+            limits          : 'product-limit',
+            priceCategories : 'price-category',
+            weightClasses   : 'weight-category'
         };
 
         var decorator = function(resp) {
 
             var products = Storage.toMap(resp.products);
+
+            _.each(products, function(product) {
+                product['category'] = null;
+                product['limit'] = null;
+            });
 
             // Insert product prices
             _.each(resp.prices, function(item) {
@@ -354,6 +361,21 @@ var Model = {
                 products[item.productId]['limit'] = a;
             });
  
+            // Flag products with incomplete price or load limit information
+            _.each(products, function(product) {
+                product.incomplete = false;
+                _.each(resp.priceCategories, function(pc) {
+                    if (!product.category || !product.category[pc.id]) {
+                        product.incomplete = true;
+                    }
+                });
+                _.each(resp.weightClasses, function(wc) {
+                    if (!product.limit || !product.limit[wc.id]) {
+                        product.incomplete = true;
+                    }
+                });
+            });
+
             return products;
 
         };
