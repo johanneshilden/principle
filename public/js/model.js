@@ -274,7 +274,7 @@ var Model = {
 
     },
 
-    getComplaints: function(id, yield) {
+    getComplaints: function(yield) {
 
         Storage.collection('complaint', 'complaints', yield);
 
