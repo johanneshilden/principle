@@ -1953,7 +1953,7 @@ App.init({
                 $('button.confirm').click(function() {
                     Storage.process({
                         type        : 'DELETE',
-                        resource    : 'price-category/' + id,
+                        resource    : '!price-category/' + id,
                         data        : '',
                         description : 'Delete product price category "' + priceCategory.name + '".',
                         purge       : 'price-categories',
