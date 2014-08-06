@@ -92,7 +92,7 @@ App.init({
         // ---------------------------- :
         // stock-activity               :
         // ---------------------------- :
-        "stock-activity/depot/:id"      : "showStockActivityForDepot",
+        "stock-activity"                : "showStockActivity",
         // ---------------------------- :
         // stock                        :
         // ---------------------------- :
@@ -396,7 +396,7 @@ App.init({
             var appUser = App.user();
             Model.getUser(appUser.id, function(user) {
                 user.role = Model.readableRoleName(user.role);
-                $('#main').html(t(user)).append('<a href="#user/password">Update password</a>');
+                $('#main').html(t(user)).append('<a href="#user/edit/' + appUser.id + '">Edit</a> | <a href="#user/password">Update password</a>');
             });
         });
     },
@@ -1667,7 +1667,9 @@ App.init({
 
         });
     },
-    showStockActivityForDepot: function(depotId) {
+    showStockActivity: function() {
+
+        $('#main').html('showStockActivity');
 
     },
     manageStock: function() {
@@ -1678,23 +1680,30 @@ App.init({
 
                     $('#main').html(t({depot: depots}));
 
-                    $('select[name="stock-depot-select"]').change(function() {
+                    $('select[name="stock-depot-select"]').on('change', function() {
+
                         var depotId = this.value;
                         if (depotId) {
                             Storage.find(depotId, depots, function(depot) {
-                                Model.getStockForDepot(depotId, function(stock) {
 
+                                // Temporarily disable onRequestBegin hook
+                                var callback = App.onRequestBegin;
+                                App.onRequestBegin = function() {};
+
+                                Model.getStockForDepot(depotId, function(stock) {
                                     $('#stock-summary').html(t_({
                                         depotId  : depotId, 
                                         depot    : depot,
                                         item     : stock
                                     }));
-
+                                    App.onRequestBegin = callback;
                                 });
+
                             });
                         } else {
                             $('#stock-summary').empty();
                         }
+
                     });
     
                 });
