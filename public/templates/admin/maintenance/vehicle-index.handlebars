@@ -1,3 +1,12 @@
+<select name="maintenance-vehicle-select">
+    <option value="">Select a vehicle</option>
+    {{#each vehicle}}
+    <option value="{{id}}">{{regNo}}</option>
+    {{/each}}
+</select>
+<div id="maintenance-summary"></div>
+
+<!--
 <table>
     <thead>
         <tr>
@@ -15,3 +24,4 @@
         {{/each}}
      </tbody>
 </table>
+-->

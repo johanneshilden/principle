@@ -34,19 +34,24 @@ App.init({
         // ---------------------------- :
         // driver                       :
         // ---------------------------- :
-        "driver"                        : "manageDrivers",
+        "drivers"                       : "manageDrivers",
         "driver/assign/vehicle/:id"     : "assignDriverToVehicle",
         // ---------------------------- :
         // fuel                         :
         // ---------------------------- :
         "fuel-management"               : "manageFuel",
-        "fuel/manage/vehicle/:id"       : "showFuelLogForVehicle",
+        "fuel/add/vehicle/:id"          : "addFuelToVehicle",
+        "fuel/vehicle/:id"              : "showFuelLogForVehicle",
         // ---------------------------- :
         // maintenance                  :
         // ---------------------------- :
         "vehicle-maintenance"           : "manageVehicleMaintenance",
         "maintenance/vehicle/:id"       : "showMaintenanceForVehicle",
-        // ---------------------------- :
+        "maintenance/register/vehicle/:id"       
+                                        : "logMaintenanceActivityForVehicle",
+        "maintenance/complete/vehicle/:id"       
+                                        : "completeMaintenanceActivityForVehicle",
+         // ---------------------------- :
         // maintenance-activity-type    :
         // ---------------------------- :
         "maintenance-types"             : "showMaintenanceActivityTypes",
@@ -98,10 +103,14 @@ App.init({
         // ---------------------------- :
         "stock"                         : "manageStock",
         "stock/depot/:id"               : "showStockForDepot",
+        "stock/add/depot/:id"           : "addStockToDepot",
+        "stock/adjust/depot/:id"        : "adjustStockForDepot",
+        "stock/report/depot/:id"        : "reportDamagedStockForDepot",
         // ---------------------------- :
         // vehicle                      :
         // ---------------------------- :
         "vehicles/depot/:id"            : "showVehiclesForDepot",
+        "vehicles/weight-class/:id"     : "showVehiclesInWeightClass",
         "vehicles"                      : "showVehicles",
         "vehicle/edit/:id"              : "editVehicle",
         "vehicle/delete/:id"            : "deleteVehicle",
@@ -799,18 +808,43 @@ App.init({
     },
     manageDrivers: function() {
         T.render('admin/driver/index', function(t) {
-            Model.getDrivers(function(drivers) {
-                $('#main').html(t({driver: drivers}));
+
+            Model.getUsersByRole('driver', function(drivers) {
+                Model.getDepots(function(depots) {
+
+                    Storage.load('vehicle', 'vehicles', function(resp) {
+
+                        var vehiclesByDriver = Storage.toMap(resp, 'driverId');
+    
+                        _.each(drivers, function(driver) {
+                            driver.depot = depots[driver.depotId];
+                            if (vehiclesByDriver.hasOwnProperty(driver.id)) {
+                                driver.vehicle = vehiclesByDriver[driver.id];
+                            } else {
+                                driver.vehicle = null;
+                            }
+                        });
+    
+                        $('#main').html(t({driver: drivers}));
+    
+                    });
+
+                });
             });
+
         });
     },
     assignDriverToVehicle: function(vehicleId) {
         T.render('admin/vehicle/driver', function(t) {
             Model.getVehicle(vehicleId, function(vehicle) {
-                Model.getDrivers(function(drivers) {
+                Model.getUsersByRole('driver', function(drivers) {
+
+                    var depotDrivers = _.filter(drivers, function(driver) {
+                        return driver.depotId === vehicle.depotId;
+                    });
 
                     var form = $('<form></form>').append(t({
-                        driver  : drivers,
+                        driver  : depotDrivers,
                         vehicle : vehicle
                     }));
      
@@ -832,10 +866,10 @@ App.init({
     
                                 Storage.process({
                                     type        : 'PATCH',
-                                    resource    : 'vehicle/driver',
+                                    resource    : '!vehicle/driver',
                                     data        : data,
                                     description : 'Assign a driver to vehicle ' + vehicle.regNo + '.',
-                                    purge       : ['vehicles', 'drivers'],
+                                    purge       : ['vehicles', 'users'],
                                     hint        : 'The driver could not be assigned to the vehicle: ', 
                                     complete: function() {
                                         window.location.hash = 'vehicles';
@@ -845,11 +879,11 @@ App.init({
                             } else {
 
                                 Storage.process({
-                                    type        : 'DELETE',
-                                    resource    : 'vehicle/driver',
-                                    data        : {vehicleId: vehicleId},
+                                    type        : 'PATCH',
+                                    resource    : 'vehicle/driver/null',
+                                    data        : { vehicleId: vehicleId },
                                     description : 'Remove driver assignment for vehicle ' + vehicle.regNo + '.',
-                                    purge       : ['vehicles', 'drivers'],
+                                    purge       : ['vehicles', 'users'],
                                     hint        : 'The driver assignment could not be removed: ', 
                                     complete: function() {
                                         window.location.hash = 'vehicles';
@@ -866,38 +900,233 @@ App.init({
     },
     manageFuel: function() {
         T.render('admin/fuel/vehicle-index', function(t) {
-            Model.getVehicles(function(vehicles) {
- 
-                $('#main').html(t({vehicle: vehicles}));
+            T.render('admin/fuel/vehicle', function(t_) {
 
+                Model.getVehicles(function(vehicles) {
+ 
+                    $('#main').html(t({vehicle: vehicles}));
+
+                    $('select[name="fuel-vehicle-select"]').on('change', function() {
+
+                        var vehicleId = this.value;
+                        if (vehicleId) {
+                            Storage.find(vehicleId, vehicles, function(vehicle) {
+
+                                // Temporarily disable onRequestBegin hook
+                                var callback = App.onRequestBegin;
+                                App.onRequestBegin = function() {};
+                                
+                                Model.getFuelActivityForVehicle(vehicleId, function(activity) {
+                                    vehicle.activity = activity;
+                                    $('#fuel-summary').html(t_(vehicle));
+                                    App.onRequestBegin = callback;
+                                });
+    
+                            });
+                        } else {
+                            $('#fuel-summary').empty();
+                        }
+
+                    });
+                });
+
+            });
+        });
+    },
+    addFuelToVehicle: function(vehicleId) {
+        T.render('admin/fuel/add', function(t) {
+            Model.getVehicle(vehicleId, function(vehicle) {
+
+                var form = $('<form></form>').append(t(vehicle));
+
+                $('#main').html(form);
+
+                form.validate({
+                    rules: {
+                        "meter-reading" : "required number",
+                        "amount"        : "required number"
+                    },
+                    submitHandler: function(form) {
+
+                        var data = {
+                            meterReading : form['meter-reading'].value,
+                            amount       : form['amount'].value
+                        };
+
+                        Storage.process({
+                            type        : 'POST',
+                            resource    : 'fuel-activity/vehicle/' + vehicleId,
+                            data        : data,
+                            description : 'Create a fuel activity log entry for vehicle "' + vehicle.regNo + '".',
+                            purge       : 'fuel-data-' + vehicleId,
+                            hint        : 'The fuel activity log entry could not be created: ',
+                            complete: function() {
+                                window.location.hash = 'fuel/vehicle/' + vehicleId;
+                            },
+                            successMsg: 'The fuel log entry for vehicle "' + vehicle.regNo + '" was successfully created.'
+                        });
+
+                    }
+                });
+                
             });
         });
     },
     showFuelLogForVehicle: function(vehicleId) {
         T.render('admin/fuel/vehicle', function(t) {
             Model.getVehicle(vehicleId, function(vehicle) {
- 
-                $('#main').html(t(vehicle));
+                Model.getFuelActivityForVehicle(vehicleId, function(activity) {
 
+                    vehicle.activity = activity;
+                    $('#main').html(t(vehicle));
+
+                });
             });
         });
     },
     manageVehicleMaintenance: function() {
         T.render('admin/maintenance/vehicle-index', function(t) {
-            Model.getVehicles(function(vehicles) {
+            T.render('admin/maintenance/vehicle', function(t_) {
+            
+                Model.getVehicles(function(vehicles) {
  
-                $('#main').html(t({vehicle: vehicles}));
+                    $('#main').html(t({vehicle: vehicles}));
+
+                    $('select[name="maintenance-vehicle-select"]').on('change', function() {
+
+                        var vehicleId = this.value;
+                        if (vehicleId) {
+                            Storage.find(vehicleId, vehicles, function(vehicle) {
+
+                                // Temporarily disable onRequestBegin hook
+                                var callback = App.onRequestBegin;
+                                App.onRequestBegin = function() {};
+                                
+                                Model.getMaintenanceActivityForVehicle(vehicleId, function(activity) {
+                                    vehicle.activity = activity;
+                                    $('#maintenance-summary').html(t_(vehicle));
+                                    App.onRequestBegin = callback;
+                                });
+    
+                            });
+                        } else {
+                            $('#maintenance-summary').empty();
+                        }
+
+                    });
+
+                });
 
             });
+
         });
     },
     showMaintenanceForVehicle: function(vehicleId) {
         T.render('admin/maintenance/vehicle', function(t) {
             Model.getVehicle(vehicleId, function(vehicle) {
+                Model.getMaintenanceActivityForVehicle(vehicleId, function(activity) {
  
-                $('#main').html(t(vehicle));
+                    vehicle.activity = activity;
+                    $('#main').html(t(vehicle));
+
+                });
+            });
+        });
+    },
+    logMaintenanceActivityForVehicle: function(vehicleId) {
+        T.render('admin/maintenance/register', function(t) {
+
+            Model.getMaintenanceTypes(function(activityTypes) {
+                Model.getVehicle(vehicleId, function(vehicle) {
+
+                    if (_.isEmpty(activityTypes)) {
+                        App.error({
+                            responseJSON: { message: 'No maintenance activity types found.' }
+                        });
+                    } else {
+                        vehicle.activityType = activityTypes;
+                        $('#main').html(t(vehicle));
+
+                        var form = $('<form></form>').append(t(vehicle));
+        
+                        $('#main').html(form);
+        
+                        form.validate({
+                            rules: {
+                                "meter-reading" : "required number",
+                                "description"   : "required",
+                                "start-time"    : "required"
+                            },
+                            submitHandler: function(form) {
+        
+                                var data = {
+                                    meterReading : form['meter-reading'].value,
+                                    description  : form['description'].value,
+                                    startTime    : form['start-time'].value,
+                                    activity     : form['type'].value,
+                                    vehicleId    : vehicleId
+                                };
+        
+                                Storage.process({
+                                    type        : 'POST',
+                                    resource    : '!maintenance/vehicle/' + vehicleId,
+                                    data        : data,
+                                    description : 'Create a maintenance activity entry for vehicle "' + vehicle.regNo + '".',
+                                    purge       : ['vehicles', 'maintenance-data-' + vehicleId],
+                                    hint        : 'The maintenance activity log entry could not be created: ',
+                                    complete: function() {
+                                        window.location.hash = 'maintenance/vehicle/' + vehicleId;
+                                    },
+                                    successMsg: 'The maintenance activity log entry for vehicle "' + vehicle.regNo + '" was successfully created.'
+                                });
+        
+                            }
+                        });
+
+                    }
+
+                });
+            });
+
+        });
+    },
+    completeMaintenanceActivityForVehicle: function(vehicleId) {
+        T.render('admin/maintenance/complete', function(t) {
+
+            Model.getVehicle(vehicleId, function(vehicle) {
+
+                var form = $('<form></form>').append(t(vehicle));
+
+                $('#main').html(form);
+
+                form.validate({
+                    rules: {
+                        "end-time" : "required"
+                    },
+                    submitHandler: function(form) {
+
+                        var data = {
+                            endTime: form['end-time'].value
+                        };
+
+                        Storage.process({
+                            type        : 'PATCH',
+                            resource    : '!maintenance/complete/vehicle/' + vehicleId,
+                            data        : data,
+                            description : 'Complete maintenance activity for vehicle "' + vehicle.regNo + '".',
+                            purge       : ['vehicles', 'maintenance-data-' + vehicleId],
+                            hint        : 'The maintenance activity could not be completed: ',
+                            complete: function() {
+                                window.location.hash = 'maintenance/vehicle/' + vehicleId;
+                            },
+                            successMsg: 'The maintenance activity for "' + vehicle.regNo + '" was completed.'
+                        });
+
+                    }
+                });
 
             });
+
         });
     },
     createArea: function(regionId) {
@@ -1725,6 +1954,21 @@ App.init({
             });
         });
     },
+    addStockToDepot: function(depotId) {
+
+        $('#main').html('add stock to depot');
+
+    },
+    adjustStockForDepot: function(depotId) {
+
+        $('#main').html('adjust stock for depot');
+
+    },
+    reportDamagedStockForDepot: function(depotId) {
+
+        $('#main').html('report damaged stock for depot');
+
+    },
     showVehiclesForDepot: function(depotId) {
         T.render('admin/vehicle/index', function(t) {
             Model.getDepot(depotId, function(depot) {
@@ -1741,6 +1985,23 @@ App.init({
     
                 });
             });
+        });
+    },
+    showVehiclesInWeightClass: function(classId) {
+        T.render('admin/vehicle/index', function(t) {
+
+            Model.getWeightClass(classId, function(weightClass) {
+                Model.getVehicles(function(vehicles) {
+
+                    var catVehicles = Model.filter(vehicles, function(item) {
+                        return item.weightCatId == classId;
+                    });
+
+                    $('#main').html(t({vehicle: catVehicles}));
+ 
+                });
+            });
+
         });
     },
     showVehicles: function() {
@@ -1820,7 +2081,7 @@ App.init({
 
                     Storage.process({
                         type        : 'DELETE',
-                        resource    : 'vehicle/' + id,
+                        resource    : '!vehicle/' + id,
                         data        : '',
                         description : 'Delete vehicle "' + vehicle.regNo + '".',
                         purge       : 'vehicles',
@@ -2335,7 +2596,7 @@ App.init({
                         purge       : 'weight-categories',
                         hint        : 'Cannot delete vehicle weight category: ',
                         feedback    : {
-                            'SQL_FOREIGN_KEY_CONSTRAINT_VIOLATION': 'Vehicles are currently assigned to "' + weightClass.name + '".'
+                            'SQL_FOREIGN_KEY_CONSTRAINT_VIOLATION': '<a href="#vehicles/weight-class/' + id + '">Vehicles are currently assigned</a> to "' + weightClass.name + '".'
                         },
                         complete: function() {
                             window.location.hash = 'weight-classes';

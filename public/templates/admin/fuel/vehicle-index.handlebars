@@ -1,3 +1,13 @@
+<select name="fuel-vehicle-select">
+    <option value="">Select a vehicle</option>
+    {{#each vehicle}}
+    <option value="{{id}}">{{regNo}}</option>
+    {{/each}}
+</select>
+<div id="fuel-summary"></div>
+
+
+<!--
 <table>
     <thead>
         <tr>
@@ -15,3 +25,4 @@
         {{/each}}
      </tbody>
 </table>
+-->

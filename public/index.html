@@ -26,8 +26,11 @@
             <li><a href="#regions">Regions</a></li>
             <li><h4 style="margin:0">Vehicle Management</h4></li>
             <li><a href="#vehicles">Vehicles</a></li>
+            <li><a href="#vehicle-maintenance">Vehicle Maintenance</a></li>
+            <li><a href="#fuel-management">Fuel Management</a></li>
             <li><a href="#weight-classes">Vehicle Weight Classes</a></li>
             <li><a href="#maintenance-types">Maintenance Activity Types</a></li>
+            <li><a href="#drivers">Drivers</a></li>
             <li><h4 style="margin:0">Customer Management</h4></li>
             <li><a href="#customers">Customers</a></li>
             <li><a href="#complaints">Complaints</a></li>
@@ -37,6 +40,7 @@
             <li><h4 style="margin:0">Product Management</h4></li>
             <li><a href="#products">Products</a></li>
             <li><a href="#price-categories">Price Categories</a></li>
+            <li><h4 style="margin:0">Order Management</h4></li>
         </ul>
 
 
@@ -244,10 +248,21 @@
             T.prefetch('admin/vehicle/index');
             T.prefetch('admin/vehicle/view');
 
+            T.prefetch('admin/driver/index');
+
             T.prefetch('admin/weight-category/create');
             T.prefetch('admin/weight-category/delete');
             T.prefetch('admin/weight-category/edit');
             T.prefetch('admin/weight-category/index');
+
+            T.prefetch('admin/fuel/vehicle');
+            T.prefetch('admin/fuel/add');
+            T.prefetch('admin/fuel/vehicle-index');
+
+            T.prefetch('admin/maintenance/vehicle');
+            T.prefetch('admin/maintenance/vehicle-index');
+            T.prefetch('admin/maintenance/register');
+            T.prefetch('admin/maintenance/complete');
 
         </script>
 

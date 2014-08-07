@@ -470,6 +470,26 @@ var Model = {
 
     },
 
+    getFuelActivityForVehicle: function(vehicleId, yield) {
+
+        if (typeof yield === 'undefined') {
+            return _.partial(arguments.callee, vehicleId);
+        }
+
+        Storage.load('fuel-activity/vehicle/' + vehicleId, 'fuel-data-' + vehicleId, yield);
+
+    },
+
+    getMaintenanceActivityForVehicle: function(vehicleId, yield) {
+
+        if (typeof yield === 'undefined') {
+            return _.partial(arguments.callee, vehicleId);
+        }
+
+        Storage.load('maintenance-data/vehicle/' + vehicleId, 'maintenance-data-' + vehicleId, yield);
+
+    },
+
     readableRoleName: function(role) {
         switch (role) {
             case 'field-staff': 

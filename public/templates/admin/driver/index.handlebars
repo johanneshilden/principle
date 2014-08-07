@@ -1,3 +1,4 @@
+{{#when driver}}
 <table>
     <thead>
         <tr>
@@ -5,6 +6,7 @@
             <th>Name</th>
             <th>Username</th>
             <th>Vehicle</th>
+            <th>Depot</th>
         </tr>
     </thead>
     <tbody>
@@ -12,10 +14,13 @@
         <tr>
             <td>{{id}}</td>
             <td>{{name}}</td>
-            <td>{{username}}</td>
-            <td>{{#if vehicleId}}<a href="#vehicle/{{vehicleId}}">{{vehicleRegNo}}</a>{{/if}}</td>
+            <td><a href="#user/{{id}}">{{username}}</a></td>
+            <td>{{#if vehicle}}<a href="#vehicle/{{vehicle.id}}">{{vehicle.regNo}}</a>{{/if}}</td>
+            <td><a href="#depot/{{depot.id}}">{{depot.name}}</a></td>
         </tr>
         {{/each}}
      </tbody>
 </table>
-
+{{else}}
+No drivers.
+{{/when}}

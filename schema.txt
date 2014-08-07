@@ -555,18 +555,15 @@ ALTER TABLE ONLY vehicle_fuel_activity
 CREATE TABLE vehicle_maintenance_activity (
     id            serial,
     description   character varying                           NOT NULL,
-    end_time      timestamp without time zone                 NOT NULL,
+    end_time      timestamp without time zone,
     meter_reading double precision                            NOT NULL,
     start_time    timestamp without time zone                 NOT NULL,
-    type_id       bigint                                      NOT NULL,
+    activity      character varying                           NOT NULL,
     vehicle_id    bigint                                      NOT NULL
 );
 
 ALTER TABLE ONLY vehicle_maintenance_activity
     ADD CONSTRAINT vehicle_maintenance_activity_pkey PRIMARY KEY (id);
-
-ALTER TABLE ONLY vehicle_maintenance_activity
-    ADD CONSTRAINT vehicle_maintenance_activity_type_id_fkey FOREIGN KEY (type_id) REFERENCES maintenance_activity_type(id);
 
 ALTER TABLE ONLY vehicle_maintenance_activity
     ADD CONSTRAINT vehicle_maintenance_activity_vehicle_id_fkey FOREIGN KEY (vehicle_id) REFERENCES vehicle(id);

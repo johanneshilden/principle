@@ -1,5 +1,5 @@
 <h2>Complaint history for customer: {{customer.name}}</h2>
-{{#if complaint.length}}
+{{#when complaint}}
 <table>
     <thead>
         <tr>
@@ -19,4 +19,4 @@
 </table>
 {{else}}
 No complaints
-{{/if}}
+{{/when}}

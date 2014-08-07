@@ -1,3 +1,28 @@
 <h2>Vehicle fuel management</h2>
-{{regNo}}
+<h5>{{regNo}}</h5>
+
+{{#when activity}}
+<h3>Fuel activity log</h3>
+<table>
+    <thead>
+        <tr>
+            <th>Created</th>
+            <th>Meter Reading</th>
+            <th>Amount</th>
+        </tr>
+    </thead>
+    <tbody>
+    {{#each activity}}
+        <tr>
+            <td>{{created}}</td>
+            <td>{{meterReading}}</td>
+            <td>{{amount}}</td>
+        </tr>
+    {{/each}}
+    </tbody>
+</table>
+{{else}}
+No activity.
+{{/when}}
+<a href="#fuel/add/vehicle/{{id}}">Register fuel activity</a>
 

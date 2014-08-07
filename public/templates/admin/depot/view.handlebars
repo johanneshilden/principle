@@ -10,12 +10,12 @@ No manager assigned. <a href="#depot/edit/{{id}}">Edit</a>
 {{/if}}
 </div>
 <div>
-{{#if area}}
+{{#when area}}
 <h3>Areas serviced by this depot</h3>
+<ul>
 {{#each area}}
-<div>
-{{name}}
-</div>
+<li><a href="#area/{{id}}">{{name}}</a></li>
 {{/each}}
-{{/if}}
+</ul>
+{{/when}}
 

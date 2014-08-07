@@ -6,6 +6,8 @@
             <th>Id</th>
             <th>Registration</th>
             <th>Weight Class</th>
+            <th>Depot</th>
+            <th>Driver</th>
         </tr>
     </thead>
     <tbody>
@@ -14,14 +16,14 @@
             <td>{{id}}</td>
             <td>{{regNo}}</td>
             <td>{{weightCategory}}</td>
+            <td>{{depot}}</td>
+            <td>{{driverName}}</td>
             <td><a href="#vehicle/{{id}}">View</a></td>
             <td><a href="#vehicle/edit/{{id}}">Edit</a></td>
             <td><a href="#vehicle/delete/{{id}}">Delete</a></td>
-            <!--
             <td><a href="#driver/assign/vehicle/{{id}}">Assign driver</a></td>
-            <td><a href="#fuel/manage/vehicle/{{id}}">Fuel management</a></td>
+            <td><a href="#fuel/vehicle/{{id}}">Fuel management</a></td>
             <td><a href="#maintenance/vehicle/{{id}}">Maintenance</a></td>
-            -->
         </tr>
         {{/each}}
      </tbody>

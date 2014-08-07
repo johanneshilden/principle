@@ -1,3 +1,42 @@
 <h2>Vehicle maintenance</h2>
-{{regNo}}
+<h5>{{regNo}}</h5>
+
+<div>
+{{#if_eq status "in_maintenance"}}
+Status: {{status}}<br>
+This vehicle is currently in maintenance.
+<a href="#maintenance/complete/vehicle/{{id}}">Flag as complete</a>
+{{else}}
+This vehicle is active.
+<a href="#maintenance/register/vehicle/{{id}}">Log a maintenance activity</a>
+{{/if_eq}}
+</div>
+
+{{#when activity}}
+<h3>Maintenance history</h3>
+<table>
+    <thead>
+        <tr>
+            <th>Meter Reading</th>
+            <th>Maintenance Type</th>
+            <th>Description</th>
+            <th>Start Time</th>
+            <th>End Time</th>
+        </tr>
+    </thead>
+    <tbody>
+    {{#each activity}}
+        <tr>
+            <td>{{meterReading}}</td>
+            <td>{{activity}}</td>
+            <td>{{description}}</td>
+            <td>{{startTime}}</td>
+            <td>{{endTime}}</td>
+        </tr>
+    {{/each}}
+    </tbody>
+</table>
+{{else}}
+No activity.
+{{/when}}
 
