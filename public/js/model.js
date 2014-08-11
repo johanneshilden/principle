@@ -323,7 +323,12 @@ var Model = {
         }
 
         Model.getVehicles(function(vehicles) {
-            Storage.find(id, vehicles, yield);
+            Storage.load('meter-reading/vehicle/' + id, 'meter-reading-' + id, function(result) {
+                Storage.find(id, vehicles, function(item) {
+                    item.meterReading = result.meterReading;
+                    yield(item);
+                });
+            });
         });
 
     },
@@ -454,9 +459,21 @@ var Model = {
 
     getOrders: function(yield) {
 
+        Storage.collection('order', 'orders', yield);
+
     },
 
-    getOrdersWithStatus: function(type, yield) {
+    getOrdersWithStatus: function(stat, yield) {
+
+        if (typeof yield === 'undefined') {
+            return _.partial(arguments.callee, stat);
+        }
+
+        Model.getOrders(function(orders) {
+            yield(Model.filter(orders, function(item) {
+                return item.status == stat;
+            }));
+        });
 
     },
 
@@ -467,6 +484,26 @@ var Model = {
         }
 
         Storage.load('stock/depot/' + depotId, 'stock-' + depotId, yield);
+
+    },
+
+    getStockActivity: function(yield) {
+
+        Storage.collection('stock-activity', 'stock-activity', yield);
+
+    },
+
+    getStockActivityForDepot: function(depotId, yield) {
+
+        if (typeof yield === 'undefined') {
+            return _.partial(arguments.callee, depotId);
+        }
+
+        Model.getStockActivity(function(activity) {
+            yield(Model.filter(activity, function(item) {
+                return item.depotId == depotId;
+            }));
+        });
 
     },
 

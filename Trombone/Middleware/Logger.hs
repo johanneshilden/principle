@@ -13,8 +13,9 @@ import System.Log.FastLogger
 -- request logger.
 buildLogger :: BufSize        -- ^ Buffer size
             -> FilePath       -- ^ Log file location
-            -> IO Middleware
+            -> IO (LoggerSet, Middleware)
 buildLogger bufsize path = do
     file <- newFileLoggerSet bufsize path
-    mkRequestLogger def { destination = Logger file }
+    mw   <- mkRequestLogger def { destination = Logger file }
+    return (file, mw)
 

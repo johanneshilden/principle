@@ -10,6 +10,7 @@ import Control.Exception.Lifted                        ( SomeException, try, fro
 import Data.Aeson
 import Data.List                                       ( intersperse )
 import Data.Maybe                                      ( listToMaybe, maybeToList, fromMaybe, mapMaybe )
+import Data.Monoid                                     ( (<>) )
 import Data.Scientific
 import Data.Text                                       ( Text, pack, empty )
 import Data.Text.Encoding
@@ -22,6 +23,8 @@ import Database.Persist
 import Database.Persist.Postgresql              hiding ( Sql )
 import Database.PostgreSQL.Simple                      ( SqlError(..) )
 import Network.Wai.Internal                            ( Request(..) )
+import System.Log.FastLogger                           ( pushLogStr, toLogStr )
+import Trombone.Db.Colorize
 import Trombone.Db.Execute
 import Trombone.Db.Template
 import Trombone.Dispatch.Core
@@ -50,7 +53,7 @@ dispatchDbAction q ps _ = run q ps
 
 run :: DbQuery -> [(Text, EscapedText)] -> Dispatch RouteResponse
 run (DbQuery ret tpl) ps = do
-    Context pool _ _ _ _ loud <- ask
+    Context pool _ _ _ _ loud logger <- ask
     case instantiate tpl ps of
         Left e -> 
             -- 400 Bad request: Request parameters did not match template
@@ -59,7 +62,12 @@ run (DbQuery ret tpl) ps = do
                   \Arguments missing: "
                 , Text.concat $ intersperse ", " $ map arg e, "." ]
         Right q -> do
-            when loud $ liftIO $ print q  -- Verbose output
+            let q' = Text.stripStart q
+                pretty = colorize q'
+            when loud $ liftIO $ putStrLn $ Text.unpack q' -- Verbose output
+            case logger of 
+                Nothing -> return ()
+                Just lg -> liftIO $ pushLogStr lg $ toLogStr $ pretty <> "\n"
             res <- try $ getDbResponse ret q 
             return $ case res of   
                        Left  e -> catchDbErrors e -- An SQL exception occured

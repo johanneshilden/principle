@@ -65,7 +65,7 @@ var Storage = (function($){
     }
 
     /*
-     * Remove one ore more keys from every users' storage space.
+     * Remove one ore more keys from the storage space of every user.
      */
     function purgeAll(key) {
         if (key instanceof Array) {

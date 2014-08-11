@@ -62,11 +62,12 @@ data ServerConf = ServerConf
     , serverHmacConf   :: Maybe HmacKeyConf  -- ^ HMAC configuration
     , serverPipelines  :: [(Text, Pipeline)] -- ^ Pipeline map
     , serverVerbose    :: Bool               -- ^ Log output to stdout
+    , serverLogger     :: Maybe LoggerSet    -- ^ FastLogger instance
     }
 
 nullConf :: ServerConf
 {-# INLINE nullConf #-}
-nullConf = ServerConf 0 0 (DbConf "" 0 "" "" "") [] [] Nothing [] False
+nullConf = ServerConf 0 0 (DbConf "" 0 "" "" "") [] [] Nothing [] False Nothing
 
 buildConnectionString :: DbConf -> ConnectionString
 buildConnectionString DbConf{..} =
@@ -83,7 +84,7 @@ runWithArgs = do
     translOpts args >>= \(args, _) -> run args
   where run :: Config -> IO ()
         run Config{ configShowVer  = True } = 
-            putStrLn "Trombone server version 0.8.1" 
+            putStrLn "Trombone server version 0.8.2" 
         run Config{ configShowHelp = True } = 
             putStrLn $ usageInfo "Usage: trombone [OPTION...]" options
         run cfg = do
@@ -111,11 +112,12 @@ runWithConf ServerConf
     , serverHmacConf   = hconf
     , serverPipelines  = pipes 
     , serverVerbose    = loud
+    , serverLogger     = logger
     } = 
     withPostgresqlPool (buildConnectionString dbconf) pconns $ \pool -> do
         putStrLn $ "Trombone listening on port " ++ show port ++ "."
         run port $ foldr ($) `flip` midware $ \request app -> do
-            let context = Context pool request routes hconf pipes loud
+            let context = Context pool request routes hconf pipes loud logger
             flip runReaderT context $ runRoutes 
                 >>= lift . app . sendJsonResponse . responseOr404 
 
@@ -125,8 +127,9 @@ setupLogger :: ServerState ()
 setupLogger = do
     (c@Config{..}, setup@ServerConf{ serverMiddleware = mw }) <- get
     when configEnLogging $ do
-        logger <- lift $ buildLogger configLogBufSize configLogFile
-        put (c, setup{ serverMiddleware = logger:mw })
+        (logger, m) <- lift $ buildLogger configLogBufSize configLogFile
+        put (c, setup{ serverMiddleware = m:mw 
+                     , serverLogger     = Just logger })
 
 setupAmqp :: ServerState ()
 setupAmqp = do

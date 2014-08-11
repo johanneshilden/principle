@@ -39,19 +39,19 @@ App.init({
         // ---------------------------- :
         // fuel                         :
         // ---------------------------- :
-        "fuel-management"               : "manageFuel",
+        "fuel"                          : "manageFuel",
+        "fuel/vehicle/:id"              : "manageFuel",
         "fuel/add/vehicle/:id"          : "addFuelToVehicle",
-        "fuel/vehicle/:id"              : "showFuelLogForVehicle",
         // ---------------------------- :
         // maintenance                  :
         // ---------------------------- :
         "vehicle-maintenance"           : "manageVehicleMaintenance",
-        "maintenance/vehicle/:id"       : "showMaintenanceForVehicle",
+        "maintenance/vehicle/:id"       : "manageVehicleMaintenance",
         "maintenance/register/vehicle/:id"       
                                         : "logMaintenanceActivityForVehicle",
         "maintenance/complete/vehicle/:id"       
                                         : "completeMaintenanceActivityForVehicle",
-         // ---------------------------- :
+        // ---------------------------- :
         // maintenance-activity-type    :
         // ---------------------------- :
         "maintenance-types"             : "showMaintenanceActivityTypes",
@@ -95,17 +95,15 @@ App.init({
         "damage-type/delete/:id"        : "deleteDamageType",
         "damage-type/create"            : "createDamageType",
         // ---------------------------- :
-        // stock-activity               :
-        // ---------------------------- :
-        "stock-activity"                : "showStockActivity",
-        // ---------------------------- :
         // stock                        :
         // ---------------------------- :
         "stock"                         : "manageStock",
-        "stock/depot/:id"               : "showStockForDepot",
+        "stock/depot/:id"               : "manageStock",
         "stock/add/depot/:id"           : "addStockToDepot",
         "stock/adjust/depot/:id"        : "adjustStockForDepot",
         "stock/report/depot/:id"        : "reportDamagedStockForDepot",
+        "stock/activity/depot/:id"      : "showStockActivity",
+        "stock-damage-report/:id"       : "viewStockDamageReport",
         // ---------------------------- :
         // vehicle                      :
         // ---------------------------- :
@@ -139,6 +137,10 @@ App.init({
         "weight-class/edit/:id"         : "editWeightClass",
         "weight-class/delete/:id"       : "deleteWeightClass",
         "weight-class/create"           : "createWeightClass",
+        // ---------------------------- :
+        // order                        :
+        // ---------------------------- :
+        "orders"                        : "showOrders",
         // ---------------------------- :
         // user                         :
         // ---------------------------- :
@@ -898,7 +900,7 @@ App.init({
             });
         });
     },
-    manageFuel: function() {
+    manageFuel: function(vehicleId) {
         T.render('admin/fuel/vehicle-index', function(t) {
             T.render('admin/fuel/vehicle', function(t_) {
 
@@ -907,27 +909,31 @@ App.init({
                     $('#main').html(t({vehicle: vehicles}));
 
                     $('select[name="fuel-vehicle-select"]').on('change', function() {
-
-                        var vehicleId = this.value;
-                        if (vehicleId) {
-                            Storage.find(vehicleId, vehicles, function(vehicle) {
-
-                                // Temporarily disable onRequestBegin hook
-                                var callback = App.onRequestBegin;
-                                App.onRequestBegin = function() {};
-                                
-                                Model.getFuelActivityForVehicle(vehicleId, function(activity) {
-                                    vehicle.activity = activity;
-                                    $('#fuel-summary').html(t_(vehicle));
-                                    App.onRequestBegin = callback;
-                                });
-    
-                            });
-                        } else {
-                            $('#fuel-summary').empty();
+                        if (this.value) {
+                            window.location.hash = 'fuel/vehicle/' + this.value;
                         }
-
                     });
+
+                    if (vehicleId) {
+                        Storage.find(vehicleId, vehicles, function(vehicle) {
+
+                            // Temporarily disable onRequestBegin hook
+                            var callback = App.onRequestBegin;
+                            App.onRequestBegin = function() {};
+                            
+                            Model.getFuelActivityForVehicle(vehicleId, function(activity) {
+                                vehicle.activity = activity;
+                                $('#fuel-summary').html(t_(vehicle));
+                                App.onRequestBegin = callback;
+                            });
+
+                            $('select[name="fuel-vehicle-select"]').val(vehicleId);
+
+                        });
+                    } else {
+                        $('#fuel-summary').empty();
+                    }
+
                 });
 
             });
@@ -941,10 +947,19 @@ App.init({
 
                 $('#main').html(form);
 
+                $('input[name="meter-reading"]').val(vehicle.meterReading);
+
                 form.validate({
                     rules: {
-                        "meter-reading" : "required number",
-                        "amount"        : "required number"
+                        "meter-reading": {
+                            required : true,
+                            number   : true,
+                            min      : vehicle.meterReading
+                        },
+                        "amount": {
+                            required : true,
+                            number   : true,
+                        }
                     },
                     submitHandler: function(form) {
 
@@ -972,19 +987,7 @@ App.init({
             });
         });
     },
-    showFuelLogForVehicle: function(vehicleId) {
-        T.render('admin/fuel/vehicle', function(t) {
-            Model.getVehicle(vehicleId, function(vehicle) {
-                Model.getFuelActivityForVehicle(vehicleId, function(activity) {
-
-                    vehicle.activity = activity;
-                    $('#main').html(t(vehicle));
-
-                });
-            });
-        });
-    },
-    manageVehicleMaintenance: function() {
+    manageVehicleMaintenance: function(vehicleId) {
         T.render('admin/maintenance/vehicle-index', function(t) {
             T.render('admin/maintenance/vehicle', function(t_) {
             
@@ -993,44 +996,35 @@ App.init({
                     $('#main').html(t({vehicle: vehicles}));
 
                     $('select[name="maintenance-vehicle-select"]').on('change', function() {
-
-                        var vehicleId = this.value;
-                        if (vehicleId) {
-                            Storage.find(vehicleId, vehicles, function(vehicle) {
-
-                                // Temporarily disable onRequestBegin hook
-                                var callback = App.onRequestBegin;
-                                App.onRequestBegin = function() {};
-                                
-                                Model.getMaintenanceActivityForVehicle(vehicleId, function(activity) {
-                                    vehicle.activity = activity;
-                                    $('#maintenance-summary').html(t_(vehicle));
-                                    App.onRequestBegin = callback;
-                                });
-    
-                            });
-                        } else {
-                            $('#maintenance-summary').empty();
+                        if (this.value) {
+                            window.location.hash = 'maintenance/vehicle/' + this.value;
                         }
-
                     });
 
+                    if (vehicleId) {
+                        Storage.find(vehicleId, vehicles, function(vehicle) {
+
+                            // Temporarily disable onRequestBegin hook
+                            var callback = App.onRequestBegin;
+                            App.onRequestBegin = function() {};
+                            
+                            Model.getMaintenanceActivityForVehicle(vehicleId, function(activity) {
+                                vehicle.activity = activity;
+                                $('#maintenance-summary').html(t_(vehicle));
+                                App.onRequestBegin = callback;
+                            });
+
+                            $('select[name="maintenance-vehicle-select"]').val(vehicleId);
+
+                        });
+                    } else {
+                        $('#maintenance-summary').empty();
+                    }
+
                 });
 
             });
 
-        });
-    },
-    showMaintenanceForVehicle: function(vehicleId) {
-        T.render('admin/maintenance/vehicle', function(t) {
-            Model.getVehicle(vehicleId, function(vehicle) {
-                Model.getMaintenanceActivityForVehicle(vehicleId, function(activity) {
- 
-                    vehicle.activity = activity;
-                    $('#main').html(t(vehicle));
-
-                });
-            });
         });
     },
     logMaintenanceActivityForVehicle: function(vehicleId) {
@@ -1050,12 +1044,18 @@ App.init({
                         var form = $('<form></form>').append(t(vehicle));
         
                         $('#main').html(form);
+
+                        $('input[name="meter-reading"]').val(vehicle.meterReading);
         
                         form.validate({
                             rules: {
-                                "meter-reading" : "required number",
+                                "meter-reading" : {
+                                    required : true,
+                                    number   : true,
+                                    min      : vehicle.meterReading
+                                },
                                 "description"   : "required",
-                                "start-time"    : "required"
+                                "start-time"    : "required datetime"
                             },
                             submitHandler: function(form) {
         
@@ -1101,7 +1101,7 @@ App.init({
 
                 form.validate({
                     rules: {
-                        "end-time" : "required"
+                        "end-time" : "required datetime"
                     },
                     submitHandler: function(form) {
 
@@ -1896,12 +1896,20 @@ App.init({
 
         });
     },
-    showStockActivity: function() {
+    showStockActivity: function(depotId) {
+        T.render('admin/stock/activity', function(t) {
 
-        $('#main').html('showStockActivity');
+            Model.getStockActivityForDepot(depotId, function(activity) {
+            
+                $('#main').html(t({
+                    activity: activity
+                }));
 
+            });
+
+        });
     },
-    manageStock: function() {
+    manageStock: function(depotId) {
         T.render('admin/stock/depot-select', function(t) {
             T.render('admin/stock/summary', function(t_) {
 
@@ -1910,64 +1918,270 @@ App.init({
                     $('#main').html(t({depot: depots}));
 
                     $('select[name="stock-depot-select"]').on('change', function() {
-
-                        var depotId = this.value;
-                        if (depotId) {
-                            Storage.find(depotId, depots, function(depot) {
-
-                                // Temporarily disable onRequestBegin hook
-                                var callback = App.onRequestBegin;
-                                App.onRequestBegin = function() {};
-
-                                Model.getStockForDepot(depotId, function(stock) {
-                                    $('#stock-summary').html(t_({
-                                        depotId  : depotId, 
-                                        depot    : depot,
-                                        item     : stock
-                                    }));
-                                    App.onRequestBegin = callback;
-                                });
-
-                            });
-                        } else {
-                            $('#stock-summary').empty();
+                        if (this.value) {
+                            window.location.hash = 'stock/depot/' + this.value;
                         }
-
                     });
     
-                });
-            });
-        });
-    },
-    showStockForDepot: function(depotId) {
-        T.render('admin/stock/summary', function(t) {
-            Model.getDepot(depotId, function(depot) {
-                Model.getStockForDepot(depotId, function(stock) {
+                    if (depotId) {
+                        Storage.find(depotId, depots, function(depot) {
+                            // Temporarily disable onRequestBegin hook
+                            var callback = App.onRequestBegin;
+                            App.onRequestBegin = function() {};
 
-                    $('#main').html(t({
-                        depotId  : depotId, 
-                        depot    : depot,
-                        item     : stock
-                    }));
+                            Model.getStockForDepot(depotId, function(stock) {
+                                $('#stock-summary').html(t_({
+                                    depotId  : depotId, 
+                                    depot    : depot,
+                                    item     : stock
+                                }));
+                                App.onRequestBegin = callback;
+                            });
+                        });
+
+                        $('select[name="stock-depot-select"]').val(depotId);
+
+                    } else {
+                        $('#stock-summary').empty();
+                    }
 
                 });
             });
         });
     },
     addStockToDepot: function(depotId) {
+        T.render('admin/stock/add', function(t) {
+            
+            Storage.chain(Model.getProducts)
+                   .chain(Model.getDepot(depotId))
+                   .using(function(products, depot) {
 
-        $('#main').html('add stock to depot');
+                var form = $('<form></form>').append(t({
+                    product : products,
+                    depot   : depot
+                }));
 
+                $('#main').html(form);
+
+                form.validate({
+                    rules: {
+                        "quantity" : "required number"
+                    },
+                    submitHandler: function(form) {
+    
+                        var productId = $('select[name="product"]').val();
+
+                        Storage.find(productId, products, function(product) {
+
+                            var data = {
+                                quantity  : form['quantity'].value,
+                                depotId   : depotId,
+                                productId : productId,
+                                type      : 'incoming'
+                            };
+        
+                            Storage.process({
+                                type        : 'PATCH',
+                                resource    : '!stock/add',
+                                data        : data,
+                                description : 'Add incoming stock for product "' + product.name + '" in "' + depot.name + '".',
+                                purge       : ['stock-' + depotId, 'stock-activity'],
+                                hint        : 'Product stock could not be added: ',
+                                complete: function() {
+                                    window.location.hash = 'stock/depot/' + depotId;
+                                },
+                                successMsg: 'Product stock was successfully added to "' + depot.name + '".'
+                            });
+
+                        });
+    
+                    }
+
+                });
+
+            });
+
+        });
     },
     adjustStockForDepot: function(depotId) {
+        T.render('admin/stock/adjust', function(t) {
 
-        $('#main').html('adjust stock for depot');
+            Storage.chain(Model.getProducts)
+                   .chain(Model.getDepot(depotId))
+                   .chain(Model.getStockForDepot(depotId))
+                   .using(function(products, depot, stock) {
 
+                var form = $('<form></form>').append(t({
+                    product : products,
+                    depot   : depot
+                }));
+ 
+                $('#main').html(form);
+
+                var productStock = Storage.toMap(stock, 'productId');
+
+                _.each(products, function(product) {
+
+                    var qty = 0;
+                    if (productStock.hasOwnProperty(product.id)) {
+                        qty = productStock[product.id].actual;
+                    }
+                    $('input[name="product-' + product.id + '"]').val(qty);
+
+                });
+
+                form.validate({
+                    submitHandler: function(form) {
+
+                        // Identify all fields for which the stock amount has been 
+                        // modified by the user.
+
+                        var pos = [];
+                        var neg = [];
+
+                        _.each(products, function(product) {
+                            var qty = 0;
+                            if (productStock.hasOwnProperty(product.id)) {
+                                qty = productStock[product.id].actual;
+                            }
+                            var qty_ = $('input[name="product-' + product.id + '"]').val();
+
+                            if (qty < qty_) {
+
+                                pos.push({
+                                    quantity  : (qty_ - qty),
+                                    depotId   : depotId,
+                                    productId : product.id,
+                                    type      : 'adjustment_pos'
+                                });
+
+                            } else if (qty > qty_) {
+
+                                neg.push({
+                                    quantity  : (qty - qty_),
+                                    depotId   : depotId,
+                                    productId : product.id,
+                                    type      : 'adjustment_neg'
+                                });
+
+                            }
+
+                        });
+
+                        var next = function() {
+                            if (neg.length) {
+
+                                Storage.process({
+                                    type        : 'PATCH',
+                                    resource    : '!stock/remove',
+                                    data        : neg,
+                                    description : 'Product stock adjustment on depot "' + depot.name + '".',
+                                    purge       : ['stock-' + depotId, 'stock-activity'],
+                                    hint        : 'Product stock adjustment failed: ',
+                                    complete: function() {
+                                        window.location.hash = 'stock/depot/' + depotId;
+                                    },
+                                    successMsg: 'Product stock was successfully adjusted on "' + depot.name + '".'
+                                });
+
+                            } else {
+                                App.notify('Product stock was successfully adjusted on "' + depot.name + '".');
+                                window.location.hash = 'stock/depot/' + depotId;
+                            }
+                        };
+
+                        if (pos.length) {
+
+                            Storage.process({
+                                type        : 'PATCH',
+                                resource    : '!stock/add',
+                                data        : pos,
+                                description : 'Product stock adjustment on depot "' + depot.name + '".',
+                                purge       : ['stock-' + depotId, 'stock-activity'],
+                                hint        : 'Product stock adjustment failed: ',
+                                success     : next
+                            });
+
+                        } else {
+                            next();
+                        }
+
+                    }
+                });
+
+            });
+
+        });
+    },
+    viewStockDamageReport: function(activityId) {
+        T.render('admin/stock/damage-report', function(t) {
+
+            Model.getStockActivity(function(activity) {
+                Storage.find(activityId, activity, function(res) {
+                    $('#main').html(t(res));
+                });
+            });
+
+        });
     },
     reportDamagedStockForDepot: function(depotId) {
+        T.render('admin/stock/report', function(t) {
 
-        $('#main').html('report damaged stock for depot');
+            Model.getProducts(function(products) {
+                Model.getDepot(depotId, function(depot) {
+                    Model.getDamageTypes(function(types) {
 
+                        var form = $('<form></form>').append(t({
+                            product : products,
+                            depot   : depot,
+                            type    : types
+                        }));
+    
+                        $('#main').html(form);
+
+                        form.validate({
+                            rules: {
+                                "quantity" : "required number"
+                            },
+                            submitHandler: function(form) {
+            
+                                var productId = $('select[name="product"]').val(),
+                                    typeId = $('select[name="type"]').val();
+    
+                                Storage.find(productId, products, function(product) {
+
+                                    var data = {
+                                        quantity    : form['quantity'].value,
+                                        depotId     : depotId,
+                                        productId   : productId,
+                                        type        : 'damage',
+                                        damageType  : types[typeId].name,
+                                        description : $('textarea[name="comment"]').val(),
+                                    };
+
+                                    Storage.process({
+                                        type        : 'PATCH',
+                                        resource    : '!stock/report-damage',
+                                        data        : data,
+                                        description : 'Report damaged stock for product "' + product.name + '" in "' + depot.name + '".',
+                                        purge       : ['stock-' + depotId, 'stock-activity'],
+                                        hint        : 'Product stock damage could not be reported: ',
+                                        complete: function() {
+                                            window.location.hash = 'stock/depot/' + depotId;
+                                        },
+                                        successMsg: 'Damaged product stock was reported for "' + depot.name + '".'
+                                    });
+            
+                                });
+
+                            }
+                        });
+    
+                    });
+                });
+            });
+
+        });
     },
     showVehiclesForDepot: function(depotId) {
         T.render('admin/vehicle/index', function(t) {
@@ -2590,7 +2804,7 @@ App.init({
                 $('button.confirm').click(function() {
                     Storage.process({
                         type        : 'DELETE',
-                        resource    : 'weight-category/' + id,
+                        resource    : '!weight-category/' + id,
                         data        : '',
                         description : 'Delete vehicle weight category "' + weightClass.name + '".',
                         purge       : 'weight-categories',
@@ -2638,6 +2852,15 @@ App.init({
                     });
 
                 }
+            });
+
+        });
+    },
+    showOrders: function() {
+        T.render('admin/order/index', function(t) {
+
+            Model.getOrders(function(orders) {
+                $('#main').html(t({order: orders}));
             });
 
         });

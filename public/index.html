@@ -26,8 +26,10 @@
             <li><a href="#regions">Regions</a></li>
             <li><h4 style="margin:0">Vehicle Management</h4></li>
             <li><a href="#vehicles">Vehicles</a></li>
+            <!--
             <li><a href="#vehicle-maintenance">Vehicle Maintenance</a></li>
-            <li><a href="#fuel-management">Fuel Management</a></li>
+            <li><a href="#fuel">Fuel Management</a></li>
+            -->
             <li><a href="#weight-classes">Vehicle Weight Classes</a></li>
             <li><a href="#maintenance-types">Maintenance Activity Types</a></li>
             <li><a href="#drivers">Drivers</a></li>
@@ -41,6 +43,7 @@
             <li><a href="#products">Products</a></li>
             <li><a href="#price-categories">Price Categories</a></li>
             <li><h4 style="margin:0">Order Management</h4></li>
+            <li><a href="#orders">Orders</a></li>
         </ul>
 
 
@@ -149,8 +152,8 @@
                 pass  : 'guest',
                 url   : 'http://127.0.0.1:55674/stomp',
                 map   : {
-                    "product/:id": function(obj, method) { 
-                        Storage.purge('product/' + obj.id);
+                    "region/:id": function(obj, method) {
+                        Storage.purge('regions');
                     }
                 }
             });
@@ -172,6 +175,14 @@
 
             $('.notifications').delegate('.note-dismiss', 'click', function() {
                 $(this).parent().parent().remove();
+            });
+
+            $(document).ready(function() {
+
+                $.validator.addMethod("datetime", function (value, element) {
+                    return this.optional(element) || /(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2}).(\d)/.test(value);
+                }, "Please enter a datetime in the format YYYY-MM-DD hh:mm:ss.s");
+
             });
 
             T.prefetch('admin/error');
@@ -233,6 +244,7 @@
 
             T.prefetch('admin/stock/depot-select');
             T.prefetch('admin/stock/summary');
+            T.prefetch('admin/stock/activity');
 
             T.prefetch('admin/user/create');
             T.prefetch('admin/user/delete');
@@ -263,6 +275,8 @@
             T.prefetch('admin/maintenance/vehicle-index');
             T.prefetch('admin/maintenance/register');
             T.prefetch('admin/maintenance/complete');
+
+            T.prefetch('admin/order/index');
 
         </script>
 

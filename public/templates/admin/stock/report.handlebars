@@ -1,0 +1,24 @@
+<h2>Report stock damage for {{depot.name}}</h2>
+<label>Product</label><br>
+<select name="product">
+    {{#each product}}
+    <option value="{{id}}">{{name}}</option>
+    {{/each}}
+</select><br>
+<label>Quantity</label><br>
+<input type="text" name="quantity"><br>
+
+<label>Type of damage</label><br>
+<select name="type">
+    {{#each type}}
+    <option value="{{id}}">{{name}}</option>
+    {{/each}}
+</select><br>
+
+<label>Comment</label><br>
+<textarea name="comment"></textarea>
+
+<br>
+
+<input type="submit">
+

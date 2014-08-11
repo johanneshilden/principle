@@ -424,7 +424,7 @@ ALTER TABLE ONLY stock_activity
 CREATE TABLE stock_damage_report (
     id           serial,
     activity_id  bigint                                       NOT NULL,
-    damage_type  bigint                                       NOT NULL,
+    damage_type  character varying                            NOT NULL,
     description  character varying                            NOT NULL
 );
 
@@ -450,9 +450,6 @@ ALTER TABLE ONLY stock_damage_type
 
 ALTER TABLE ONLY stock_damage_type
     ADD CONSTRAINT unique_stock_damage_type_name UNIQUE (name);
-
-ALTER TABLE ONLY stock_damage_report
-    ADD CONSTRAINT stock_damage_report_damage_type_fkey FOREIGN KEY (damage_type) REFERENCES stock_damage_type(id);
 
 -------------------------------------------------------------------------------
 -- User information.
@@ -1278,6 +1275,6 @@ ALTER TABLE ONLY trombone_keys
 
 
 COPY trombone_keys (client, key) FROM stdin;
-generic	114ad0ef86bc392b39bad6009113c2a5a8a1d993a
+generic	14ad0ef86bc392b39bad6009113c2a5a8a1d993a
 \.
 

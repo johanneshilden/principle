@@ -1,9 +1,24 @@
 <h2>Stock activity</h2>
 <table>
-{{#each activity}}
-<tr>
-    <td>{{activityType}}</td>
-    <td>{{created}}</td>
-</tr>
-{{/each}}
+    <thead>
+        <tr>
+            <th>Activity</th>
+            <th>Created</th>
+            <th>Quantity</th>
+            <th>Product</th>
+        </tr>
+    </thead>
+    <tbody>
+    {{#each activity}}
+        <tr>
+            <td>{{activityType}}</td>
+            <td>{{created}}</td>
+            <td>{{quantity}}</td>
+            <td>{{productName}}</td>
+            {{#if_eq activityType 'damage'}}
+            <td><a href="#stock-damage-report/{{id}}">View damage report</a></td>
+            {{/if_eq}}
+        </tr>
+    {{/each}}
+    </tbody>
 </table>

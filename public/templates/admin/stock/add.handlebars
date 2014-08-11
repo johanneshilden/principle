@@ -1,0 +1,11 @@
+<h2>Add stock to {{depot.name}}</h2>
+<label>Product</label><br>
+<select name="product">
+    {{#each product}}
+    <option value="{{id}}">{{name}}</option>
+    {{/each}}
+</select><br>
+<label>Quantity</label><br>
+<input type="text" name="quantity"><br>
+<input type="submit">
+

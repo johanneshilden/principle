@@ -1,0 +1,29 @@
+{{#when order}}
+<table>
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Last change</th>
+            <th>Status</th>
+            <th>Created</th>
+            <th>Customer</th>
+            <th>User</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each order}}
+        <tr>
+            <td>{{id}}</td>
+            <td>{{lastChange}}</td>
+            <td>{{status}}</td>
+            <td>{{created}}</td>
+            <td><a href="#customer/{{customerId}}">{{customerName}}</a></td>
+            <td>{{userName}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+{{else}}
+No orders.
+{{/when}}

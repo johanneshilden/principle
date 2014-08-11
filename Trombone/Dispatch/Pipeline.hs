@@ -19,6 +19,10 @@ import qualified Data.Text                             as Text
 import qualified Data.Vector                           as Vect
 
 dispatchPipeline :: Pipeline -> [(Text, EscapedText)] -> Value -> Dispatch RouteResponse
+dispatchPipeline q ps (Array a) =
+    liftM resp $ mapM (dispatchPipeline q ps) (Vect.toList a)
+  where val (RouteResponse _ _ x) = x
+        resp = RouteResponse [] 202 . Array . Vect.fromList . map val
 dispatchPipeline (Pipeline pcs conns _) ps obj = do
     mq <- initMq
     stabilize (Pipeline pcs conns mq) 
@@ -35,7 +39,7 @@ dispatchPipeline (Pipeline pcs conns _) ps obj = do
 
 stabilize :: Pipeline -> Dispatch RouteResponse
 stabilize sys@(Pipeline _ _ mq) = do
-    Context pool _ _ _ _ loud <- ask
+    Context pool _ _ _ _ loud _ <- ask
     when loud $ liftIO $ print mq
     s@(Pipeline _ _ mq') <- integrate sys 
     if mq == mq'  -- Has the message queue changed?
@@ -78,7 +82,7 @@ integrate (Pipeline pcs conns mq) =
 runProcessor :: Processor -> [Message] -> [Connection] -> Dispatch [Message]
 runProcessor _ [] _ = return []
 runProcessor (Processor pid fields mtd uri exp) msgs conns = do
-    Context _ _ _ _ _ loud <- ask
+    Context _ _ _ _ _ loud _ <- ask
     let o = buildJsonRequest msgs
         v = expand exp o
     case (saturated fields v, fill uri o) of
