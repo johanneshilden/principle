@@ -973,7 +973,7 @@ App.init({
                             resource    : 'fuel-activity/vehicle/' + vehicleId,
                             data        : data,
                             description : 'Create a fuel activity log entry for vehicle "' + vehicle.regNo + '".',
-                            purge       : 'fuel-data-' + vehicleId,
+                            purge       : ['fuel-data-' + vehicleId, 'meter-reading-' + vehicleId],
                             hint        : 'The fuel activity log entry could not be created: ',
                             complete: function() {
                                 window.location.hash = 'fuel/vehicle/' + vehicleId;
@@ -1072,7 +1072,7 @@ App.init({
                                     resource    : '!maintenance/vehicle/' + vehicleId,
                                     data        : data,
                                     description : 'Create a maintenance activity entry for vehicle "' + vehicle.regNo + '".',
-                                    purge       : ['vehicles', 'maintenance-data-' + vehicleId],
+                                    purge       : ['vehicles', 'maintenance-data-' + vehicleId, 'meter-reading-' + vehicleId],
                                     hint        : 'The maintenance activity log entry could not be created: ',
                                     complete: function() {
                                         window.location.hash = 'maintenance/vehicle/' + vehicleId;
@@ -1101,7 +1101,11 @@ App.init({
 
                 form.validate({
                     rules: {
-                        "end-time" : "required datetime"
+                        "end-time" : {
+                            required       : true,
+                            datetime       : true,
+                            moreRecentThan : vehicle.maintenanceStartTime
+                        }
                     },
                     submitHandler: function(form) {
 

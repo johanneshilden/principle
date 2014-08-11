@@ -181,7 +181,13 @@
 
                 $.validator.addMethod("datetime", function (value, element) {
                     return this.optional(element) || /(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2}).(\d)/.test(value);
-                }, "Please enter a datetime in the format YYYY-MM-DD hh:mm:ss.s");
+                }, "Please enter a date-time in the format YYYY-MM-DD hh:mm:ss.s");
+
+                $.validator.addMethod("moreRecentThan", function (value, element, d) {
+                    var date1 = new Date(value),
+                        date2 = new Date(d);
+                    return this.optional(element) || date1 > date2;
+                }, "Please specify a date and time more recent than {0}");
 
             });
 
