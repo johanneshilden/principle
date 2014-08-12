@@ -156,6 +156,16 @@ var Model = {
 
     },
 
+    getActivityForCustomer: function(customerId, yield) {
+
+        if (typeof yield === 'undefined') {
+            return _.partial(arguments.callee, customerId);
+        }
+
+        Storage.load('activity/customer/' + customerId, 'activities-customer-' + customerId, yield);
+
+    },
+
     getPriceCategories: function(yield) {
 
         Storage.collection('price-category', 'price-categories', yield);
@@ -477,6 +487,16 @@ var Model = {
 
     },
 
+    getProductsForOrder: function(orderId, yield) {
+
+        if (typeof yield === 'undefined') {
+            return _.partial(arguments.callee, orderId);
+        }
+
+        Storage.load('product/order/' + orderId, 'products-order-' + orderId, yield);
+
+    },
+
     getStockForDepot: function(depotId, yield) {
 
         if (typeof yield === 'undefined') {
@@ -542,6 +562,21 @@ var Model = {
             default:
                 return 'Unknown';
         }
+    },
+
+    readableStockActType: function(type) {
+        switch (type) {
+            case 'adjustment_pos':
+                return 'Stock Adjustment (+)';
+            case 'adjustment_neg':
+                return 'Stock Adjustment (-)';
+            case 'incoming':
+                return 'Incoming Stock';
+            case 'damage':
+                return 'Stock Damage';
+            default:
+                return 'Unknown';
+          }
     },
 
     filter: function(objs, fun) {

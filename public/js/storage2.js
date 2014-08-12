@@ -42,7 +42,7 @@ var Storage = (function($){
     }
 
     /*
-     * Remove one ore more keys from the current user's local storage space.
+     * Remove one or more keys from the current user's local storage space.
      */
     function purge(key) {
 
@@ -65,7 +65,7 @@ var Storage = (function($){
     }
 
     /*
-     * Remove one ore more keys from the storage space of every user.
+     * Remove one or more keys from the storage spaces of every user.
      */
     function purgeAll(key) {
         if (key instanceof Array) {
@@ -107,14 +107,29 @@ var Storage = (function($){
 
     }
 
-    function load(resource, key, callback, decorator) {
-
-        var item = Storage.lookup(key);
-
-        if (item) {
-            if (callback && 'function' === typeof callback) {
-                callback(item);
+    /*
+     * Load a resource, either from the remote service, or from the device 
+     * cache, depending on connectivity status and service availability.
+     *
+     * This method provides two different modes of operation: In passive mode,
+     * no request will be made if a cached version of the resource is available 
+     * on the local device. (Default is false, i.e., resources are always
+     * fetched remotely when doing so is possible.)
+     */
+    function load(resource, key, callback, decorator, passive) {
+        
+        var lookupKey = function() {
+            var item = Storage.lookup(key);
+            if (item) {
+                if (callback && 'function' === typeof callback) {
+                    callback(item);
+                }
+                return true;
             }
+            return false;
+        };
+
+        if (passive === true && lookupKey()) {
             return;
         }
 
@@ -136,11 +151,28 @@ var Storage = (function($){
                     var res = _.keys(obj)[0],
                         val = obj[res];
                     delete obj[res];
-                    Storage.load(val, fromCamel(res), function(resp) {
-                        result[res] = resp;
-                        traverse(obj);
-                        return false;   // Do not cache intermediate results.
+
+                    Storage.request({
+                        resource: val,
+                        success: function(resp) {
+                            result[res] = resp;
+                            traverse(obj);
+                        },
+                        error: function(e) {
+                            if (!e.status) {
+                                if (passive !== true && lookupKey()) {
+                                    return;
+                                }
+                                App.offline();
+                            } else {
+                                App.error(e);
+                            }
+                        },
+                        complete: function() {
+                            App.onRequestEnd();
+                        }
                     });
+
                 }
             };
             return traverse(resource);
@@ -160,6 +192,9 @@ var Storage = (function($){
             },
             error: function(e) {
                 if (!e.status) {
+                    if (passive !== true && lookupKey()) {
+                        return;
+                    }
                     App.offline();
                 } else {
                     App.error(e);
@@ -274,7 +309,7 @@ var Storage = (function($){
     }
  
     function namespace(uid) {
-        return 'sdrp.db.' + uid + '.';
+        return App.ns() + '.db.' + uid + '.';
     }
 
     function serial(data) {
@@ -283,7 +318,7 @@ var Storage = (function($){
 
     function fromCamel(str) {
         return str.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
-    };
+    }
 
     var queue = {
 
@@ -372,6 +407,7 @@ var App = (function(){
 
     var router;
     var user;
+    var namespace;
 
     return {
 
@@ -386,6 +422,7 @@ var App = (function(){
                     if (callback) callback.apply(this, args);
                 }
             }));
+            namespace = routes.namespace || 'appcache';
             router = new app();
             Backbone.history.start();
         },
@@ -477,7 +514,7 @@ var App = (function(){
 
         authenticate: function(username, pass, uri) {
 
-            var local = store.get('sdrp.db.user/' + username);
+            var local = store.get(App.ns() + '.db.user/' + username);
 
             if (local) {
                 try {
@@ -498,7 +535,7 @@ var App = (function(){
                     success: function(resp) {
                         user = resp;
                         var cipher = CryptoJS.AES.encrypt(JSON.stringify(user), user.password);
-                        store.set('sdrp.db.user/' + username, cipher.toString());
+                        store.set(App.ns() + '.db.user/' + username, cipher.toString());
                         App.notify('User ' + username + ' authenticated.');
                         App.refresh();
                     },
@@ -518,6 +555,10 @@ var App = (function(){
             // Refresh the current route.
             Backbone.history.stop(); 
             Backbone.history.start();
+        },
+
+        ns: function() {
+            return namespace;
         }
 
     };

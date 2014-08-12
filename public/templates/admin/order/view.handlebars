@@ -1,0 +1,26 @@
+<a href="#order/edit/{{id}}">Edit this order</a>
+<br>
+<br>
+Created: {{created}}
+<br>
+<br>
+Customer: <a href="#customer/{{customerId}}">{{customerName}}</a>
+
+<h3>Products</h3>
+<table>
+    <thead>
+        <tr>
+            <th>Product</th>
+            <th>Quantity</th>
+            <th>Price</th>
+        </tr>
+    </thead>
+    {{#each product}}
+    <tr>
+        <td><a href="#product/{{id}}">{{name}}</a></td>
+        <td>{{quantity}}</td>
+        <td>{{price}}</td>
+    </tr>
+    {{/each}}
+</table>
+

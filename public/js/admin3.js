@@ -1,4 +1,5 @@
 App.init({
+    namespace: 'sphere',
     routes: {
         ""                              : "index",
         "flush"                         : "emptyCache",
@@ -141,6 +142,9 @@ App.init({
         // order                        :
         // ---------------------------- :
         "orders"                        : "showOrders",
+        "order/:id"                     : "viewOrder",
+        "order/edit/:id"                : "editOrder",
+        "orders/customer/:id"           : "showOrdersForCustomer",
         // ---------------------------- :
         // user                         :
         // ---------------------------- :
@@ -1486,10 +1490,14 @@ App.init({
 
             Model.getCustomer(id, function(customer) {
                 Model.getContactsForCustomer(id, function(contacts) {
+                    Model.getActivityForCustomer(id, function(activities) {
 
-                    customer.contact = contacts;
-                    $('#main').html(t(customer));
+                        customer.contact  = contacts;
+                        customer.activity = activities;
 
+                        $('#main').html(t(customer));
+
+                    });
                 });
             });
 
@@ -1736,9 +1744,19 @@ App.init({
         });
     },
     showCustomerActivity: function(customerId) {
+        T.render('admin/customer/activity', function(t) {
 
-        $('#main').html('show customer activity');
+            Model.getCustomer(customerId, function(customer) {
+                Model.getActivityForCustomer(customerId, function(activities) {
 
+                    customer.activity = activities;
+
+                    $('#main').html(t(customer));
+
+                });
+            });
+
+        });
     },
     showComplaints: function() {
         T.render('admin/complaint/index', function(t) {
@@ -1905,6 +1923,10 @@ App.init({
 
             Model.getStockActivityForDepot(depotId, function(activity) {
             
+                _.each(activity, function(act) {
+                    act.type = Model.readableStockActType(act.activityType);
+                });
+
                 $('#main').html(t({
                     activity: activity
                 }));
@@ -2865,6 +2887,52 @@ App.init({
 
             Model.getOrders(function(orders) {
                 $('#main').html(t({order: orders}));
+            });
+
+        });
+    },
+    showOrdersForCustomer: function(customerId) {
+        T.render('admin/order/index', function(t) {
+
+            Model.getOrders(function(orders) {
+                var customerOrders = Model.filter(orders, function(item) {
+                    return item.customerId == customerId;
+                });
+
+                $('#main').html(t({order: customerOrders}));
+
+            });
+
+        });
+    },
+    viewOrder: function(id) {
+        T.render('admin/order/view', function(t) {
+
+            Model.getOrders(function(orders) {
+                Storage.find(id, orders, function(order) {
+                    Model.getProductsForOrder(id, function(products) { 
+
+                        order.product = products;
+                        $('#main').html(t(order));
+
+                    });
+                });
+            });
+
+        });
+    },
+    editOrder: function(id) {
+        T.render('admin/order/edit', function(t) {
+
+            Model.getOrders(function(orders) {
+                Storage.find(id, orders, function(order) {
+                    Model.getProductsForOrder(id, function(products) { 
+
+                        order.product = products;
+                        $('#main').html(t(order));
+
+                    });
+                });
             });
 
         });

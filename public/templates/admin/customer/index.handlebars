@@ -9,7 +9,7 @@
             <th>Street</th>
             <th>TIN</th>
             <th>Phone</th>
-            <th>Active</th>
+            <th>Status</th>
             <th>Price class</th>
         </tr>
     </thead>
@@ -26,6 +26,7 @@
             <td>{{priceCategory}}</td>
             <td><a href="#customer/edit/{{id}}">Edit</a></td>
             <td><a href="#complaints/customer/{{id}}">Complaints</a></td>
+            <td><a href="#orders/customer/{{id}}">Orders</a></td>
         </tr>
         {{/each}}
     </tbody>

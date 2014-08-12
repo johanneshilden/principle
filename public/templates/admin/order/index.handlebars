@@ -7,7 +7,6 @@
             <th>Status</th>
             <th>Created</th>
             <th>Customer</th>
-            <th>User</th>
             <th></th>
         </tr>
     </thead>
@@ -19,7 +18,7 @@
             <td>{{status}}</td>
             <td>{{created}}</td>
             <td><a href="#customer/{{customerId}}">{{customerName}}</a></td>
-            <td>{{userName}}</td>
+            <td><a href="#order/{{id}}">View order details<a/></td>
         </tr>
         {{/each}}
     </tbody>
