@@ -487,6 +487,20 @@ var Model = {
 
     },
 
+    getOrdersForCustomer: function(customerId, yield) {
+
+        if (typeof yield === 'undefined') {
+            return _.partial(arguments.callee, customerId);
+        }
+
+        Model.getOrders(function(orders) {
+            yield(Model.filter(orders, function(item) {
+                return item.customerId == customerId;
+            }));
+        });
+
+    },
+
     getProductsForOrder: function(orderId, yield) {
 
         if (typeof yield === 'undefined') {

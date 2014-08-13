@@ -11,6 +11,7 @@
             <li><hr>Order queueing dashboard<hr></li>
             <li><hr>Call center dashboard<hr></li>
             <li><hr>Field staff app<hr></li>
+            <li><a href="#!f/customers/all">All customers</a></li>
         </ul>
         <ul style="float:right">
             <li><hr>Admin<hr></li>
@@ -152,11 +153,104 @@
                 pass  : 'guest',
                 url   : 'http://127.0.0.1:55674/stomp',
                 map   : {
+                    "user/:id": function(obj, method) {
+                        Storage.purge(['users', 'depots']);
+                    },
+                    "user": function(obj, method) {
+                        Storage.purge(['users', 'depots']);
+                    },
                     "region/:id": function(obj, method) {
                         Storage.purge('regions');
+                    },
+                    "region": function(obj, method) {
+                        Storage.purge('regions');
+                    },
+                    "!depot/:id": function(obj, method) {
+                        Storage.purge(['depots', 'areas', 'users']);
+                    },
+                    "!depot": function(obj, method) {
+                        Storage.purge(['depots', 'areas', 'users']);
+                    },
+                    "!area/:id": function(obj, method) {
+                        Storage.purge(['areas', 'users']);
+                    },
+                    "area": function(obj, method) {
+                        Storage.purge(['areas', 'users']);
+                    },
+                    "vehicle/:id": function(obj, method) {
+                        Storage.purge('vehicles');
+                    },
+                    "!vehicle/:id": function(obj, method) {
+                        Storage.purge('vehicles');
+                    },
+                    "vehicle": function(obj, method) {
+                        Storage.purge('vehicles');
+                    },
+                    "customer/:id": function(obj, method) {
+                        Storage.purge('customers');
+                    },
+                    "customer": function(obj, method) {
+                        Storage.purge('customers');
+                    },
+                    "contact/customer/:id": function(obj, method) {
+                        Storage.purge('customers');
+                        Storage.purge('contacts-customer-' + obj.id);
+                    },
+                    "contact/:id/customer/:customerId": function(obj, method) {
+                        Storage.purge('customers');
+                        Storage.purge('contacts-customer-' + obj.customerId);
+                    },
+                    "maintenance-activity-type/:id": function(obj, method) {
+                        Storage.purge('maintenance-types');
+                    },
+                    "complaint/resolve/:id": function(obj, method) {
+                        Storage.purge('complaints');
+                    },
+                    "stock-damage-type/:id": function(obj, method) {
+                        Storage.purge('stock-damage-types');
+                    },
+                    "stock-damage-type": function(obj, method) {
+                        Storage.purge('stock-damage-types');
+                    },
+                    "!stock/add/depot/:id": function(obj, method) {
+                        Storage.purge(['stock-' + obj.id, 'stock-activity']);
+                    },
+                    "!stock/remove/depot/:id": function(obj, method) {
+                        Storage.purge(['stock-' + obj.id, 'stock-activity']);
+                    },
+                    "!stock/report-damage/depot/:id": function(obj, method) {
+                        Storage.purge(['stock-' + obj.id, 'stock-activity']);
+                    },
+                    "price-category/:id": function(obj, method) {
+                        Storage.purge('price-categories');
+                    },
+                    "price-category": function(obj, method) {
+                        Storage.purge('price-categories');
+                    },
+                    "!price-category/:id": function(obj, method) {
+                        Storage.purge('price-categories');
+                    },
+                    "!product/:id": function(obj, method) {
+                        Storage.purge('products');
+                    },
+                    "!product": function(obj, method) {
+                        Storage.purge('products');
+                    },
+                    "weight-category/:id": function(obj, method) {
+                        Storage.purge('weight-categories');
+                    },
+                    "!weight-category/:id": function(obj, method) {
+                        Storage.purge('weight-categories');
+                    },
+                    "weight-category": function(obj, method) {
+                        Storage.purge('weight-categories');
                     }
+ 
+
                 }
             });
+
+            Storage.setPassiveMode(true);
 
             Handlebars.registerHelper('if_eq', function(a, b, opts) {
                 if (a == b) return opts.fn(this);
@@ -215,6 +309,7 @@
             T.prefetch('admin/customer/index');
             T.prefetch('admin/customer/view');
             T.prefetch('admin/customer/activity');
+            T.prefetch('admin/customer/contacts');
 
             T.prefetch('admin/depot/create');
             T.prefetch('admin/depot/delete');

@@ -21,8 +21,9 @@ Long:    {{longitude}}
 <div>
 TIN:    {{tin}}
 </div>
-<div>
+<!--
 contacts
+
 {{#if contact}}
 <table>
 {{#each contact}}
@@ -39,7 +40,6 @@ contacts
 {{/if}}
 </div>
 <a href="#customer/edit/{{id}}">Edit customer</a> | <a href="#contact/customer/{{id}}/create">Add a contact</a>
-<!--
 <a href="#complaints/customer/{{id}}">Complaint history</a>
 <a href="#activity/customer/{{id}}">Call activity</a>
 <a href="#service-complaint/create/customer/{{id}}">Register service complaint</a>
@@ -48,9 +48,15 @@ contacts
 <br>
 <br>
 
-<a href="#orders/customer/{{id}}">Orders</a><br>
-<a href="#complaints/customer/{{id}}">Complaints</a><br>
-<a href="#activity/customer/{{id}}">Call activity</a><br>
+<a href="#customer/{{id}}/tab/orders">Orders</a><br>
+<div id="customer-orders"></div>
 
+<a href="#customer/{{id}}/tab/contacts">Contact details</a><br>
+<div id="customer-contacts"></div>
 
+<a href="#customer/{{id}}/tab/complaints">Complaints</a><br>
+<div id="customer-complaints"></div>
+
+<a href="#customer/{{id}}/tab/activity">Call activity</a><br>
+<div id="customer-activity"></div>
 

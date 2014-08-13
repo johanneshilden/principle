@@ -1,5 +1,7 @@
 var Storage = (function($){
 
+    var passiveMode = false;
+
     /*
      * Look up a key owned by the current user in the device storage.
      */
@@ -108,7 +110,7 @@ var Storage = (function($){
     }
 
     /*
-     * Load a resource, either from the remote service, or from the device 
+     * Acquire a resource, either from the remote service, or from the device 
      * cache, depending on connectivity status and service availability.
      *
      * This method provides two different modes of operation: In passive mode,
@@ -117,7 +119,11 @@ var Storage = (function($){
      * fetched remotely when doing so is possible.)
      */
     function load(resource, key, callback, decorator, passive) {
-        
+
+        if (typeof passive === 'undefined') {
+            passive = passiveMode;
+        }
+
         var lookupKey = function() {
             var item = Storage.lookup(key);
             if (item) {
@@ -147,6 +153,7 @@ var Storage = (function($){
                             Storage.insert(key, result);
                         }
                     }
+                    App.onRequestEnd();
                 } else {
                     var res = _.keys(obj)[0],
                         val = obj[res];
@@ -167,9 +174,6 @@ var Storage = (function($){
                             } else {
                                 App.error(e);
                             }
-                        },
-                        complete: function() {
-                            App.onRequestEnd();
                         }
                     });
 
@@ -320,6 +324,10 @@ var Storage = (function($){
         return str.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
     }
 
+    function setPassiveMode(mode) {
+        passiveMode = mode;
+    }
+
     var queue = {
 
         push: function(request) {
@@ -398,6 +406,7 @@ var Storage = (function($){
         toMap          : toMap,
         find           : find,
         chain          : chain,
+        setPassiveMode : setPassiveMode,
         queue          : queue
     };
  
@@ -491,15 +500,18 @@ var App = (function(){
                     var items  = msg.body.split(' '),
                         method = items[0],
                         uri    = items[1];
-            
+
                     for (key in conf.map) {
                         var matcher = routeMatcher(key),
                             res = matcher.parse(uri);
+
                         if (res) {
                             conf.map[key](res, method);
                             return;
                         }
                     }
+
+                    console.log('Unhandled resource notification message: ' + uri);
 
                 });
             };

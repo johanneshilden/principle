@@ -67,6 +67,7 @@ App.init({
         "customers/area/:id"            : "showCustomersForArea",
         "customer/edit/:id"             : "editCustomer",
         "customer/create"               : "createCustomer",
+        "customer/:id/tab/:tab"         : "viewCustomer",
         "customer/:id"                  : "viewCustomer",
         // ---------------------------- :
         // contact                      :
@@ -84,10 +85,6 @@ App.init({
         "complaints"                    : "showComplaints",
         "complaints/customer/:id"       : "showComplaintsForCustomer",
         "complaint/:id"                 : "viewComplaint",
-        "service-complaint/create/customer/:id" 
-                                        : "createServiceComplaint",
-        "quality-complaint/create/customer/:id" 
-                                        : "createQualityComplaint",
         // ---------------------------- :
         // stock-damage                 :
         // ---------------------------- :
@@ -815,90 +812,91 @@ App.init({
     manageDrivers: function() {
         T.render('admin/driver/index', function(t) {
 
-            Model.getUsersByRole('driver', function(drivers) {
-                Model.getDepots(function(depots) {
+            Storage.chain(Model.getUsersByRole('driver'))
+                   .chain(Model.getDepots)
+                   .using(function(drivers, depots) {
 
-                    Storage.load('vehicle', 'vehicles', function(resp) {
+                Storage.load('vehicle', 'vehicles', function(resp) {
 
-                        var vehiclesByDriver = Storage.toMap(resp, 'driverId');
-    
-                        _.each(drivers, function(driver) {
-                            driver.depot = depots[driver.depotId];
-                            if (vehiclesByDriver.hasOwnProperty(driver.id)) {
-                                driver.vehicle = vehiclesByDriver[driver.id];
-                            } else {
-                                driver.vehicle = null;
-                            }
-                        });
-    
-                        $('#main').html(t({driver: drivers}));
-    
+                    var vehiclesByDriver = Storage.toMap(resp, 'driverId');
+
+                    _.each(drivers, function(driver) {
+                        driver.depot = depots[driver.depotId];
+                        if (vehiclesByDriver.hasOwnProperty(driver.id)) {
+                            driver.vehicle = vehiclesByDriver[driver.id];
+                        } else {
+                            driver.vehicle = null;
+                        }
                     });
 
+                    $('#main').html(t({driver: drivers}));
+
                 });
+
             });
 
         });
     },
     assignDriverToVehicle: function(vehicleId) {
         T.render('admin/vehicle/driver', function(t) {
-            Model.getVehicle(vehicleId, function(vehicle) {
-                Model.getUsersByRole('driver', function(drivers) {
 
-                    var depotDrivers = _.filter(drivers, function(driver) {
-                        return driver.depotId === vehicle.depotId;
-                    });
+            Storage.chain(Model.getVehicle(vehicleId))
+                   .chain(Model.getUsersByRole('driver'))
+                   .using(function(vehicle, drivers) {
 
-                    var form = $('<form></form>').append(t({
-                        driver  : depotDrivers,
-                        vehicle : vehicle
-                    }));
+                var depotDrivers = _.filter(drivers, function(driver) {
+                    return driver.depotId === vehicle.depotId;
+                });
+
+                var form = $('<form></form>').append(t({
+                    driver  : depotDrivers,
+                    vehicle : vehicle
+                }));
      
-                    $('#main').html(form);
+                $('#main').html(form);
 
-                    if (vehicle.driverId) {
-                        $('select[name="driver"]').val(vehicle.driverId);
-                    }
-        
-                    form.validate({
-                        submitHandler: function(form) {
-
-                            if (form['driver'].value) {
-
-                                var data = {
-                                    driverId  : form['driver'].value,
-                                    vehicleId : vehicleId
-                                };
+                if (vehicle.driverId) {
+                    $('select[name="driver"]').val(vehicle.driverId);
+                }
     
-                                Storage.process({
-                                    type        : 'PATCH',
-                                    resource    : '!vehicle/driver',
-                                    data        : data,
-                                    description : 'Assign a driver to vehicle ' + vehicle.regNo + '.',
-                                    purge       : ['vehicles', 'users'],
-                                    hint        : 'The driver could not be assigned to the vehicle: ', 
-                                    complete: function() {
-                                        window.location.hash = 'vehicles';
-                                    }
-                                });
-    
-                            } else {
+                form.validate({
+                    submitHandler: function(form) {
 
-                                Storage.process({
-                                    type        : 'PATCH',
-                                    resource    : 'vehicle/driver/null',
-                                    data        : { vehicleId: vehicleId },
-                                    description : 'Remove driver assignment for vehicle ' + vehicle.regNo + '.',
-                                    purge       : ['vehicles', 'users'],
-                                    hint        : 'The driver assignment could not be removed: ', 
-                                    complete: function() {
-                                        window.location.hash = 'vehicles';
-                                    }
-                                });
- 
-                            }
+                        if (form['driver'].value) {
+
+                            var data = {
+                                driverId  : form['driver'].value,
+                                vehicleId : vehicleId
+                            };
+
+                            Storage.process({
+                                type        : 'PATCH',
+                                resource    : '!vehicle/driver',
+                                data        : data,
+                                description : 'Assign a driver to vehicle ' + vehicle.regNo + '.',
+                                purge       : ['vehicles', 'users'],
+                                hint        : 'The driver could not be assigned to the vehicle: ', 
+                                complete: function() {
+                                    window.location.hash = 'vehicles';
+                                }
+                            });
+
+                        } else {
+
+                            Storage.process({
+                                type        : 'PATCH',
+                                resource    : 'vehicle/driver/null',
+                                data        : { vehicleId: vehicleId },
+                                description : 'Remove driver assignment for vehicle ' + vehicle.regNo + '.',
+                                purge       : ['vehicles', 'users'],
+                                hint        : 'The driver assignment could not be removed: ', 
+                                complete: function() {
+                                    window.location.hash = 'vehicles';
+                                }
+                            });
+
                         }
-                    });
+                    }
 
                 });
             });
@@ -1034,62 +1032,62 @@ App.init({
     logMaintenanceActivityForVehicle: function(vehicleId) {
         T.render('admin/maintenance/register', function(t) {
 
-            Model.getMaintenanceTypes(function(activityTypes) {
-                Model.getVehicle(vehicleId, function(vehicle) {
+            Storage.chain(Model.getMaintenanceTypes)
+                   .chain(Model.getVehicle(vehicleId))
+                   .using(function(activityTypes, vehicle) {
 
-                    if (_.isEmpty(activityTypes)) {
-                        App.error({
-                            responseJSON: { message: 'No maintenance activity types found.' }
-                        });
-                    } else {
-                        vehicle.activityType = activityTypes;
-                        $('#main').html(t(vehicle));
+                if (_.isEmpty(activityTypes)) {
+                    App.error({
+                        responseJSON: { message: 'No maintenance activity types found.' }
+                    });
+                } else {
+                    vehicle.activityType = activityTypes;
+                    $('#main').html(t(vehicle));
 
-                        var form = $('<form></form>').append(t(vehicle));
-        
-                        $('#main').html(form);
+                    var form = $('<form></form>').append(t(vehicle));
+    
+                    $('#main').html(form);
 
-                        $('input[name="meter-reading"]').val(vehicle.meterReading);
-        
-                        form.validate({
-                            rules: {
-                                "meter-reading" : {
-                                    required : true,
-                                    number   : true,
-                                    min      : vehicle.meterReading
-                                },
-                                "description"   : "required",
-                                "start-time"    : "required datetime"
+                    $('input[name="meter-reading"]').val(vehicle.meterReading);
+    
+                    form.validate({
+                        rules: {
+                            "meter-reading" : {
+                                required : true,
+                                number   : true,
+                                min      : vehicle.meterReading
                             },
-                            submitHandler: function(form) {
-        
-                                var data = {
-                                    meterReading : form['meter-reading'].value,
-                                    description  : form['description'].value,
-                                    startTime    : form['start-time'].value,
-                                    activity     : form['type'].value,
-                                    vehicleId    : vehicleId
-                                };
-        
-                                Storage.process({
-                                    type        : 'POST',
-                                    resource    : '!maintenance/vehicle/' + vehicleId,
-                                    data        : data,
-                                    description : 'Create a maintenance activity entry for vehicle "' + vehicle.regNo + '".',
-                                    purge       : ['vehicles', 'maintenance-data-' + vehicleId, 'meter-reading-' + vehicleId],
-                                    hint        : 'The maintenance activity log entry could not be created: ',
-                                    complete: function() {
-                                        window.location.hash = 'maintenance/vehicle/' + vehicleId;
-                                    },
-                                    successMsg: 'The maintenance activity log entry for vehicle "' + vehicle.regNo + '" was successfully created.'
-                                });
-        
-                            }
-                        });
+                            "description"   : "required",
+                            "start-time"    : "required datetime"
+                        },
+                        submitHandler: function(form) {
+    
+                            var data = {
+                                meterReading : form['meter-reading'].value,
+                                description  : form['description'].value,
+                                startTime    : form['start-time'].value,
+                                activity     : form['type'].value,
+                                vehicleId    : vehicleId
+                            };
+    
+                            Storage.process({
+                                type        : 'POST',
+                                resource    : '!maintenance/vehicle/' + vehicleId,
+                                data        : data,
+                                description : 'Create a maintenance activity entry for vehicle "' + vehicle.regNo + '".',
+                                purge       : ['vehicles', 'maintenance-data-' + vehicleId, 'meter-reading-' + vehicleId],
+                                hint        : 'The maintenance activity log entry could not be created: ',
+                                complete: function() {
+                                    window.location.hash = 'maintenance/vehicle/' + vehicleId;
+                                },
+                                successMsg: 'The maintenance activity log entry for vehicle "' + vehicle.regNo + '" was successfully created.'
+                            });
+    
+                        }
+                    });
 
-                    }
+                }
 
-                });
             });
 
         });
@@ -1485,20 +1483,69 @@ App.init({
 
         });
     },
-    viewCustomer: function(id) {
+    viewCustomer: function(id, tab) {
         T.render('admin/customer/view', function(t) {
 
             Model.getCustomer(id, function(customer) {
-                Model.getContactsForCustomer(id, function(contacts) {
-                    Model.getActivityForCustomer(id, function(activities) {
 
-                        customer.contact  = contacts;
-                        customer.activity = activities;
+                switch (tab) {
+                    case 'orders':
+                        T.render('admin/order/index', function(t_) {
+                            Model.getOrdersForCustomer(id, function(orders) {
 
+                                $('#main').html(t(customer));
+
+                                $('#customer-orders').html(t_({
+                                    order: orders
+                                }));
+
+                            });
+                        });
+                        break;
+                    case 'contacts':
+                        T.render('admin/customer/contacts', function(t_) {
+                            Model.getContactsForCustomer(id, function(contacts) {
+
+                                $('#main').html(t(customer));
+                                customer.contact = contacts;
+                                $('#customer-contacts').html(t_(customer));
+
+                            });
+                        });
+                        break;
+                    case 'complaints':
+                        T.render('admin/complaint/index', function(t_) {
+                            Model.getComplaints(function(complaints) {
+
+                                $('#main').html(t(customer));
+
+                                var customerComplaints = Model.filter(complaints, function(item) {
+                                    return item.customerId == id;
+                                });
+
+                                $('#customer-complaints').html(t_({
+                                    complaint: customerComplaints
+                                }));
+
+                            });
+                        });
+                        break;
+                    case 'activity':
+                        T.render('admin/customer/activity', function(t_) {
+                            Model.getActivityForCustomer(id, function(activities) {
+
+                                $('#main').html(t(customer));
+                                customer.activity = activities;
+                                $('#customer-activity').html(t_(customer));
+
+                            });
+                        });
+                        break;
+                    default:
                         $('#main').html(t(customer));
+                        break;
+                }
 
-                    });
-                });
             });
 
         });
@@ -1645,7 +1692,6 @@ App.init({
                     submitHandler: function(form) {
 
                         var data = {
-                            customerId  : customerId,
                             kind        : form['kind'].value,
                             datum       : form['datum'].value, 
                             meta        : form['meta'].value
@@ -1653,7 +1699,7 @@ App.init({
 
                         Storage.process({
                             type        : 'POST',
-                            resource    : 'contact',
+                            resource    : 'contact/customer/' + customerId,
                             data        : data,
                             description : 'Create a new customer contact for customer "' + customer.name + '".',
                             purge       : ['customers', 'contacts-customer-' + customerId],
@@ -1692,7 +1738,6 @@ App.init({
                     submitHandler: function(form) {
 
                         var data = {
-                            customerId : customerId,
                             kind       : form['kind'].value,
                             datum      : form['datum'].value, 
                             meta       : form['meta'].value
@@ -1700,7 +1745,7 @@ App.init({
 
                         Storage.process({
                             type        : 'PUT',
-                            resource    : 'contact/' + id,
+                            resource    : 'contact/' + id + '/customer/' + customerId,
                             data        : data,
                             description : 'Edit customer contact for customer "' + contact.customerName + '".',
                             purge       : ['contact-' + id, 'contacts-customer-' + customerId],
@@ -1728,10 +1773,10 @@ App.init({
                 $('button.confirm').click(function() {
                     Storage.process({
                         type        : 'DELETE',
-                        resource    : 'contact/' + id,
+                        resource    : 'contact/' + id + '/customer/' + contact.customerId,
                         data        : '',
                         description : 'Delete contact for customer "' + contact.customerName + '".',
-                        purge       : ['contacts-customer-' + contact.customerId, 'contact-' + id],
+                        purge       : ['customers', 'contacts-customer-' + contact.customerId],
                         hint        : 'Cannot delete contact: ',
                         complete: function() {
                             window.location.hash = 'customer/' + contact.customerId;
@@ -1750,7 +1795,6 @@ App.init({
                 Model.getActivityForCustomer(customerId, function(activities) {
 
                     customer.activity = activities;
-
                     $('#main').html(t(customer));
 
                 });
@@ -1796,25 +1840,13 @@ App.init({
                         data        : '',
                         description : 'Resolve complaint from customer "' + complaint.customer + '".',
                         purge       : 'complaints',
-                        complete: function() {
-                            App.refresh();
-                        }
+                        complete    : App.refresh
                     });
 
                 });
 
             });
         });
-    },
-    createServiceComplaint: function(customerId) {
-
-        $('#main').html('create service complaint');
-
-    },
-    createQualityComplaint: function(customerId) {
-
-        $('#main').html('create quality complaint');
-
     },
     showDamageTypes: function() {
         T.render('admin/stock-damage-type/index', function(t) {
@@ -1951,6 +1983,7 @@ App.init({
     
                     if (depotId) {
                         Storage.find(depotId, depots, function(depot) {
+
                             // Temporarily disable onRequestBegin hook
                             var callback = App.onRequestBegin;
                             App.onRequestBegin = function() {};
@@ -1963,6 +1996,7 @@ App.init({
                                 }));
                                 App.onRequestBegin = callback;
                             });
+
                         });
 
                         $('select[name="stock-depot-select"]').val(depotId);
@@ -2001,14 +2035,13 @@ App.init({
 
                             var data = {
                                 quantity  : form['quantity'].value,
-                                depotId   : depotId,
                                 productId : productId,
                                 type      : 'incoming'
                             };
         
                             Storage.process({
                                 type        : 'PATCH',
-                                resource    : '!stock/add',
+                                resource    : '!stock/add/depot/' + depotId,
                                 data        : data,
                                 description : 'Add incoming stock for product "' + product.name + '" in "' + depot.name + '".',
                                 purge       : ['stock-' + depotId, 'stock-activity'],
@@ -2076,7 +2109,6 @@ App.init({
 
                                 pos.push({
                                     quantity  : (qty_ - qty),
-                                    depotId   : depotId,
                                     productId : product.id,
                                     type      : 'adjustment_pos'
                                 });
@@ -2085,7 +2117,6 @@ App.init({
 
                                 neg.push({
                                     quantity  : (qty - qty_),
-                                    depotId   : depotId,
                                     productId : product.id,
                                     type      : 'adjustment_neg'
                                 });
@@ -2099,7 +2130,7 @@ App.init({
 
                                 Storage.process({
                                     type        : 'PATCH',
-                                    resource    : '!stock/remove',
+                                    resource    : '!stock/remove/depot/' + depotId,
                                     data        : neg,
                                     description : 'Product stock adjustment on depot "' + depot.name + '".',
                                     purge       : ['stock-' + depotId, 'stock-activity'],
@@ -2120,7 +2151,7 @@ App.init({
 
                             Storage.process({
                                 type        : 'PATCH',
-                                resource    : '!stock/add',
+                                resource    : '!stock/add/depot/' + depotId,
                                 data        : pos,
                                 description : 'Product stock adjustment on depot "' + depot.name + '".',
                                 purge       : ['stock-' + depotId, 'stock-activity'],
@@ -2153,58 +2184,56 @@ App.init({
     reportDamagedStockForDepot: function(depotId) {
         T.render('admin/stock/report', function(t) {
 
-            Model.getProducts(function(products) {
-                Model.getDepot(depotId, function(depot) {
-                    Model.getDamageTypes(function(types) {
+            Storage.chain(Model.getProducts)
+                   .chain(Model.getDepot(depotId))
+                   .chain(Model.getDamageTypes)
+                   .using(function(products, depot, types) {
 
-                        var form = $('<form></form>').append(t({
-                            product : products,
-                            depot   : depot,
-                            type    : types
-                        }));
+                var form = $('<form></form>').append(t({
+                    product : products,
+                    depot   : depot,
+                    type    : types
+                }));
+
+                $('#main').html(form);
+
+                form.validate({
+                    rules: {
+                        "quantity" : "required number"
+                    },
+                    submitHandler: function(form) {
     
-                        $('#main').html(form);
+                        var productId = $('select[name="product"]').val(),
+                            typeId = $('select[name="type"]').val();
 
-                        form.validate({
-                            rules: {
-                                "quantity" : "required number"
-                            },
-                            submitHandler: function(form) {
-            
-                                var productId = $('select[name="product"]').val(),
-                                    typeId = $('select[name="type"]').val();
+                        Storage.find(productId, products, function(product) {
+
+                            var data = {
+                                quantity    : form['quantity'].value,
+                                productId   : productId,
+                                type        : 'damage',
+                                damageType  : types[typeId].name,
+                                description : $('textarea[name="comment"]').val(),
+                            };
+
+                            Storage.process({
+                                type        : 'PATCH',
+                                resource    : '!stock/report-damage/depot/' + depotId,
+                                data        : data,
+                                description : 'Report damaged stock for product "' + product.name + '" in "' + depot.name + '".',
+                                purge       : ['stock-' + depotId, 'stock-activity'],
+                                hint        : 'Product stock damage could not be reported: ',
+                                complete: function() {
+                                    window.location.hash = 'stock/depot/' + depotId;
+                                },
+                                successMsg: 'Damaged product stock was reported for "' + depot.name + '".'
+                            });
     
-                                Storage.find(productId, products, function(product) {
-
-                                    var data = {
-                                        quantity    : form['quantity'].value,
-                                        depotId     : depotId,
-                                        productId   : productId,
-                                        type        : 'damage',
-                                        damageType  : types[typeId].name,
-                                        description : $('textarea[name="comment"]').val(),
-                                    };
-
-                                    Storage.process({
-                                        type        : 'PATCH',
-                                        resource    : '!stock/report-damage',
-                                        data        : data,
-                                        description : 'Report damaged stock for product "' + product.name + '" in "' + depot.name + '".',
-                                        purge       : ['stock-' + depotId, 'stock-activity'],
-                                        hint        : 'Product stock damage could not be reported: ',
-                                        complete: function() {
-                                            window.location.hash = 'stock/depot/' + depotId;
-                                        },
-                                        successMsg: 'Damaged product stock was reported for "' + depot.name + '".'
-                                    });
-            
-                                });
-
-                            }
                         });
-    
-                    });
+
+                    }
                 });
+    
             });
 
         });
@@ -3017,9 +3046,7 @@ App.init({
                             complete: function() {
                                 window.location.hash = 'users';
                             },
-                            successMsg: function() {
-                                App.notify('User "' + user.username + '" was deleted.', 'important');
-                            }
+                            successMsg: 'User "' + user.username + '" was deleted.'
                         });
     
                     });

@@ -1,7 +1,13 @@
+{{#if_eq status 'placed'}}
 <a href="#order/edit/{{id}}">Edit this order</a>
+{{/if_eq}}
+
 <br>
 <br>
 Created: {{created}}
+<br>
+<br>
+Status: {{status}}
 <br>
 <br>
 Customer: <a href="#customer/{{customerId}}">{{customerName}}</a>
