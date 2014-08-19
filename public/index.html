@@ -9,9 +9,13 @@
             <li><hr>Driver app<hr></li>
             <li><hr>Depot management dashboard<hr></li>
             <li><hr>Order queueing dashboard<hr></li>
+            <li><a href="#!q/vehicles">Available vehicles</a></li>
             <li><hr>Call center dashboard<hr></li>
+            <li><a href="#!c/customers">Customers</a></li>
+            <li><a href="#!c/orders">Orders</a></li>
             <li><hr>Field staff app<hr></li>
             <li><a href="#!f/customers/all">All customers</a></li>
+            <li><a href="#!f/customers">Area customers</a></li>
         </ul>
         <ul style="float:right">
             <li><hr>Admin<hr></li>
@@ -172,10 +176,10 @@
                         Storage.purge(['depots', 'areas', 'users']);
                     },
                     "!area/:id": function(obj, method) {
-                        Storage.purge(['areas', 'users']);
+                        Storage.purge(['areas', 'users', 'area-users']);
                     },
                     "area": function(obj, method) {
-                        Storage.purge(['areas', 'users']);
+                        Storage.purge(['areas', 'users', 'area-users']);
                     },
                     "vehicle/:id": function(obj, method) {
                         Storage.purge('vehicles');
@@ -203,7 +207,10 @@
                     "maintenance-activity-type/:id": function(obj, method) {
                         Storage.purge('maintenance-types');
                     },
-                    "complaint/resolve/:id": function(obj, method) {
+                    "maintenance-activity-type": function(obj, method) {
+                        Storage.purge('maintenance-types');
+                    },
+                     "complaint/resolve/:id": function(obj, method) {
                         Storage.purge('complaints');
                     },
                     "stock-damage-type/:id": function(obj, method) {
@@ -222,13 +229,13 @@
                         Storage.purge(['stock-' + obj.id, 'stock-activity']);
                     },
                     "price-category/:id": function(obj, method) {
-                        Storage.purge('price-categories');
+                        Storage.purge(['price-categories', 'products']);
                     },
                     "price-category": function(obj, method) {
-                        Storage.purge('price-categories');
+                        Storage.purge(['price-categories', 'products']);
                     },
                     "!price-category/:id": function(obj, method) {
-                        Storage.purge('price-categories');
+                        Storage.purge(['price-categories', 'products']);
                     },
                     "!product/:id": function(obj, method) {
                         Storage.purge('products');
@@ -237,16 +244,14 @@
                         Storage.purge('products');
                     },
                     "weight-category/:id": function(obj, method) {
-                        Storage.purge('weight-categories');
+                        Storage.purge(['weight-categories', 'products']);
                     },
                     "!weight-category/:id": function(obj, method) {
-                        Storage.purge('weight-categories');
+                        Storage.purge(['weight-categories', 'products']);
                     },
                     "weight-category": function(obj, method) {
-                        Storage.purge('weight-categories');
+                        Storage.purge(['weight-categories', 'products']);
                     }
- 
-
                 }
             });
 

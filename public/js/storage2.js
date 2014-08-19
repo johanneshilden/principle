@@ -250,8 +250,8 @@ var Storage = (function($){
     }
 
     /*
-     * Translate an array to a key-value object indexed over the given key,
-     * with 'id' used as default, if no key is specified.
+     * Translate an array of objects (of the same type) to a key-value object 
+     * indexed over the provided key. If no key is specified, 'id' is assumed.
      */
     function toMap(item, key) {
         key = (typeof key === 'undefined') ? 'id' : key;
@@ -496,7 +496,7 @@ var App = (function(){
             var onConnect = function() {
                 client.subscribe('/exchange/trombone/api', function(msg) {
 
-                    // Response to resource change notifications.
+                    // Respond to resource change notifications.
                     var items  = msg.body.split(' '),
                         method = items[0],
                         uri    = items[1];

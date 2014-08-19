@@ -211,6 +211,7 @@ App.init({
         "!c/activity/customer/:id"      : "callcenter_viewActivityForCustomer",
         "!c/contacts/customer/:id"      : "callcenter_viewContactsForCustomer",
         "!c/customer/:id"               : "callcenter_viewCustomer",
+        "!c/customer/edit/:id"          : "callcenter_editCustomer",
         "!c/activity"                   : "callcenter_registerActivity",
         // ---------------------------- :
         // order                        :
@@ -1167,7 +1168,7 @@ App.init({
                             resource    : 'area',
                             data        : data,
                             description : 'Create a new area named "' + data.name + '".',
-                            purge       : 'areas',
+                            purge       : ['areas', 'area-users'],
                             hint        : 'The area could not be created: ',
                             feedback    : {
                                 'SQL_UNIQUE_CONSTRAINT_VIOLATION': 'An area with the name "' + data.name + '" already exists in ' + region.name + ' region.'
@@ -1274,7 +1275,7 @@ App.init({
                                 resource    : '!area/' + id,
                                 data        : data,
                                 description : 'Edit area "' + area.name + '".',
-                                purge       : ['areas', 'users'],
+                                purge       : ['areas', 'users', 'area-users'],
                                 hint        : 'The area could not be updated: ', 
                                 feedback    : {
                                     'SQL_UNIQUE_CONSTRAINT_VIOLATION': 'An area with the name "' + data.name + '" already exists in the same region.'
@@ -1307,7 +1308,7 @@ App.init({
                         resource    : '!area/' + id,
                         data        : '',
                         description : 'Delete area "' + area.name + '".',
-                        purge       : 'areas',
+                        purge       : ['areas', 'area-users'],
                         hint        : 'Cannot delete area: ',
                         feedback    : {
                             'SQL_FOREIGN_KEY_CONSTRAINT_VIOLATION': 'This area still has <a href="#customers/area/' + id + '">assigned customers</a>.'
@@ -2456,7 +2457,7 @@ App.init({
                             resource    : 'price-category/' + id,
                             data        : data,
                             description : 'Update product price category "' + priceCategory.name + '".',
-                            purge       : 'price-categories',
+                            purge       : ['price-categories', 'products'],
                             hint        : 'The product price category could not be updated: ',
                             feedback    : {
                                 'SQL_UNIQUE_CONSTRAINT_VIOLATION': 'A category with the name "' + data.name + '" already exists.'
@@ -2486,7 +2487,7 @@ App.init({
                         resource    : '!price-category/' + id,
                         data        : '',
                         description : 'Delete product price category "' + priceCategory.name + '".',
-                        purge       : 'price-categories',
+                        purge       : ['price-categories', 'products'],
                         hint        : 'Cannot delete price category: ',
                         feedback    : {
                             'SQL_FOREIGN_KEY_CONSTRAINT_VIOLATION': '<a href="#customers/category/' + id + '">Customers are currently assigned</a> to the price category "' + priceCategory.name + '".'
@@ -2522,7 +2523,7 @@ App.init({
                         resource    : 'price-category',
                         data        : data,
                         description : 'Create a new product price category named "' + data.name + '".',
-                        purge       : 'price-categories',
+                        purge       : ['price-categories', 'products'],
                         hint        : 'The product price category could not be created: ',
                         feedback    : {
                             'SQL_UNIQUE_CONSTRAINT_VIOLATION': 'A category with the name "' + data.name + '" already exists.'
@@ -2835,7 +2836,7 @@ App.init({
                             resource    : 'weight-category/' + id,
                             data        : data,
                             description : 'Update vehicle weight category: "' + data.name + '".',
-                            purge       : 'weight-categories',
+                            purge       : ['weight-categories', 'products'],
                             hint        : 'The vehicle weight category could not be updated: ',
                             complete: function() {
                                 window.location.hash = 'weight-classes';
@@ -2862,7 +2863,7 @@ App.init({
                         resource    : '!weight-category/' + id,
                         data        : '',
                         description : 'Delete vehicle weight category "' + weightClass.name + '".',
-                        purge       : 'weight-categories',
+                        purge       : ['weight-categories', 'products'],
                         hint        : 'Cannot delete vehicle weight category: ',
                         feedback    : {
                             'SQL_FOREIGN_KEY_CONSTRAINT_VIOLATION': '<a href="#vehicles/weight-class/' + id + '">Vehicles are currently assigned</a> to "' + weightClass.name + '".'
@@ -2898,7 +2899,7 @@ App.init({
                         resource    : 'weight-category',
                         data        : data,
                         description : 'Create vehicle weight category: "' + data.name + '".',
-                        purge       : 'weight-categories',
+                        purge       : ['weight-categories', 'products'],
                         hint        : 'The vehicle weight category could not be created: ',
                         complete: function() {
                             window.location.hash = 'weight-classes';
@@ -2956,10 +2957,14 @@ App.init({
             Model.getOrders(function(orders) {
                 Storage.find(id, orders, function(order) {
                     Model.getProductsForOrder(id, function(products) { 
+                        Model.getProducts(function(allProducts) {
 
-                        order.product = products;
-                        $('#main').html(t(order));
+                            order.product = products;
+                            order.all = allProducts;
 
+                            $('#main').html(t(order));
+
+                        });
                     });
                 });
             });
@@ -3162,15 +3167,15 @@ App.init({
     fieldstaff_showCustomers: function() {
         T.render('fieldstaff/customer/index', function(t) {
 
-            Model.getAreaForFieldstaffUser(function(areaId) {
-                Model.getCustomers(function(customers) {
-    
+            Model.getAreasForCurrentUser(function(areas) {
+               Model.getCustomers(function(customers) {
+
                     var areaCustomers = Model.filter(customers, function(item) {
-                        return item.areaId === areaId;
+                        return _.contains(areas, item.areaId);
                     });
-    
+
                     $('#main').html(t({customer: areaCustomers}));
-    
+
                 });
             });
 
@@ -3186,11 +3191,11 @@ App.init({
     fieldstaff_showOrders: function() {
         T.render('fieldstaff/order/index', function(t) {
 
-            Model.getAreaForFieldstaffUser(function(areaId) {
+            Model.getAreasForFieldstaffUser(function(areas) {
                 Model.getOrders(function(orders) {
 
                     var areaOrders = Model.filter(orders, function(item) {
-                        return item.customerAreaId == areaId;
+                        return _.contains(areas, item.areaId);
                     });
 
                     $('#main').html(t({order: areaOrders}));
@@ -3222,11 +3227,11 @@ App.init({
         T.render('callcenter/customer/index', function(t) {
             
             Model.getCustomers(function(customers) {
-                Model.getAreaForCallcenterUser(function(areaId) {
+                Model.getAreasForCurrentUser(function(areas) {
 
                     // Filter customers by area id
                     var areaCustomers = Model.filter(customers, function(item) {
-                        return item.areaId == areaId;
+                        return _.contains(areas, item.areaId);
                     });
 
                     $('#main').html(t({customer: areaCustomers}));
@@ -3269,6 +3274,11 @@ App.init({
     callcenter_viewCustomer: function(id) {
 
         $('#main').html('cs: view customer');
+
+    },
+    callcenter_editCustomer: function(id) {
+
+        $('#main').html('cs: edit customer');
 
     },
     callcenter_registerActivity: function() {

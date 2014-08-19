@@ -53,9 +53,28 @@ var Model = {
 
     },
 
-    getAreaUsers: function() {
+    getAreaUsers: function(yield) {
 
         Storage.load('area-user', 'area-users', yield);
+
+    },
+
+    getAreasForCurrentUser: function(yield) {
+
+        var user = App.user();
+
+        Model.getAreaUsers(function(areaUsers) {
+
+            var areas = [];
+            _.each(areaUsers, function(item) {
+                if (item.id === user.id) {
+                    areas.push(item.areaId);
+                }
+            });
+
+            yield(areas);
+
+        });
 
     },
 
