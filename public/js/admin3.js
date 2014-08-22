@@ -3390,52 +3390,64 @@ App.init({
     },
     depot_showQueuedDispatches: function() {
         T.render('depot/dispatch/index', function(t) {
-            Model.getDispatchesWithStatus(['queued', 'loading', 'loaded'], function(dispatches) {
+            Model.getDepotForCurrentUser(function(depotId) {
+                Model.getDispatchesWithStatus(['queued', 'loading', 'loaded'], function(allDispatches) {
 
-                _.each(dispatches, function(dispatch) {
-                    dispatch.statusName = Model.readableOrderStatus(dispatch.status);
-                });
-
-                $('#main').html(t({dispatch: dispatches}));
-
-                $('.status').click(function() {
-
-                    var newStatus  = $(this).data('status'),
-                        dispatchId = $(this).data('id'),
-                        date       = new Date()
-
-                    var data = {
-                        "status"   : newStatus,
-                        "datetime" : date.toISOString() 
-                    };
-
-                    Storage.process({
-                        type        : 'PATCH',
-                        resource    : '!dispatch/status/' + dispatchId,
-                        data        : data,
-                        description : 'Update the status for dispatch #' + dispatchId + '.',
-                        purge       : ['activity-dispatch-' + dispatchId, 'dispatches', 'order-activity-dispatch-' + dispatchId, 'orders'],
-                        success: function() {
-                            App.refresh();
-                        },
-                        successMsg: 'The status of <a href="#!d/dispatch/' + dispatchId + '">dispatch #' + dispatchId + '</a> was changed to "' + newStatus + '".'
+                    var dispatches = Model.filter(allDispatches, function(item) {
+                        return item.depotId == depotId;
                     });
 
+                    _.each(dispatches, function(dispatch) {
+                        dispatch.statusName = Model.readableOrderStatus(dispatch.status);
+                    });
+    
+                    $('#main').html(t({dispatch: dispatches}));
+    
+                    $('.status').click(function() {
+    
+                        var newStatus  = $(this).data('status'),
+                            dispatchId = $(this).data('id'),
+                            date       = new Date()
+    
+                        var data = {
+                            "status"   : newStatus,
+                            "datetime" : date.toISOString() 
+                        };
+    
+                        Storage.process({
+                            type        : 'PATCH',
+                            resource    : '!dispatch/status/' + dispatchId,
+                            data        : data,
+                            description : 'Update the status for dispatch #' + dispatchId + '.',
+                            purge       : ['activity-dispatch-' + dispatchId, 'dispatches', 'order-activity-dispatch-' + dispatchId, 'orders'],
+                            success: function() {
+                                App.refresh();
+                            },
+                            successMsg: 'The status of <a href="#!d/dispatch/' + dispatchId + '">dispatch #' + dispatchId + '</a> was changed to "' + newStatus + '".'
+                        });
+    
+                    });
+    
                 });
-
             });
         });
     },
     depot_showDispatched: function() {
         T.render('depot/dispatch/index', function(t) {
-            Model.getDispatchesWithStatus('dispatched', function(dispatches) {
+            Model.getDepotForCurrentUser(function(depotId) {
+                Model.getDispatchesWithStatus('dispatched', function(allDispatches) {
 
-                _.each(dispatches, function(dispatch) {
-                    dispatch.statusName = Model.readableOrderStatus(dispatch.status);
+                    var dispatches = Model.filter(allDispatches, function(item) {
+                        return item.depotId == depotId;
+                    });
+
+                    _.each(dispatches, function(dispatch) {
+                        dispatch.statusName = Model.readableOrderStatus(dispatch.status);
+                    });
+    
+                    $('#main').html(t({dispatch: dispatches}));
+
                 });
-
-                $('#main').html(t({dispatch: dispatches}));
-
             });
         });
     },
