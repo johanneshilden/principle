@@ -1,0 +1,28 @@
+{{#when vehicle}}
+<table>
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Registration</th>
+            <th>Weight Class</th>
+            <th>Depot</th>
+            <th>Driver</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each vehicle}}
+        <tr>
+            <td>{{id}}</td>
+            <td>{{regNo}}</td>
+            <td>{{weightCategory}}</td>
+            <td>{{depot}}</td>
+            <td>{{driverName}}</td>
+            <td><a href="#!d/vehicle/{{id}}">View</a></td>
+            <td><a href="#!d/driver/assign/vehicle/{{id}}">Assign driver</a></td>
+        </tr>
+        {{/each}}
+     </tbody>
+</table>
+{{else}}
+No vehicles.
+{{/when}}

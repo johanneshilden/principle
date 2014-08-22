@@ -1,0 +1,44 @@
+{{#when dispatch}}
+<table>
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Driver</th>
+            <th>Vehicle</th>
+            <th>Details</th>
+            <th>Created</th>
+            <th>Weight Category</th>
+            <th>Status</th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each dispatch}}
+        <tr>
+            <td>{{id}}</td>
+            <td>{{driverName}}</td>
+            <td><a href="#!d/vehicle/{{vehicleId}}">{{vehicleRegNo}}</a></td>
+            <td><a href="#!d/dispatch/{{id}}">View</a></td>
+            <td>{{created}}</td>
+            <td>{{vehicleWeightCategory}}</td>
+            <td>{{statusName}}</td>
+            <td><a href="#!d/dispatch/{{id}}/log">Show activity log</a></td>
+            {{#if_eq status 'queued'}}
+            <td><a href="javascript:" class="status" data-id="{{id}}" data-status="loading">Change to status 'Loading'</a></td>
+            {{else}}
+                {{#if_eq status 'loading'}}
+                <td><a href="javascript:" class="status" data-id="{{id}}" data-status="loaded">Change to status 'Loaded'</a></td>
+                {{else}}
+                    {{#if_eq status 'loaded'}}
+                    <td><a href="javascript:" class="status" data-id="{{id}}" data-status="dispatched">Change to status 'Dispatched'</a></td>
+                    {{/if_eq}}
+                {{/if_eq}}
+            {{/if_eq}}
+         </tr>
+        {{/each}}
+    </tbody>
+</table>
+{{else}}
+No dispatches
+{{/when}}

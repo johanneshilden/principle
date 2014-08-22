@@ -10,7 +10,7 @@
     <tbody>
         {{#each item}}
         <tr>
-            <td><a href="#product/{{productId}}">{{productName}}</a></td>
+            <td><a href="#!d/product/{{productId}}">{{productName}}</a></td>
             <td>{{actual}}</td>
             <td>{{available}}</td>
         </tr>
@@ -20,8 +20,7 @@
 {{else}}
 No stock availability information available.
 {{/when}}
-<a href="#stock/add/depot/{{depotId}}">Add stock</a> | 
-<a href="#stock/adjust/depot/{{depotId}}">Make stock adjustment</a> |
-<a href="#stock/report/depot/{{depotId}}">Report damaged stock</a> |
-<a href="#stock/activity/depot/{{depotId}}">Stock movement activity</a>
 
+<div>
+<a href="#!d/stock/activity">Stock movement activity</a>
+</div>

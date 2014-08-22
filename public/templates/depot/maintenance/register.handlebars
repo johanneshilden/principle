@@ -1,0 +1,25 @@
+<h2>Register vehicle maintenance activity</h2>
+
+Vehicle: {{regNo}}<br>
+
+<label>Meter Reading</label><br>
+<input type="text" name="meter-reading"><br>
+
+<label>Description</label><br>
+<textarea name="description"></textarea><br>
+
+<label>Start Time</label><br>
+<input type="text" name="start-time"><br>
+
+<label>Maintenance Type</label><br>
+<select name="type">
+    {{#each activityType}}
+    <option value="{{id}}">{{name}}</option>
+    {{/each}}
+</select>
+
+<br>
+<br>
+
+<input type="submit">
+

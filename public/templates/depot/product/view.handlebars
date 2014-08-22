@@ -1,0 +1,22 @@
+<h1>{{name}}</h1>
+<p>
+{{description}}
+</p>
+
+{{#when category}}
+<h3>Prices</h3>
+<ul>
+{{#each category}}
+<li>{{priceCategory}}: {{price}}</li>
+{{/each}}
+</ul>
+{{/when}}
+
+{{#when limit}}
+<h3>Vehicle Load Limits</h3>
+{{#each limit}}
+<li>{{weightCategory}}: {{limit}}</li>
+{{/each}}
+</ul>
+{{/when}}
+

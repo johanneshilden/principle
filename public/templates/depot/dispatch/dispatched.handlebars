@@ -1,0 +1,20 @@
+{{#when dispatch}}
+<table>
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each dispatch}}
+        <tr>
+            <td>{{id}}</td>
+            <td>{{statusName}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+{{else}}
+No dispatches
+{{/when}}

@@ -1,0 +1,30 @@
+{{#when order}}
+<table>
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Customer</th>
+            <th>Phone</th>
+            <th>Area</th>
+            <th>Order time</th>
+            <th>Delivery time</th>
+            <th>Time confirmed</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each order}}
+        <tr>
+            <td>{{orderId}}</td>
+            <td>{{customerName}}</td>
+            <td>{{customerPhone}}</td>
+            <td>{{customerArea}}</td>
+            <td>{{created}}</td>
+            <td>{{timeDelivered}}</td>
+            <td>{{timeConfirmed}}</td>
+            <td>{{status}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+{{/when}}

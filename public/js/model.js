@@ -21,7 +21,7 @@ var Model = {
     getUsersByRole: function(role, yield) {
 
         if (typeof yield === 'undefined') {
-            return _.partial(arguments.callee, role);
+            return _.partial(arguments.callee, arguments[0]);
         }
 
         Model.getRoles(function(roles) {
@@ -44,7 +44,7 @@ var Model = {
     getUser: function(id, yield) {
 
         if (typeof yield === 'undefined') {
-            return _.partial(arguments.callee, id);
+            return _.partial(arguments.callee, arguments[0]);
         }
 
         Model.getUsers(function(users) {
@@ -120,7 +120,7 @@ var Model = {
     getAreasForRegion: function(regionId, yield) {
 
         if (typeof yield === 'undefined') {
-            return _.partial(arguments.callee, regionId);
+            return _.partial(arguments.callee, arguments[0]);
         }
 
         Model.getAreas(function(areas) {
@@ -134,7 +134,7 @@ var Model = {
     getAreasForDepot: function(depotId, yield) {
 
         if (typeof yield === 'undefined') {
-            return _.partial(arguments.callee, depotId);
+            return _.partial(arguments.callee, arguments[0]);
         }
 
         Model.getAreas(function(areas) {
@@ -148,7 +148,7 @@ var Model = {
     getArea: function(id, yield) {
 
         if (typeof yield === 'undefined') {
-            return _.partial(arguments.callee, id);
+            return _.partial(arguments.callee, arguments[0]);
         }
 
         Model.getAreas(function(areas) {
@@ -166,7 +166,7 @@ var Model = {
     getCustomer: function(id, yield) {
 
         if (typeof yield === 'undefined') {
-            return _.partial(arguments.callee, id);
+            return _.partial(arguments.callee, arguments[0]);
         }
 
         Model.getCustomers(function(customers) {
@@ -178,7 +178,7 @@ var Model = {
     getActivityForCustomer: function(customerId, yield) {
 
         if (typeof yield === 'undefined') {
-            return _.partial(arguments.callee, customerId);
+            return _.partial(arguments.callee, arguments[0]);
         }
 
         Storage.load('activity/customer/' + customerId, 'activities-customer-' + customerId, yield);
@@ -194,7 +194,7 @@ var Model = {
     getPriceCategory: function(id, yield) {
 
         if (typeof yield === 'undefined') {
-            return _.partial(arguments.callee, id);
+            return _.partial(arguments.callee, arguments[0]);
         }
 
         Model.getPriceCategories(function(categories) {
@@ -232,7 +232,7 @@ var Model = {
     getDepot: function(id, yield) {
 
         if (typeof yield === 'undefined') {
-            return _.partial(arguments.callee, id);
+            return _.partial(arguments.callee, arguments[0]);
         }
 
         Model.getDepots(function(depots) {
@@ -244,7 +244,7 @@ var Model = {
     getDepotsForRegion: function(regionId, yield) {
 
         if (typeof yield === 'undefined') {
-            return _.partial(arguments.callee, regionId);
+            return _.partial(arguments.callee, arguments[0]);
         }
 
         Model.getDepots(function(depots) {
@@ -253,6 +253,19 @@ var Model = {
             }));
         });
 
+    },
+
+    getDepotForCurrentUser: function(yield) {
+        Model.getUser(App.user().id, function(user) {
+            var depotId = user.depotId;
+            if (depotId) {
+                yield(depotId);
+            } else {
+                App.error({
+                    responseJSON: { message: 'No depot assigned to current user. Please contact a system administrator.' }
+                });
+            }
+        });
     },
 
     getRegions: function(yield) {
@@ -264,7 +277,7 @@ var Model = {
     getRegion: function(id, yield) {
 
         if (typeof yield === 'undefined') {
-            return _.partial(arguments.callee, id);
+            return _.partial(arguments.callee, arguments[0]);
         }
 
         Model.getRegions(function(regions) {
@@ -286,7 +299,7 @@ var Model = {
     getContactsForCustomer: function(customerId, yield) {
 
         if (typeof yield === 'undefined') {
-            return _.partial(arguments.callee, customerId);
+            return _.partial(arguments.callee, arguments[0]);
         }
 
         Storage.load('contact/customer/' + customerId, 'contacts-customer-' + customerId, yield);
@@ -296,7 +309,7 @@ var Model = {
     getContact: function(id, yield) {
 
         if (typeof yield === 'undefined') {
-            return _.partial(arguments.callee, id);
+            return _.partial(arguments.callee, arguments[0]);
         }
 
         Storage.load('contact/' + id, 'contact-' + id, yield);
@@ -312,7 +325,7 @@ var Model = {
     getComplaint: function(id, yield) {
 
         if (typeof yield === 'undefined') {
-            return _.partial(arguments.callee, id);
+            return _.partial(arguments.callee, arguments[0]);
         }
 
         Model.getComplaints(function(complaints) {
@@ -330,7 +343,7 @@ var Model = {
     getDamageType: function(id, yield) {
 
         if (typeof yield === 'undefined') {
-            return _.partial(arguments.callee, id);
+            return _.partial(arguments.callee, arguments[0]);
         }
 
         Model.getDamageTypes(function(damageTypes) {
@@ -345,10 +358,24 @@ var Model = {
 
     },
 
+    getVehiclesForDepot: function(depotId, yield) {
+
+        if (typeof yield === 'undefined') {
+            return _.partial(arguments.callee, arguments[0]);
+        }
+
+        Model.getVehicles(function(vehicles) {
+            yield(Model.filter(vehicles, function(item) {
+                return item.depotId == depotId;
+            }));
+        });
+
+    },
+
     getVehicle: function(id, yield) {
 
         if (typeof yield === 'undefined') {
-            return _.partial(arguments.callee, id);
+            return _.partial(arguments.callee, arguments[0]);
         }
 
         Model.getVehicles(function(vehicles) {
@@ -441,7 +468,7 @@ var Model = {
     getProduct: function(id, yield) {
 
         if (typeof yield === 'undefined') {
-            return _.partial(arguments.callee, id);
+            return _.partial(arguments.callee, arguments[0]);
         }
 
         Model.getProducts(function(products) {
@@ -459,7 +486,7 @@ var Model = {
     getWeightClass: function(id, yield) {
 
         if (typeof yield === 'undefined') {
-            return _.partial(arguments.callee, id);
+            return _.partial(arguments.callee, arguments[0]);
         }
 
         Model.getWeightClasses(function(weightClasses) {
@@ -477,7 +504,7 @@ var Model = {
     getMaintenanceType: function(id, yield) {
 
         if (typeof yield === 'undefined') {
-            return _.partial(arguments.callee, id);
+            return _.partial(arguments.callee, arguments[0]);
         }
 
         Model.getMaintenanceTypes(function(types) {
@@ -495,7 +522,7 @@ var Model = {
     getOrdersWithStatus: function(stat, yield) {
 
         if (typeof yield === 'undefined') {
-            return _.partial(arguments.callee, stat);
+            return _.partial(arguments.callee, arguments[0]);
         }
 
         Model.getOrders(function(orders) {
@@ -509,7 +536,7 @@ var Model = {
     getOrdersForCustomer: function(customerId, yield) {
 
         if (typeof yield === 'undefined') {
-            return _.partial(arguments.callee, customerId);
+            return _.partial(arguments.callee, arguments[0]);
         }
 
         Model.getOrders(function(orders) {
@@ -520,10 +547,91 @@ var Model = {
 
     },
 
+    getDispatches: function(yield) {
+
+        Storage.collection('dispatch', 'dispatches', yield);
+
+    },
+
+    getOrderActivity: function(orderId, yield) {
+
+        if (typeof yield === 'undefined') {
+            return _.partial(arguments.callee, arguments[0]);
+        }
+
+        Storage.load('order-activity/' + orderId, 'order-activity-' + orderId, yield);
+
+    },
+
+    getOrderActivityForDispatch: function(dispatchId, yield) {
+
+        if (typeof yield === 'undefined') {
+            return _.partial(arguments.callee, arguments[0]);
+        }
+
+        Storage.load('order-activity/dispatch/' + dispatchId, 'order-activity-dispatch-' + dispatchId, yield);
+
+    },
+
+    getDispatch: function(id, yield) {
+
+        if (typeof yield === 'undefined') {
+            return _.partial(arguments.callee, arguments[0]);
+        }
+
+        Model.getDispatches(function(dispatches) {
+            Storage.find(id, dispatches, function(dispatch) {
+                Model.getOrderActivityForDispatch(id, function(orderActivity) {
+
+                    dispatch.orderActivity = orderActivity;
+                    yield(dispatch);
+
+                });
+            });
+        });
+
+    },
+
+    getDispatchesWithStatus: function(stat, yield) {
+
+        if (typeof yield === 'undefined') {
+            return _.partial(arguments.callee, arguments[0]);
+        }
+
+        Model.getDispatches(function(disps) {
+            yield(Model.filter(disps, function(item) {
+                if (stat instanceof Array) {
+                    return _.contains(stat, item.status);
+                } else {
+                    return item.status == stat;
+                }
+            }));
+        });
+
+    },
+
+    getDispatchActivity: function(dispatchId, yield) {
+
+        Storage.collection('dispatch/' + dispatchId + '/activity', 'activity-dispatch-' + dispatchId, yield);
+        
+    },
+
+    getProductsForDispatch: function(dispatchId, yield) {
+
+        Storage.load('product/dispatch/' + dispatchId, 'products-dispatch-' + dispatchId, yield);
+
+    },
+
+    getOrdersForDispatch: function(dispatchId, yield) {
+
+        Storage.load('order/dispatch/' + dispatchId, 'orders-dispatch-' + dispatchId, yield);
+
+    },
+
     getProductsForOrder: function(orderId, yield) {
 
         if (typeof yield === 'undefined') {
-            return _.partial(arguments.callee, orderId);
+            return _.partial(arguments.callee, arguments[0]);
         }
 
         Storage.load('product/order/' + orderId, 'products-order-' + orderId, yield);
@@ -533,7 +641,7 @@ var Model = {
     getStockForDepot: function(depotId, yield) {
 
         if (typeof yield === 'undefined') {
-            return _.partial(arguments.callee, depotId);
+            return _.partial(arguments.callee, arguments[0]);
         }
 
         Storage.load('stock/depot/' + depotId, 'stock-' + depotId, yield);
@@ -549,7 +657,7 @@ var Model = {
     getStockActivityForDepot: function(depotId, yield) {
 
         if (typeof yield === 'undefined') {
-            return _.partial(arguments.callee, depotId);
+            return _.partial(arguments.callee, arguments[0]);
         }
 
         Model.getStockActivity(function(activity) {
@@ -563,7 +671,7 @@ var Model = {
     getFuelActivityForVehicle: function(vehicleId, yield) {
 
         if (typeof yield === 'undefined') {
-            return _.partial(arguments.callee, vehicleId);
+            return _.partial(arguments.callee, arguments[0]);
         }
 
         Storage.load('fuel-activity/vehicle/' + vehicleId, 'fuel-data-' + vehicleId, yield);
@@ -573,7 +681,7 @@ var Model = {
     getMaintenanceActivityForVehicle: function(vehicleId, yield) {
 
         if (typeof yield === 'undefined') {
-            return _.partial(arguments.callee, vehicleId);
+            return _.partial(arguments.callee, arguments[0]);
         }
 
         Storage.load('maintenance-data/vehicle/' + vehicleId, 'maintenance-data-' + vehicleId, yield);
@@ -609,6 +717,21 @@ var Model = {
                 return 'Stock Damage';
             default:
                 return 'Unknown';
+          }
+    },
+
+    readableOrderStatus: function(stat) {
+        switch (stat) {
+            case 'queued':
+                return 'Queued';
+            case 'loading':
+                return 'Loading';
+            case 'loaded':
+                return 'Loaded';
+            case 'dispatched':
+                return 'Dispatched';
+            default:
+                return stat;
           }
     },
 

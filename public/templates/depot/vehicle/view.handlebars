@@ -3,3 +3,73 @@
 <div>
 Driver: {{driverName}}
 </div>
+<div>
+Status: {{status}}
+</div>
+
+
+<h4>Fuel log</h4>
+{{#when fuelActivity}}
+<table>
+    <thead>
+        <tr>
+            <th>Created</th>
+            <th>Meter Reading</th>
+            <th>Amount</th>
+        </tr>
+    </thead>
+    <tbody>
+    {{#each fuelActivity}}
+        <tr>
+            <td>{{created}}</td>
+            <td>{{meterReading}}</td>
+            <td>{{amount}}</td>
+        </tr>
+    {{/each}}
+    </tbody>
+</table>
+{{else}}
+No fuel activity.
+{{/when}}
+<a href="#!d/fuel/add/vehicle/{{id}}">Register fuel activity</a>
+
+<h4>Maintenance</h4>
+<div>
+{{#if_eq status "in_maintenance"}}
+Status: {{status}}<br>
+This vehicle is currently in maintenance.
+<a href="#maintenance/complete/vehicle/{{id}}">Flag as complete</a>
+{{else}}
+This vehicle is active.
+<a href="#!d/maintenance/register/vehicle/{{id}}">Log a maintenance activity</a>
+{{/if_eq}}
+</div>
+
+{{#when maintenanceActivity}}
+<h3>Maintenance history</h3>
+<table>
+    <thead>
+        <tr>
+            <th>Meter Reading</th>
+            <th>Maintenance Type</th>
+            <th>Description</th>
+            <th>Start Time</th>
+            <th>End Time</th>
+        </tr>
+    </thead>
+    <tbody>
+    {{#each maintenanceActivity}}
+        <tr>
+            <td>{{meterReading}}</td>
+            <td>{{activity}}</td>
+            <td>{{description}}</td>
+            <td>{{startTime}}</td>
+            <td>{{endTime}}</td>
+        </tr>
+    {{/each}}
+    </tbody>
+</table>
+{{else}}
+No activity.
+{{/when}}
+

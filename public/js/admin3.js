@@ -142,6 +142,7 @@ App.init({
         "order/:id"                     : "viewOrder",
         "order/edit/:id"                : "editOrder",
         "orders/customer/:id"           : "showOrdersForCustomer",
+        "order/:id/log"                 : "showOrderActivityLog",
         // ---------------------------- :
         // user                         :
         // ---------------------------- :
@@ -203,7 +204,8 @@ App.init({
         // ---------------------------- :
         // customer                     :
         // ---------------------------- :
-        "!c/customers"                  : "callcenter_showCustomers",
+        "!c/customers/all"              : "callcenter_showCustomers",
+        "!c/customers"                  : "callcenter_showAreaCustomers",
         "!c/location/customer/:id"      : "callcenter_viewCustomerLocation",
         "!c/tasks/customer/:id"         : "callcenter_viewTasksForCustomer",
         "!c/orders/customer/:id"        : "callcenter_viewOrdersForCustomer",
@@ -238,10 +240,21 @@ App.init({
         // //////////////////////////// :
 
         // ---------------------------- :
+        // dispatch                     :
+        // ---------------------------- :
+        "!d/queued"                     : "depot_showQueuedDispatches",
+        "!d/dispatched"                 : "depot_showDispatched",
+        "!d/dispatch/:id"               : "depot_viewDispatch",
+        "!d/dispatch/:id/log"           : "depot_showDispatchLog",
+        // ---------------------------- :
+        // product                      :
+        // ---------------------------- :
+        "!d/product/:id"                : "depot_viewProduct",
+        // ---------------------------- :
         // order                        :
         // ---------------------------- :
-        "!d/queued"                     : "depot_showQueuedOrders",
-        "!d/dispatched"                 : "depot_showDispatchedOrders",
+        "!d/orders/dispatch/:id"        : "depot_showDispatchOrders",
+        "!d/order/:id/log"              : "depot_showOrderLog",
         // ---------------------------- :
         // customer                     :
         // ---------------------------- :
@@ -249,18 +262,33 @@ App.init({
         // ---------------------------- :
         // vehicle                      :
         // ---------------------------- :
+        "!d/vehicles"                   : "depot_showVehicles",
         "!d/vehicle/:id"                : "depot_viewVehicle",
+        // ---------------------------- :
+        // fuel                         :
+        // ---------------------------- :
+        "!d/fuel/add/vehicle/:id"       : "depot_addFuelToVehicle",
+        // ---------------------------- :
+        // maintenance                  :
+        // ---------------------------- :
+        "!d/maintenance/register/vehicle/:id"       
+                                        : "depot_logMaintenanceActivityForVehicle",
+        "!d/maintenance/complete/vehicle/:id"       
+                                        : "depot_completeMaintenanceActivityForVehicle",
         // ---------------------------- :
         // driver                       :
         // ---------------------------- :
         "!d/sidebar/drivers"            : "depot_showDrivers",
+        "!d/driver/assign/vehicle/:id"  : "depot_assignDriverToVehicle",
         // ---------------------------- :
         // stock                        :
         // ---------------------------- :
         "!d/sidebar/stock-summary"      : "depot_showStockSummary",
         "!d/sidebar/add-stock"          : "depot_addStock",
-        "!d/sidebar/report-damages"     : "depot_reportStockDamages",
+        "!d/sidebar/report-damages"     : "depot_reportStockDamage",
         "!d/sidebar/stock-adjustment"   : "depot_makeStockAdjustment",
+        "!d/stock/activity"             : "depot_showStockActivity",
+        "!d/stock-damage-report/:id"    : "depot_viewStockDamageReport",
 
         // //////////////////////////// :
         // ORDER QUEUEING               :
@@ -2935,6 +2963,19 @@ App.init({
 
         });
     },
+    showOrderActivityLog: function(orderId) {
+        T.render('admin/order/log', function(t) {
+            Model.getOrderActivity(orderId, function(activities) {
+
+                _.each(activities, function(activity) {
+                    activity.statusName = Model.readableOrderStatus(activity.status);
+                });
+
+                $('#main').html(t({activity: activities}));
+
+            });
+        });
+    },
     viewOrder: function(id) {
         T.render('admin/order/view', function(t) {
 
@@ -3227,6 +3268,17 @@ App.init({
         T.render('callcenter/customer/index', function(t) {
             
             Model.getCustomers(function(customers) {
+
+                $('#main').html(t({customer: customers}));
+
+            });
+
+        });
+    },
+    callcenter_showAreaCustomers: function() {
+        T.render('callcenter/customer/index', function(t) {
+            
+            Model.getCustomers(function(customers) {
                 Model.getAreasForCurrentUser(function(areas) {
 
                     // Filter customers by area id
@@ -3336,20 +3388,159 @@ App.init({
         $('#main').html('cs: show calendar');
 
     },
-    depot_showQueuedOrders: function() {
-        T.render('depot/order/index', function(t) {
-            Model.getOrdersWithStatus('queued', function(orders) {
+    depot_showQueuedDispatches: function() {
+        T.render('depot/dispatch/index', function(t) {
+            Model.getDispatchesWithStatus(['queued', 'loading', 'loaded'], function(dispatches) {
 
-                $('#main').html(t({order: orders}));
+                _.each(dispatches, function(dispatch) {
+                    dispatch.statusName = Model.readableOrderStatus(dispatch.status);
+                });
+
+                $('#main').html(t({dispatch: dispatches}));
+
+                $('.status').click(function() {
+
+                    var newStatus  = $(this).data('status'),
+                        dispatchId = $(this).data('id'),
+                        date       = new Date()
+
+                    var data = {
+                        "status"   : newStatus,
+                        "datetime" : date.toISOString() 
+                    };
+
+                    Storage.process({
+                        type        : 'PATCH',
+                        resource    : '!dispatch/status/' + dispatchId,
+                        data        : data,
+                        description : 'Update the status for dispatch #' + dispatchId + '.',
+                        purge       : ['activity-dispatch-' + dispatchId, 'dispatches', 'order-activity-dispatch-' + dispatchId, 'orders'],
+                        success: function() {
+                            App.refresh();
+                        },
+                        successMsg: 'The status of <a href="#!d/dispatch/' + dispatchId + '">dispatch #' + dispatchId + '</a> was changed to "' + newStatus + '".'
+                    });
+
+                });
 
             });
         });
     },
-    depot_showDispatchedOrders: function() {
-        T.render('depot/order/index', function(t) {
-            Model.getOrdersWithStatus('dispatched', function(orders) {
+    depot_showDispatched: function() {
+        T.render('depot/dispatch/index', function(t) {
+            Model.getDispatchesWithStatus('dispatched', function(dispatches) {
 
-                $('#main').html(t({order: orders}));
+                _.each(dispatches, function(dispatch) {
+                    dispatch.statusName = Model.readableOrderStatus(dispatch.status);
+                });
+
+                $('#main').html(t({dispatch: dispatches}));
+
+            });
+        });
+    },
+    depot_showDispatchOrders: function(dispatchId) {
+
+        $('#main').html('depot: show dispatch orders.');
+
+    },
+    depot_showOrderLog: function(orderId) {
+        T.render('depot/order/log', function(t) {
+            Model.getOrderActivity(orderId, function(activities) {
+
+                _.each(activities, function(activity) {
+                    activity.statusName = Model.readableOrderStatus(activity.status);
+                });
+
+                $('#main').html(t({activity: activities}));
+
+            });
+        });
+    },
+    depot_viewDispatch: function(id) {
+
+        Model.getDispatch(id, function(dispatch) {
+            T.render('depot/dispatch/details', function(t_) {
+
+                var div = $('<div></div>');
+                div.append(t_(dispatch));
+
+                if (_.contains(['queued', 'loading', 'loaded'], dispatch.status)) {
+                    T.render('depot/dispatch/product-view', function(t) {
+    
+                        Model.getProductsForDispatch(id, function(products) {
+    
+                            dispatch.product = products;
+    
+                            div.append(t(dispatch));
+                            $('#main').html(div);
+
+                        });
+    
+                    });
+                } else {
+                    T.render('depot/dispatch/order-view', function(t) {
+
+                        Model.getOrdersForDispatch(id, function(orders) {
+
+                            var orderActivity = {};
+                            _.each(dispatch.orderActivity, function(activity) {
+                                if (orderActivity.hasOwnProperty(activity.orderId)) {
+                                    orderActivity[activity.orderId][activity.status] = activity;
+                                } else {
+                                    var o = {};
+                                    o[activity.status] = activity;
+                                    orderActivity[activity.orderId] = o;
+                                }
+                            });
+
+                            dispatch.order = orders;
+
+                            var ids = [];
+                            _.each(orders, function(order) {
+                                ids.push(order.orderId);
+                                order.timeDelivered = '-';
+                                order.timeConfirmed = '-'; 
+                                if (orderActivity.hasOwnProperty(order.orderId)) {
+                                    var activities = orderActivity[order.orderId];
+                                    if (activities['delivered']) {
+                                        order.timeDelivered = activities['delivered'].created;
+                                    }
+                                    if (activities['confirmed']) {
+                                        order.timeConfirmed = activities['confirmed'].created; 
+                                    }
+                                }
+                            });
+
+                            div.append(t(dispatch));
+                            $('#main').html(div);
+    
+                        });
+
+                    });
+                }
+            });
+
+        });
+    },
+    depot_showDispatchLog: function(dispatchId) {
+        T.render('depot/dispatch/log', function(t) {
+            Model.getDispatchActivity(dispatchId, function(activities) {
+
+                _.each(activities, function(activity) {
+                    activity.statusName = Model.readableOrderStatus(activity.status);
+                });
+
+                $('#main').html(t({activity: activities}));
+
+            });
+        });
+    },
+    depot_viewProduct: function(id) {
+        T.render('depot/product/view', function(t) {
+            Model.getProduct(id, function(product) {
+
+                $('#main').html(t(product));
 
             });
         });
@@ -3359,43 +3550,553 @@ App.init({
         $('#main').html('depot: show customer');
 
     },
+    depot_showVehicles: function() {
+        T.render('depot/vehicle/index', function(t) {
+            Model.getVehicles(function(vehicles) {
+                Model.getDepotForCurrentUser(function(depotId) {
+
+                    // Filter vehicles by availability and depot
+                    var availVehicles = Model.filter(vehicles, function(item) {
+                        return item.depotId == depotId && item.isAvailable;
+                    });
+
+                    $('#main').html(t({vehicle: availVehicles}));
+
+                });
+            });
+        });
+    },
     depot_viewVehicle: function(id) {
         T.render('depot/vehicle/view', function(t) {
             Model.getVehicle(id, function(vehicle) {
 
-                $('#main').html(t(vehicle));
+                Model.getMaintenanceActivityForVehicle(id, function(maintenance) {
+                    Model.getFuelActivityForVehicle(id, function(fuel) {
+
+                        vehicle.maintenanceActivity = maintenance;
+                        vehicle.fuelActivity = fuel;
+
+                        $('#main').html(t(vehicle));
+
+                    });
+                });
 
             });
+        });
+    },
+    depot_addFuelToVehicle: function(vehicleId) {
+        T.render('depot/fuel/add', function(t) {
+            Model.getVehicle(vehicleId, function(vehicle) {
+
+                var form = $('<form></form>').append(t(vehicle));
+
+                $('#main').html(form);
+
+                $('input[name="meter-reading"]').val(vehicle.meterReading);
+
+                form.validate({
+                    rules: {
+                        "meter-reading": {
+                            required : true,
+                            number   : true,
+                            min      : vehicle.meterReading
+                        },
+                        "amount": {
+                            required : true,
+                            number   : true,
+                        }
+                    },
+                    submitHandler: function(form) {
+
+                        var data = {
+                            meterReading : form['meter-reading'].value,
+                            amount       : form['amount'].value
+                        };
+
+                        Storage.process({
+                            type        : 'POST',
+                            resource    : 'fuel-activity/vehicle/' + vehicleId,
+                            data        : data,
+                            description : 'Create a fuel activity log entry for vehicle "' + vehicle.regNo + '".',
+                            purge       : ['fuel-data-' + vehicleId, 'meter-reading-' + vehicleId],
+                            hint        : 'The fuel activity log entry could not be created: ',
+                            complete: function() {
+                                window.location.hash = '!d/vehicle/' + vehicleId;
+                            },
+                            successMsg: 'The fuel log entry for vehicle "' + vehicle.regNo + '" was successfully created.'
+                        });
+
+                    }
+                });
+                
+            });
+        });
+    },
+    depot_logMaintenanceActivityForVehicle: function(vehicleId) {
+        T.render('depot/maintenance/register', function(t) {
+
+            Storage.chain(Model.getMaintenanceTypes)
+                   .chain(Model.getVehicle(vehicleId))
+                   .using(function(activityTypes, vehicle) {
+
+                if (_.isEmpty(activityTypes)) {
+                    App.error({
+                        responseJSON: { message: 'No maintenance activity types found.' }
+                    });
+                } else {
+                    vehicle.activityType = activityTypes;
+                    $('#main').html(t(vehicle));
+
+                    var form = $('<form></form>').append(t(vehicle));
+    
+                    $('#main').html(form);
+
+                    $('input[name="meter-reading"]').val(vehicle.meterReading);
+    
+                    form.validate({
+                        rules: {
+                            "meter-reading" : {
+                                required : true,
+                                number   : true,
+                                min      : vehicle.meterReading
+                            },
+                            "description"   : "required",
+                            "start-time"    : "required datetime"
+                        },
+                        submitHandler: function(form) {
+    
+                            var data = {
+                                meterReading : form['meter-reading'].value,
+                                description  : form['description'].value,
+                                startTime    : form['start-time'].value,
+                                activity     : form['type'].value,
+                                vehicleId    : vehicleId
+                            };
+    
+                            Storage.process({
+                                type        : 'POST',
+                                resource    : '!maintenance/vehicle/' + vehicleId,
+                                data        : data,
+                                description : 'Create a maintenance activity entry for vehicle "' + vehicle.regNo + '".',
+                                purge       : ['vehicles', 'maintenance-data-' + vehicleId, 'meter-reading-' + vehicleId],
+                                hint        : 'The maintenance activity log entry could not be created: ',
+                                complete: function() {
+                                    window.location.hash = '!d/vehicle/' + vehicleId;
+                                },
+                                successMsg: 'The maintenance activity log entry for vehicle "' + vehicle.regNo + '" was successfully created.'
+                            });
+    
+                        }
+                    });
+
+                }
+
+            });
+
+        });
+    },
+    depot_completeMaintenanceActivityForVehicle: function(vehicleId) {
+        T.render('depot/maintenance/complete', function(t) {
+
+            Model.getVehicle(vehicleId, function(vehicle) {
+
+                var form = $('<form></form>').append(t(vehicle));
+
+                $('#main').html(form);
+
+                form.validate({
+                    rules: {
+                        "end-time" : {
+                            required       : true,
+                            datetime       : true,
+                            moreRecentThan : vehicle.maintenanceStartTime
+                        }
+                    },
+                    submitHandler: function(form) {
+
+                        var data = {
+                            endTime: form['end-time'].value
+                        };
+
+                        Storage.process({
+                            type        : 'PATCH',
+                            resource    : '!maintenance/complete/vehicle/' + vehicleId,
+                            data        : data,
+                            description : 'Complete maintenance activity for vehicle "' + vehicle.regNo + '".',
+                            purge       : ['vehicles', 'maintenance-data-' + vehicleId],
+                            hint        : 'The maintenance activity could not be completed: ',
+                            complete: function() {
+                                window.location.hash = '!d/vehicle/' + vehicleId;
+                            },
+                            successMsg: 'The maintenance activity for "' + vehicle.regNo + '" was completed.'
+                        });
+
+                    }
+                });
+
+            });
+
         });
     },
     depot_showDrivers: function() {
         T.render('depot/driver/index', function(t) {
-            Model.getDrivers(function(drivers) {
+            Model.getDepotForCurrentUser(function(depotId) {
+                Model.getUsersByRole('driver', function(drivers) {
 
-                $('#main').html(t({driver: drivers}));
+                    var depotDrivers = Model.filter(drivers, function(item) {
+                        return item.depotId == depotId;
+                    });
 
+                    Model.getVehicles(function(vehicles) {
+
+                        var vehiclesByDriver = Storage.toMap(vehicles, 'driverId');
+
+
+                        _.each(depotDrivers, function(driver) {
+                            if (vehiclesByDriver.hasOwnProperty(driver.id)) {
+                                driver.vehicle = vehiclesByDriver[driver.id];
+                            } else {
+                                driver.vehicle = null;
+                            }
+                        });
+    
+                        $('#main').html(t({driver: depotDrivers}));
+
+                    });
+                });
+            });
+        });
+    },
+    depot_assignDriverToVehicle: function(vehicleId) {
+        T.render('depot/vehicle/driver', function(t) {
+
+            Storage.chain(Model.getVehicle(vehicleId))
+                   .chain(Model.getUsersByRole('driver'))
+                   .using(function(vehicle, drivers) {
+
+                var depotDrivers = _.filter(drivers, function(driver) {
+                    return driver.depotId === vehicle.depotId;
+                });
+
+                var form = $('<form></form>').append(t({
+                    driver  : depotDrivers,
+                    vehicle : vehicle
+                }));
+     
+                $('#main').html(form);
+
+                if (vehicle.driverId) {
+                    $('select[name="driver"]').val(vehicle.driverId);
+                }
+    
+                form.validate({
+                    submitHandler: function(form) {
+
+                        if (form['driver'].value) {
+
+                            var data = {
+                                driverId  : form['driver'].value,
+                                vehicleId : vehicleId
+                            };
+
+                            Storage.process({
+                                type        : 'PATCH',
+                                resource    : '!vehicle/driver',
+                                data        : data,
+                                description : 'Assign a driver to vehicle ' + vehicle.regNo + '.',
+                                purge       : ['vehicles', 'users'],
+                                hint        : 'The driver could not be assigned to the vehicle: ', 
+                                complete: function() {
+                                    window.location.hash = '!d/vehicles';
+                                }
+                            });
+
+                        } else {
+
+                            Storage.process({
+                                type        : 'PATCH',
+                                resource    : 'vehicle/driver/null',
+                                data        : { vehicleId: vehicleId },
+                                description : 'Remove driver assignment for vehicle ' + vehicle.regNo + '.',
+                                purge       : ['vehicles', 'users'],
+                                hint        : 'The driver assignment could not be removed: ', 
+                                complete: function() {
+                                    window.location.hash = '!d/vehicles';
+                                }
+                            });
+
+                        }
+                    }
+
+                });
             });
         });
     },
     depot_showStockSummary: function() {
+        T.render('depot/stock/summary', function(t) {
+            Model.getDepotForCurrentUser(function(depotId) {
 
-        $('#main').html('depot: show stock summary');
+                Model.getStockForDepot(depotId, function(stock) {
+                    $('#main').html(t({item: stock}));
+                });
 
+            });
+        });
     },
     depot_addStock: function() {
+        T.render('depot/stock/add', function(t) {
+            Model.getDepotForCurrentUser(function(depotId) {
+            
+                Storage.chain(Model.getProducts)
+                       .chain(Model.getDepot(depotId))
+                       .using(function(products, depot) {
 
-        $('#main').html('depot: add stock');
+                    var form = $('<form></form>').append(t({
+                        product : products,
+                        depot   : depot
+                    }));
 
-    },
-    depot_reportStockDamages: function() {
+                    $('#main').html(form);
 
-        $('#main').html('depot: report damages');
+                    form.validate({
+                        rules: {
+                            "quantity" : "required number"
+                        },
+                        submitHandler: function(form) {
+        
+                            var productId = $('select[name="product"]').val();
 
+                            Storage.find(productId, products, function(product) {
+
+                                var data = {
+                                    quantity  : form['quantity'].value,
+                                    productId : productId,
+                                    type      : 'incoming'
+                                };
+            
+                                Storage.process({
+                                    type        : 'PATCH',
+                                    resource    : '!stock/add/depot/' + depotId,
+                                    data        : data,
+                                    description : 'Add incoming stock for product "' + product.name + '" in "' + depot.name + '".',
+                                    purge       : ['stock-' + depotId, 'stock-activity'],
+                                    hint        : 'Product stock could not be added: ',
+                                    complete: function() {
+                                        window.location.hash = '!d/sidebar/stock-summary';
+                                    },
+                                    successMsg: 'Product stock was successfully added.'
+                                });
+
+                            });
+        
+                        }
+
+                    });
+
+                });
+
+            });
+
+        });
     },
     depot_makeStockAdjustment: function() {
+        T.render('depot/stock/adjust', function(t) {
+            Model.getDepotForCurrentUser(function(depotId) {
 
-        $('#main').html('depot: make adjustment');
+                Storage.chain(Model.getProducts)
+                       .chain(Model.getDepot(depotId))
+                       .chain(Model.getStockForDepot(depotId))
+                       .using(function(products, depot, stock) {
 
+                    var form = $('<form></form>').append(t({
+                        product : products,
+                        depot   : depot
+                    }));
+     
+                    $('#main').html(form);
+
+                    var productStock = Storage.toMap(stock, 'productId');
+
+                    _.each(products, function(product) {
+
+                        var qty = 0;
+                        if (productStock.hasOwnProperty(product.id)) {
+                            qty = productStock[product.id].actual;
+                        }
+                        $('input[name="product-' + product.id + '"]').val(qty);
+
+                    });
+
+                    form.validate({
+                        submitHandler: function(form) {
+
+                            // Identify all fields for which the stock amount has been 
+                            // modified by the user.
+
+                            var pos = [];
+                            var neg = [];
+
+                            _.each(products, function(product) {
+                                var qty = 0;
+                                if (productStock.hasOwnProperty(product.id)) {
+                                    qty = productStock[product.id].actual;
+                                }
+                                var qty_ = $('input[name="product-' + product.id + '"]').val();
+
+                                if (qty < qty_) {
+
+                                    pos.push({
+                                        quantity  : (qty_ - qty),
+                                        productId : product.id,
+                                        type      : 'adjustment_pos'
+                                    });
+
+                                } else if (qty > qty_) {
+
+                                    neg.push({
+                                        quantity  : (qty - qty_),
+                                        productId : product.id,
+                                        type      : 'adjustment_neg'
+                                    });
+
+                                }
+
+                            });
+
+                            var next = function() {
+                                if (neg.length) {
+
+                                    Storage.process({
+                                        type        : 'PATCH',
+                                        resource    : '!stock/remove/depot/' + depotId,
+                                        data        : neg,
+                                        description : 'Product stock adjustment on depot "' + depot.name + '".',
+                                        purge       : ['stock-' + depotId, 'stock-activity'],
+                                        hint        : 'Product stock adjustment failed: ',
+                                        complete: function() {
+                                            window.location.hash = '!d/sidebar/stock-summary';
+                                        },
+                                        successMsg: 'Product stock was successfully adjusted.'
+                                    });
+
+                                } else {
+                                    App.notify('Product stock was successfully adjusted.');
+                                    window.location.hash = '!d/sidebar/stock-summary';
+                                }
+                            };
+
+                            if (pos.length) {
+
+                                Storage.process({
+                                    type        : 'PATCH',
+                                    resource    : '!stock/add/depot/' + depotId,
+                                    data        : pos,
+                                    description : 'Product stock adjustment on depot "' + depot.name + '".',
+                                    purge       : ['stock-' + depotId, 'stock-activity'],
+                                    hint        : 'Product stock adjustment failed: ',
+                                    success     : next
+                                });
+
+                            } else {
+                                next();
+                            }
+
+                        }
+                    });
+
+                });
+
+            });
+        });
+    },
+    depot_reportStockDamage: function() {
+        T.render('depot/stock/report', function(t) {
+            Model.getDepotForCurrentUser(function(depotId) {
+
+                Storage.chain(Model.getProducts)
+                       .chain(Model.getDepot(depotId))
+                       .chain(Model.getDamageTypes)
+                       .using(function(products, depot, types) {
+
+                    var form = $('<form></form>').append(t({
+                        product : products,
+                        depot   : depot,
+                        type    : types
+                    }));
+
+                    $('#main').html(form);
+
+                    form.validate({
+                        rules: {
+                            "quantity" : "required number"
+                        },
+                        submitHandler: function(form) {
+        
+                            var productId = $('select[name="product"]').val(),
+                                typeId = $('select[name="type"]').val();
+
+                            Storage.find(productId, products, function(product) {
+
+                                var data = {
+                                    quantity    : form['quantity'].value,
+                                    productId   : productId,
+                                    type        : 'damage',
+                                    damageType  : types[typeId].name,
+                                    description : $('textarea[name="comment"]').val(),
+                                };
+
+                                Storage.process({
+                                    type        : 'PATCH',
+                                    resource    : '!stock/report-damage/depot/' + depotId,
+                                    data        : data,
+                                    description : 'Report damaged stock for product "' + product.name + '".',
+                                    purge       : ['stock-' + depotId, 'stock-activity'],
+                                    hint        : 'Product stock damage could not be reported: ',
+                                    complete: function() {
+                                        window.location.hash = '!d/sidebar/stock-summary';
+                                    },
+                                    successMsg: 'Damaged product stock was reported.'
+                                });
+        
+                            });
+
+                        }
+                    });
+        
+                });
+
+            });
+        });
+    },
+    depot_showStockActivity: function() {
+        T.render('depot/stock/activity', function(t) {
+            Model.getDepotForCurrentUser(function(depotId) {
+
+                Model.getStockActivityForDepot(depotId, function(activity) {
+                
+                    _.each(activity, function(act) {
+                        act.type = Model.readableStockActType(act.activityType);
+                    });
+    
+                    $('#main').html(t({
+                        activity: activity
+                    }));
+    
+                });
+
+            });
+        });
+    },
+    depot_viewStockDamageReport: function(activityId) {
+        T.render('depot/stock/damage-report', function(t) {
+
+            Model.getStockActivity(function(activity) {
+                Storage.find(activityId, activity, function(res) {
+                    $('#main').html(t(res));
+                });
+            });
+
+        });
     },
     queueing_showDispatches: function() {
 
@@ -3403,9 +4104,17 @@ App.init({
 
     },
     queueing_showVehicles: function() {
+        T.render('queueing/vehicle/index', function(t) {
+            Model.getVehicles(function(vehicles) {
 
-        $('#main').html('queueing: show vehicles');
-
+                var availableVehicles = Model.filter(vehicles, function(item) {
+                    return item.isAvailable;
+                });
+    
+                $('#main').html(t({vehicle: availableVehicles}));
+    
+            });
+        });
     },
     queueing_viewVehicle: function(id) {
 
