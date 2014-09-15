@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <style type="text/css">
+            table td {
+                border: 1px solid black;
+            }
+        </style>
+    </head>
+    <body>
+
+        <form class="basket"></form>
+
+        <script type="text/javascript" src="js/jquery.min.js"></script>
+        <script type="text/javascript" src="js/handlebars-template.js"></script>
+        <script type="text/javascript" src="js/jquery.validate.min.js"></script>
+        <script type="text/javascript" src="js/rollups/aes.js"></script>
+        <script type="text/javascript" src="js/underscore-min.js"></script>
+        <script type="text/javascript" src="js/backbone-min.js"></script>
+        <script type="text/javascript" src="js/handlebars-v1.3.0.js"></script>
+        <script type="text/javascript" src="js/store.min.js"></script>
+        <script type="text/javascript" src="js/hmac-sha1.js"></script>
+        <script type="text/javascript" src="js/sockjs-0.3.min.js"></script>
+        <script type="text/javascript" src="js/stomp.js"></script>
+        <script type="text/javascript" src="js/ba-routematcher.min.js"></script>
+        <script type="text/javascript" src="js/storage2.js"></script>
+        <script type="text/javascript" src="js/model.js"></script>
+        <script type="text/javascript" src="js/admin3.js"></script>
+ 
+        <script id="basket-products" type="text/x-handlebars-template">
+            {{#if product}}
+            <select>
+                {{#each product}}
+                <option value="{{id}}">{{name}}</option>
+                {{/each}}
+            </select>
+            <input type="text" name="quantity" value="1">
+            <a href="javascript:" class="item-add">Add</a>
+            {{/if}}
+        </script>
+
+        <script id="basket-items" type="text/x-handlebars-template">
+            <table cellpadding="8" cellpadding="8">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                        <th>Sub Total</th>
+                    </tr>
+                </thead>
+                <tbody class="item-list-wrapper">
+                </tbody>
+            </table>
+            <div>
+                <input type="submit">
+            </div>
+        </script>
+
+        <script id="basket-item-edit" type="text/x-handlebars-template">
+            <tr id="basket-item-{{id}}">
+                <td>{{product}}</td>
+                <td>
+                    <input type="text" name="quantity" value="{{quantity}}">
+                    <a data-id="{{id}}" class="item-update" href="javascript:">Update</a>
+                </td>
+                <td>{{price}}</td>
+                <td>{{subtotal}}</td>
+                <td><a data-id="{{id}}" class="item-remove" href="javascript:">Remove</a></td> 
+            </tr>
+        </script>
+
+        <script id="basket-item-view" type="text/x-handlebars-template">
+            <tr id="basket-item-{{id}}">
+                <td>{{product}}</td>
+                <td>{{quantity}} | <a data-id="{{id}}" class="item-edit" href="javascript:">Edit</a></td>
+                <td>{{price}}</td>
+                <td>{{subtotal}}</td>
+                <td><a data-id="{{id}}" class="item-remove" href="javascript:">Remove</a></td> 
+            </tr>
+        </script>
+
+        <script id="basket-item-total" type="text/x-handlebars-template">
+            <tr id="basket-item-row-total">
+                <td colspan="3"></td>
+                <td>Total:</td>
+                <td>{{total}}</td>
+            </tr>
+        </script>
+
+        <script type="text/javascript">
+
+
+            // List of products, indexed by id
+            var products = {
+                1: {
+                    id: 1,
+                    name: 'Product #1',
+                    price: 123.0
+                },
+                2: {
+                    id: 2,
+                    name: 'Product #2',
+                    price: 456.0
+                }
+            };
+            
+            // Selected product-quantity pairs
+            var items = {}; 
+
+            var templates = {
+                basketItems : Handlebars.compile($('#basket-items').html()),
+                itemView    : Handlebars.compile($('#basket-item-view').html()),
+                itemEdit    : Handlebars.compile($('#basket-item-edit').html()),
+                itemTotal   : Handlebars.compile($('#basket-item-total').html()),
+                products    : Handlebars.compile($('#basket-products').html())
+            };
+
+            function addItem(id, quantity) {
+                var product = products[id];
+
+                if (product) {
+                    var item = {
+                        product  : product,
+                        quantity : quantity
+                    };
+                    items[id] = item;
+
+                    // Is this the first item?
+                    if (1 == _.keys(items).length) { 
+                        $('.basket').append(templates.basketItems());
+                    }
+
+                    refreshProducts();
+                    $('.basket .item-list-wrapper').append(templates.itemView(extract(item)));
+                }
+            }
+
+            function removeItem(id) {
+                delete items[id];
+                if (_.keys(items).length) {
+                    refreshTotal();
+                } else {
+                    $('.basket').html('<div class="products-wrapper"></div>');
+                }
+                refreshProducts();
+            }
+
+            function updateItem(id, quantity) {
+                var item = items[id];
+                if (item) {
+                    item.quantity = quantity;
+                    $('#basket-item-' + id).html($(templates.itemView(extract(item))).html());
+                    refreshTotal();
+                }
+            }
+
+            function editItem(id) {
+                var item = items[id];
+                if (item) {
+                    $('#basket-item-' + id).html($(templates.itemEdit(extract(item))).html());
+                }
+            }
+
+            function extract(item) {
+                return {
+                    id       : item.product.id,
+                    product  : item.product.name,
+                    price    : item.product.price,
+                    subtotal : (item.quantity * item.product.price),
+                    quantity : item.quantity
+                };
+            }
+
+            function refreshTotal() {
+
+                var total = 0;
+                for (key in items) {
+                    var item = items[key];
+                    total += (item.quantity * item.product.price);
+                }
+
+                $('#basket-item-row-total').html($(templates.itemTotal({total: total})).html());
+
+            }
+
+            function refreshProducts() {
+                var selected = _.keys(items);
+                var products_ = [];
+
+                for (key in products) {
+                    var product = products[key];
+                    if (!(_.contains(selected, key))) {
+                        products_.push({
+                            id   : product.id,
+                            name : product.name
+                        });
+                    }
+                }
+
+                $('.basket .products-wrapper').html(templates.products({product : products_}));
+            }
+
+            // client ----------------------------------------------------------------------------
+
+            function validate() {
+                //alert('v');
+            }
+
+
+            $('.basket').on('click', '.item-add', function() {
+
+                var productId = Number($('.basket select').val()),
+                    quantity  = Number($('input[name="quantity"]').val());
+
+                addItem(productId, quantity);
+
+                $('input[name="quantity"]').val(1);
+
+                validate();
+
+            });
+
+            $('.basket').on('click', '.item-remove', function() {
+
+                var item = $(this).parent().parent().remove();
+                removeItem($(this).data('id'));
+
+            });
+
+            $('.basket').on('click', '.item-edit', function() {
+
+                editItem($(this).data('id'));
+
+            });
+
+            $('.basket').on('click', '.item-update', function() {
+
+                var id = $(this).data('id');
+                var qty = $('#basket-item-' + id + ' input[name="quantity"]').val();
+
+                updateItem(id, Number(qty));
+
+                validate();
+
+            });
+
+
+            // Init ----------------------
+
+            $('.basket').html('<div class="products-wrapper"></div>');
+            refreshProducts();
+ 
+
+
+            $('#main').basket({
+                columns: ["name"]
+            });
+
+
+        </script>
+
+    </body>
+</html>

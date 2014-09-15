@@ -1,0 +1,30 @@
+
+<div>
+    <select id="order-product-select">
+        {{#each product}}
+        <option value="{{id}}">{{name}}</option>
+        {{/each}}
+    </select>
+</div>
+<!--
+<div>
+    <label>Quantity</label>
+    <input type="text">
+</div>
+-->
+<input id="order-item-add-quantity" type="text" value="1" name="quantity">
+<button id="order-add-product">Add to order</button>
+
+<table id="order-products">
+    <thead>
+        <tr>
+            <th>Product</th>
+            <th>Quantity</th>
+            <th>Sub Total</th>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+
+<button id="order-submit">Submit</button>
+

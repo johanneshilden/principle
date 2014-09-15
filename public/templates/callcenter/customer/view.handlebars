@@ -1,0 +1,58 @@
+<h1>Customer information</h1>
+<h2>{{name}}</h2>
+<div>
+Area:    {{areaName}}
+</div>
+<div>
+Street:    {{address}}
+</div>
+<div>
+Created:    {{created}}
+</div>
+<div>
+Price cat:    {{priceCategory}}
+</div>
+<div>
+Lat:    {{latitude}}
+</div>
+<div>
+Long:    {{longitude}}
+</div>
+<div>
+TIN:    {{tin}}
+</div>
+
+<div>
+    Average order value: {{averageOrderValue}}
+</div>
+<div>
+    Average time between orders: {{averageTimeInterval}}
+</div>
+
+<br>
+<br>
+
+<a href="#!c/customer/{{id}}/tab/orders">Orders</a><br>
+<div id="customer-orders"></div>
+
+<a href="#!c/customer/{{id}}/tab/contacts">Contact details</a><br>
+<div id="customer-contacts"></div>
+
+<a href="#!c/customer/{{id}}/tab/complaints">Complaints</a><br>
+<div id="customer-complaints"></div>
+
+<a href="#!c/customer/{{id}}/tab/activity">Call activity</a><br>
+<div id="customer-activity"></div>
+
+<a href="#!c/customer/{{id}}/tab/tasks">Tasks</a><br>
+<div id="customer-tasks"></div>
+
+<hr>
+
+<a href="#!c/customer/{{id}}/tab/select-activity">Register call activity</a>
+<br>
+
+<div id="customer-activity-create" style="border:1px solid black;"></div>
+
+<a href="#!c/price-list/{{id}}">Product price list</a>
+<br>

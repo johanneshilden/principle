@@ -1,0 +1,22 @@
+<div>
+<label>Title</label>
+<input name="complaint-title" type="text">
+</div>
+<div>
+<label>Title</label>
+<textarea name="complaint-description"></textarea>
+</div>
+
+<div>
+    <select id="complaint-product-select">
+        {{#each product}}
+        <option value="{{id}}">{{name}}</option>
+        {{/each}}
+    </select>
+    <a class="complaint-add-product" href="javascript:">Add product</a>
+</div>
+<hr>
+    <input type="submit">
+<hr>
+
+

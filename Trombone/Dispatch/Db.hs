@@ -58,7 +58,7 @@ run (DbQuery ret tpl) ps = do
         Left e -> 
             -- 400 Bad request: Request parameters did not match template
             return $ errorResponse ErrorBadRequest $ Text.concat
-                [ "Invalid route: Template parameter list undersaturated. \
+                [ "Error: Template parameter list undersaturated. \
                   \Arguments missing: "
                 , Text.concat $ intersperse ", " $ map arg e, "." ]
         Right q -> do
@@ -175,6 +175,7 @@ persistValToJsonVal (PersistBool       b) = Bool b
 persistValToJsonVal (PersistByteString b) = String $ decodeUtf8 b
 persistValToJsonVal (PersistInt64      n) = Number $ fromIntegral n
 persistValToJsonVal (PersistDouble     d) = Number $ fromFloatDigits d
+persistValToJsonVal (PersistRational   r) = Number $ fromRational r
 persistValToJsonVal (PersistMap        m) = toObj m
 persistValToJsonVal (PersistUTCTime    u) = showV u
 persistValToJsonVal (PersistTimeOfDay  t) = showV t

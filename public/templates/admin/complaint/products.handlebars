@@ -1,0 +1,25 @@
+<h4>Complaint products</h4>
+<table>
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Quantity</th>
+            <th>Description</th>
+            <th>Expiry Date</th>
+            <th>Production Date/Time</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each products}}
+        <tr>
+            <td>{{id}}</td>
+            <td><a href="#product/{{id}}">{{name}}</a></td>
+            <td>{{quantity}}</td>
+            <td>{{description}}</td>
+            <td>{{expiryDate}}</td>
+            <td>{{produced}}</td>
+        </tr>
+        {{/each}}
+     </tbody>
+</table>

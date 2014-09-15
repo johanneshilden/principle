@@ -1,0 +1,19 @@
+<tr>
+    <td>
+       <h4>{{name}}</h4>
+   </td>
+   <td>
+        <div style="display:none;">
+            <input class="order-product-quantity" id="prod-{{id}}-quantity" name="prod-{{id}}-quantity" data-id="{{id}}" type="text" value="{{quantity}}">
+            <a data-id="{{id}}" class="order-product-qty-update" href="javascript:">Update</a>
+        </div>
+        <div>
+            Quantity: <span id="prod-{{id}}-quantity-text">{{quantity}}</span> | <a class="order-product-qty-edit" href="javascript:">Edit</a>
+        </div>
+        <a class="product-remove" data-id="{{id}}" href="javascript:">Remove from order</a>
+   </td>
+   <td id="prod-{{id}}-sub-total">
+
+   </td>
+</th>
+

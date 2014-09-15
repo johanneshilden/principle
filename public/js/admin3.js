@@ -154,10 +154,12 @@ App.init({
         // ---------------------------- :
         // commission                   :
         // ---------------------------- :
-        "commissions/edit"              : "editCommissionMatrix",
+        "commissions"                   : "commissionMatrix",
+        "commissions/:index"            : "commissionMatrix",
         // ---------------------------- :
         // system                       :
         // ---------------------------- :
+        "task/settings"                 : "editTaskSettings",
         "system/activity"               : "showSystemActivityLog",
  
         // //////////////////////////// :
@@ -168,21 +170,46 @@ App.init({
         // customer                     :
         // ---------------------------- :
         "!f/customers/all"              : "fieldstaff_showAllCustomers",
+        "!f/customers/pending"          : "fieldstaff_showPendingCustomers",
+        "!f/customer/register/:id"      : "fieldstaff_registerCustomer",
         "!f/customers"                  : "fieldstaff_showCustomers",
         "!f/customer/:id"               : "fieldstaff_viewCustomer",
+        "!f/customer/:id/tab/:tab"      : "fieldstaff_viewCustomer",
+        // ---------------------------- :
+        // contact                      :
+        // ---------------------------- :
+        //"!f/contact/customer/:id/create": "fieldstaff_createCustomerContact",
+        "!f/contact/:id/edit"           : "fieldstaff_editCustomerContact",
+        "!f/contact/:id/delete"         : "fieldstaff_deleteCustomerContact",
+        // ---------------------------- :
+        // complaint                    :
+        // ---------------------------- :
+         "!f/complaint/:id"             : "fieldstaff_viewComplaint",
+        // ---------------------------- :
+        // product                      :
+        // ---------------------------- :
+        "!f/price-list/:id"             : "fieldstaff_showProducts",
+        "!f/product/:id"                : "fieldstaff_viewProduct",
         // ---------------------------- :
         // order                        :
         // ---------------------------- :
         "!f/orders"                     : "fieldstaff_showOrders",
+        "!f/order/edit/:id"             : "fieldstaff_editOrder",
+        "!f/order/:id"                  : "fieldstaff_viewOrder",
+        "!f/order/:id/log"              : "fieldstaff_showOrderActivityLog",
         // ---------------------------- :
         // stock                        :
         // ---------------------------- :
         "!f/stock"                      : "fieldstaff_showStock",
- 
+        // ---------------------------- :
+        // dispatch                     :
+        // ---------------------------- :
+        "!f/dispatches"                 : "fieldstaff_showDispatches",
         // ---------------------------- :
         // task                         :
         // ---------------------------- :
- 
+        "!f/tasks"                      : "fieldstaff_showTasks",
+  
         // ---------------------------- :
         // performance                  :
         // ---------------------------- :
@@ -194,8 +221,14 @@ App.init({
         // //////////////////////////// :
         // DRIVER                       :
         // //////////////////////////// :
-
-        //"!v/index"
+        "!v/orders"                     : "driver_showOrders",
+        "!v/orders/delivered"           : "driver_showDeliveredOrders",
+        "!v/depot"                      : "driver_viewDepot",
+        "!v/stock/customer"             : "driver_showStock",
+        "!v/stock/return"               : "driver_showReturnStock",
+        "!v/performance/today"          : "driver_performanceToday",
+        "!v/performance/weekly"         : "driver_performanceWeekly",
+        "!v/performance/monthly"        : "driver_performanceMonthly",
 
         // //////////////////////////// :
         // CALL CENTER                  :
@@ -205,16 +238,30 @@ App.init({
         // customer                     :
         // ---------------------------- :
         "!c/customers/all"              : "callcenter_showCustomers",
+        "!c/customer/create"            : "callcenter_createCustomer",
         "!c/customers"                  : "callcenter_showAreaCustomers",
         "!c/location/customer/:id"      : "callcenter_viewCustomerLocation",
-        "!c/tasks/customer/:id"         : "callcenter_viewTasksForCustomer",
         "!c/orders/customer/:id"        : "callcenter_viewOrdersForCustomer",
         "!c/complaints/customer/:id"    : "callcenter_viewComplaintsForCustomer",
         "!c/activity/customer/:id"      : "callcenter_viewActivityForCustomer",
         "!c/contacts/customer/:id"      : "callcenter_viewContactsForCustomer",
         "!c/customer/:id"               : "callcenter_viewCustomer",
+        "!c/customer/:id/tab/:tab"      : "callcenter_viewCustomer",
         "!c/customer/edit/:id"          : "callcenter_editCustomer",
-        "!c/activity"                   : "callcenter_registerActivity",
+        // ---------------------------- :
+        // contact                      :
+        // ---------------------------- :
+        // "!c/contact/customer/:id/create": "callcenter_createCustomerContact",
+        "!c/contact/:id/edit"           : "callcenter_editCustomerContact",
+        "!c/contact/:id/delete"         : "callcenter_deleteCustomerContact",
+        // ---------------------------- :
+        // customer call activity       :
+        // ---------------------------- :
+        //"!c/activity/register/:id"      : "callcenter_registerActivity",
+        // ---------------------------- :
+        // complaint                    :
+        // ---------------------------- :
+        "!c/complaint/:id"              : "callcenter_viewComplaint",
         // ---------------------------- :
         // order                        :
         // ---------------------------- :
@@ -222,11 +269,13 @@ App.init({
         "!c/orders"                     : "callcenter_showOrders",
         "!c/order/edit/:id"             : "callcenter_editOrder",
         "!c/order/delete/:id"           : "callcenter_deleteOrder",
+        "!c/order/create"               : "callcenter_createOrder",
         "!c/order/:id"                  : "callcenter_viewOrder",
+        "!c/order/:id/log"              : "callcenter_showOrderActivityLog",
         // ---------------------------- :
         // product                      :
         // ---------------------------- :
-        "!c/price-list"                 : "callcenter_showProducts",
+        "!c/price-list/:id"             : "callcenter_showProducts",
         "!c/product/:id"                : "callcenter_viewProduct",
         // ---------------------------- :
         // sidebar                      :
@@ -234,7 +283,16 @@ App.init({
         "!c/sidebar/tasks"              : "callcenter_showTasks",
         "!c/sidebar/stock"              : "callcenter_showStockSummary",
         "!c/sidebar/calendar"           : "callcenter_showCalendar",
- 
+        // ---------------------------- :
+        // widgets                      :
+        // ---------------------------- :
+        "!c/widgets/performance"        : "callcenter_viewPerformance",
+        // ---------------------------- :
+        // task                         :
+        // ---------------------------- :
+        "!c/tasks/customer/:id"         : "callcenter_viewTasksForCustomer",
+        "!c/tasks"                      : "callcenter_showTasks",
+  
         // //////////////////////////// :
         // DEPOT MANAGEMENT             :
         // //////////////////////////// :
@@ -289,6 +347,11 @@ App.init({
         "!d/sidebar/stock-adjustment"   : "depot_makeStockAdjustment",
         "!d/stock/activity"             : "depot_showStockActivity",
         "!d/stock-damage-report/:id"    : "depot_viewStockDamageReport",
+        // ---------------------------- :
+        // order queueing
+        // ---------------------------- :
+        "!d/queueing/vehicles"          : "depot_showAvailableVehicles",
+        "!d/load/vehicle/:id"           : "depot_load",
 
         // //////////////////////////// :
         // ORDER QUEUEING               :
@@ -298,6 +361,7 @@ App.init({
         // dispatch                     :
         // ---------------------------- :
         "!q/dispatches"                 : "queueing_showDispatches",
+        "!q/dispatches/all"             : "queueing_showDispatchHistory",
         "!q/dispatch/:id"               : "queueing_viewDispatch",
         "!q/load/vehicle/:id"           : "queueing_load",
 
@@ -359,7 +423,7 @@ App.init({
         $('#info').html('Loading...');
     },
     onRequestEnd: function() {
-        $('#info').html('');
+        $('#info').empty();
     },
     login: function() {
         T.render('admin/login', function(t) {
@@ -952,6 +1016,8 @@ App.init({
                             var callback = App.onRequestBegin;
                             App.onRequestBegin = function() {};
                             
+                            $('#fuel-summary').empty();
+
                             Model.getFuelActivityForVehicle(vehicleId, function(activity) {
                                 vehicle.activity = activity;
                                 $('#fuel-summary').html(t_(vehicle));
@@ -1039,6 +1105,8 @@ App.init({
                             var callback = App.onRequestBegin;
                             App.onRequestBegin = function() {};
                             
+                            $('#maintenance-summary').empty();
+
                             Model.getMaintenanceActivityForVehicle(vehicleId, function(activity) {
                                 vehicle.activity = activity;
                                 $('#maintenance-summary').html(t_(vehicle));
@@ -1516,65 +1584,102 @@ App.init({
         T.render('admin/customer/view', function(t) {
 
             Model.getCustomer(id, function(customer) {
+                Model.getOrderAverageForCustomer(id, function(orderAverage) {
+                    Model.getAverageOrderTimeInterval(id, function(timeInterval) {
 
-                switch (tab) {
-                    case 'orders':
-                        T.render('admin/order/index', function(t_) {
-                            Model.getOrdersForCustomer(id, function(orders) {
+                        customer.averageOrderValue   = orderAverage.average;
+                        customer.averageTimeInterval = timeInterval.hours;
+ 
+                        switch (tab) {
+                            case 'orders':
+                                T.render('admin/order/index', function(t_) {
+                                    Model.getOrdersForCustomer(id, function(orders) {
 
-                                $('#main').html(t(customer));
+                                        $('#main').html(t(customer));
 
-                                $('#customer-orders').html(t_({
-                                    order: orders
-                                }));
+                                        $('#customer-orders').html(t_({
+                                            order: orders
+                                        }));
 
-                            });
-                        });
-                        break;
-                    case 'contacts':
-                        T.render('admin/customer/contacts', function(t_) {
-                            Model.getContactsForCustomer(id, function(contacts) {
-
-                                $('#main').html(t(customer));
-                                customer.contact = contacts;
-                                $('#customer-contacts').html(t_(customer));
-
-                            });
-                        });
-                        break;
-                    case 'complaints':
-                        T.render('admin/complaint/index', function(t_) {
-                            Model.getComplaints(function(complaints) {
-
-                                $('#main').html(t(customer));
-
-                                var customerComplaints = Model.filter(complaints, function(item) {
-                                    return item.customerId == id;
+                                    });
                                 });
+                                break;
+                            case 'contacts':
+                                T.render('admin/customer/contacts', function(t_) {
+                                    Model.getContactsForCustomer(id, function(contacts) {
 
-                                $('#customer-complaints').html(t_({
-                                    complaint: customerComplaints
-                                }));
+                                        $('#main').html(t(customer));
+                                        customer.contact = contacts;
+                                        $('#customer-contacts').html(t_(customer));
 
-                            });
-                        });
-                        break;
-                    case 'activity':
-                        T.render('admin/customer/activity', function(t_) {
-                            Model.getActivityForCustomer(id, function(activities) {
+                                    });
+                                });
+                                break;
+                            case 'complaints':
+                                T.render('admin/complaint/index', function(t_) {
+                                    Model.getComplaints(function(complaints) {
 
+                                        $('#main').html(t(customer));
+
+                                        var customerComplaints = Model.filter(complaints, function(item) {
+                                            return item.customerId == id;
+                                        });
+
+                                        $('#customer-complaints').html(t_({
+                                            complaint: customerComplaints
+                                        }));
+
+                                    });
+                                });
+                                break;
+                            case 'activity':
+                                T.render('admin/customer/activity', function(t_) {
+                                    Model.getActivityForCustomer(id, function(activities) {
+
+                                        $('#main').html(t(customer));
+
+                                        _.each(activities, function(act) {
+  
+                                            switch (act.contactType) {
+                                                case 'proactive':
+                                                    act.contactType = 'Proactive'
+                                                    break;
+                                                case 'visit':
+                                                    act.contactType = 'Customer Visit'
+                                                    break;
+                                                case 'customer-received':
+                                                    act.contactType = 'Received From Customer'
+                                                    break;
+                                                default:
+                                                    act.contactType = '-';
+                                            }
+
+                                            var url = null;
+                                            switch (act.kind) {
+                                                case 'service-complaint':
+                                                case 'quality-complaint':
+                                                case 'complaint-resolved':
+                                                    url = 'complaint/' + act.entityId;
+                                                    break;
+                                                default:
+                                            }
+                                            act.url = url;
+                                        });
+
+                                        customer.activity = activities;
+                                        $('#customer-activity').html(t_(customer));
+
+                                    });
+                                });
+                                break;
+                            default:
                                 $('#main').html(t(customer));
-                                customer.activity = activities;
-                                $('#customer-activity').html(t_(customer));
+                                break;
+                        }
 
-                            });
-                        });
-                        break;
-                    default:
-                        $('#main').html(t(customer));
-                        break;
-                }
+                    });
 
+                });
             });
 
         });
@@ -1858,22 +1963,36 @@ App.init({
     },
     viewComplaint: function(id) {
         T.render('admin/complaint/view', function(t) {
-            Model.getComplaint(id, function(complaint) {
-                $('#main').html(t(complaint));
+            T.render('admin/complaint/products', function(t_) {
+                Model.getComplaint(id, function(complaint) {
 
-                $('button.resolve').click(function() {
+                    $('#main').html(t(complaint));
 
-                    Storage.process({
-                        type        : 'PATCH',
-                        resource    : 'complaint/resolve/' + id,
-                        data        : '',
-                        description : 'Resolve complaint from customer "' + complaint.customer + '".',
-                        purge       : 'complaints',
-                        complete    : App.refresh
+                    if ('quality' === complaint.kind) {
+                        $('#main').append(t_(complaint));
+                    }
+    
+                    $('button.resolve').click(function() {
+    
+                        var date = new Date();
+
+                        Storage.process({
+                            type        : 'PATCH',
+                            resource    : '!complaint/resolve/' + id,
+                            data        : {
+                                datetime    : date.toISOString(),
+                                customerId  : complaint.customerId,
+                                userId      : App.user().id,
+                                description : 'Complaint was resolved.'
+                            },
+                            description : 'Resolve complaint from customer "' + complaint.customer + '".',
+                            purge       : 'complaints',
+                            complete    : App.refresh
+                        });
+    
                     });
 
                 });
-
             });
         });
     },
@@ -2016,6 +2135,8 @@ App.init({
                             // Temporarily disable onRequestBegin hook
                             var callback = App.onRequestBegin;
                             App.onRequestBegin = function() {};
+
+                            $('#stock-summary').empty();
 
                             Model.getStockForDepot(depotId, function(stock) {
                                 $('#stock-summary').html(t_({
@@ -2205,6 +2326,25 @@ App.init({
             Model.getStockActivity(function(activity) {
                 Storage.find(activityId, activity, function(res) {
                     $('#main').html(t(res));
+                });
+            });
+
+        });
+    },
+    depot_showAvailableVehicles: function() {
+        T.render('depot/queueing/vehicles', function(t) {
+
+            Model.getDepotForCurrentUser(function(depotId) {
+                Model.getVehiclesForDepot(depotId, function(vehicles) {
+    
+                    var availableVehicles = Model.filter(vehicles, function(item) {
+                        return item.isAvailable;
+                    });
+        
+                    $('#main').html(t({
+                        vehicle: availableVehicles
+                    }));
+        
                 });
             });
 
@@ -3188,21 +3328,235 @@ App.init({
             });
         });
     },
-    editCommissionMatrix: function() {
+    commissionMatrix: function(offset) {
+        T.render('admin/user/commissions', function(t) {
+            T.render('admin/user/commission/edit', function(t_) {
+                T.render('admin/user/commission/row', function(t__) {
+    
+                    Model.getProductsCount(function(count) {
+        
+                        var pageCount = Math.ceil(count.count / 10);
+        
+                        if (!offset)
+                            offset = 1;
+        
+                        var fr = 10*(offset - 1) + 1, 
+                            to = fr + 4;
+        
+                        Model.getProductsInterval([fr, to], function(products) {
+        
+                            var roles = ['field-staff', 'depot-manager', 'admin', 'call-center', 'driver'];
+                
+                            Model.getRoleCommissionValues([fr, to], function(values) {
+                
+                                var productCommissionVals = {};
+                
+                                _.each(values, function(value) {
+                                    if (productCommissionVals.hasOwnProperty(value.productId)) {
+                                        productCommissionVals[value.productId][value.role] = value.value;
+                                    } else {
+                                        var obj = {
+                                            productId   : value.productId,
+                                            productName : value.productName
+                                        };
+                                        obj[value.role] = value.value;
+                                        productCommissionVals[value.productId] = obj;
+                                    }
+                                });
+        
+                                _.each(products, function(product) {
+                                    product.commission = {};
+                                    if (productCommissionVals.hasOwnProperty(product.id)) {
+                                        product.commission = productCommissionVals[product.id];
+                                    } 
+                                    _.each(roles, function(role) {
+                                        if (!product.commission.hasOwnProperty(role)) {
+                                            product.commission[role] = 0; 
+                                        }
+                                    });
+                                });
+        
+                                var paginator = [];
+        
+                                for (var i = 1; i <= pageCount; i++) {
+                                    paginator.push({
+                                        page    : i,
+                                        current : (i == offset)
+                                    });
+                                }
+        
+                                $('#main').html(t({
+                                    product     : products,
+                                    paginator   : paginator
+                                }));
+        
+                                var indexedProducts = Storage.toMap(products);
 
-        $('#main').html('edit commission');
+                                $('.commission-edit').click(function() {
+                                    var productId = $(this).data('id');
+                                    Storage.find(productId, indexedProducts, function(product) { 
 
+                                        var div  = $(this).parent().parent(),
+                                            form = div.html(t_(product)).find('form');
+
+                                        form.validate({
+                                            rules: {
+                                                "field-staff"    : "required number",
+                                                "call-center"    : "required number",
+                                                "driver"         : "required number",
+                                                "depot-manager"  : "required number"
+                                            },
+                                            submitHandler: function(form) {
+
+                                                var data = {
+                                                    "fieldStaff"   : form['field-staff'].value,
+                                                    "callCenter"   : form['call-center'].value,
+                                                    "driver"       : form['driver'].value,
+                                                    "depotManager" : form['depot-manager'].value
+                                                };
+
+                                                Storage.process({
+                                                    type        : 'PUT',
+                                                    resource    : '!role-commission/product/' + productId,
+                                                    data        : data,
+                                                    description : 'Update role commission values for product "' + product.name + '".',
+                                                    purge       : 'commission-values-' + fr + '-' + to,
+                                                    hint        : 'The action could not be completed: ',
+                                                    success: function() {
+                                                        product.commission['field-staff']   = data.fieldStaff;
+                                                        product.commission['call-center']   = data.callCenter;
+                                                        product.commission['driver']        = data.driver;
+                                                        product.commission['depot-manager'] = data.depotManager;
+                                                        div.html(t__(product));
+                                                    },
+                                                    successMsg: 'Role commission values for product "' + product.name + '" was updated.'
+                                                });
+
+                                            }
+                                        });
+                                        
+                                    }.bind(this));
+                                });
+        
+                            });
+                
+                        });
+        
+                    });
+                });
+            });
+        });
     },
     showSystemActivityLog: function() {
 
         $('#main').html('show system activity log');
 
     },
+    editTaskSettings: function() {
+        T.render('admin/task/settings', function(t) {
+
+            //var form = $('<form></form>').append(t());
+
+            //$('#main').html(form);
+
+
+            //form.validate({
+            //    rules: {
+            //        
+            //    },
+            //    submitHandler: function(form) {
+            //    }
+            //});
+            
+
+        });
+    },
     fieldstaff_showAllCustomers: function() {
         T.render('fieldstaff/customer/index', function(t) {
             Model.getCustomers(function(customers) {
                 $('#main').html(t({customer: customers})); 
             });
+        });
+    },
+    fieldstaff_showPendingCustomers: function() {
+        T.render('fieldstaff/customer/pending/index', function(t) {
+            Model.getPendingCustomers(function(customers) {
+
+                $('#main').html(t({customer: customers})); 
+
+            });
+        });
+    },
+    fieldstaff_registerCustomer: function(id) {
+        T.render('fieldstaff/customer/pending/register', function(t) {
+
+            Storage.chain(Model.getAreas)
+                   .chain(Model.getPriceCategories)
+                   .using(function(areas, priceCategories) {
+ 
+                Model.getPendingCustomers(function(customers) {
+                    Storage.find(id, customers, function(customer) {
+    
+                        customer.priceCategory = priceCategories;
+                        customer.area          = areas;
+
+                        var form = $('<form></form>').append(t(customer));
+        
+                        $('#main').html(form);
+    
+                        form.validate({
+                            rules: {
+                                "name"           : "required",
+                                "address"        : "required",
+                                "latitude"       : "required number",
+                                "longitude"      : "required number",
+                                "tin"            : "required",
+                                "phone"          : "required"
+                            },
+                            submitHandler: function(form) {
+        
+                                var data = {
+                                    name          : form['name'].value,
+                                    latitude      : form['latitude'].value,
+                                    longitude     : form['longitude'].value,
+                                    tin           : form['tin'].value,
+                                    phone         : form['phone'].value,
+                                    address       : form['address'].value,
+                                    isActive      : form['is-active'].checked,
+                                    areaId        : form['area'].value,
+                                    priceCatId    : form['price-category'].value
+                                };
+        
+                                Storage.process({
+                                    type        : 'POST',
+                                    resource    : 'customer',
+                                    data        : data,
+                                    description : 'Create customer "' + data.name + '".',
+                                    purge       : 'customers',
+                                    hint        : 'The customer could not be created: ',
+                                    feedback    : {
+                                        'SQL_UNIQUE_CONSTRAINT_VIOLATION': 'A customer with the name "' + data.name + '" already exists.'
+                                    },
+                                    success: function() {
+                                        Storage.process({
+                                            type        : 'DELETE',
+                                            resource    : 'pending/' + id
+                                         });
+                                    },
+                                    complete: function() {
+                                        window.location.hash = '!f/customers';
+                                    },
+                                    successMsg: 'Customer "' + data.name + '" was successfully created.'
+                                });
+        
+                            }
+                        });
+
+
+                    });
+                });
+            });
+
         });
     },
     fieldstaff_showCustomers: function() {
@@ -3222,17 +3576,836 @@ App.init({
 
         });
     },
-    fieldstaff_viewCustomer: function(id) {
+    fieldstaff_viewCustomer: function(id, tab) {
         T.render('fieldstaff/customer/view', function(t) {
-            Model.getCustomer(id, function(customer) {
-                $('#main').html(t(customer));
+
+
+
+            Model.getOrderAverageForCustomer(id, function(orderAverage) {
+
+                Model.getDepotForCurrentUser(function(depotId) {
+
+                    Model.getAverageOrderTimeInterval(id, function(timeInterval) {
+                        Model.getCustomer(id, function(customer) {
+    
+                            customer.averageOrderValue   = orderAverage.average;
+                            customer.averageTimeInterval = timeInterval.hours;
+            
+                            switch (tab) {
+                                case 'orders':
+                                    T.render('fieldstaff/order/index', function(t_) {
+                                        Model.getOrdersForCustomer(id, function(orders) {
+            
+                                            $('#main').html(t(customer));
+                                            $('#customer-orders').html(t_({order: orders}));
+            
+                                        });
+                                    });
+                                    break;
+                                case 'contacts':
+                                    T.render('fieldstaff/customer/contacts', function(t_) {
+                                        Model.getContactsForCustomer(id, function(contacts) {
+            
+                                            $('#main').html(t(customer));
+                                            customer.contact = contacts;
+                                            $('#customer-contacts').html(t_(customer));
+            
+                                        });
+                                    });
+                                    break;
+                                case 'complaints':
+                                    T.render('fieldstaff/complaint/index', function(t_) {
+                                        Model.getComplaints(function(complaints) {
+            
+                                            $('#main').html(t(customer));
+    
+                                            var customerComplaints = Model.filter(complaints, function(item) {
+                                                return item.customerId == id;
+                                            });
+            
+                                            $('#customer-complaints').html(t_({
+                                                complaint: customerComplaints
+                                            }));
+            
+                                        });
+                                    });
+                                    break;
+                                case 'activity':
+                                    T.render('fieldstaff/customer/activity', function(t_) {
+                                        Model.getActivityForCustomer(id, function(activities) {
+            
+                                            $('#main').html(t(customer));
+    
+
+                                            _.each(activities, function(act) {
+
+                                                switch (act.contactType) {
+                                                    case 'proactive':
+                                                        act.contactType = 'Proactive'
+                                                        break;
+                                                    case 'visit':
+                                                        act.contactType = 'Customer Visit'
+                                                        break;
+                                                    case 'customer-received':
+                                                        act.contactType = 'Received From Customer'
+                                                        break;
+                                                    default:
+                                                        act.contactType = '-';
+                                                }
+
+                                                var url = null;
+                                                switch (act.kind) {
+                                                    case 'service-complaint':
+                                                    case 'quality-complaint':
+                                                    case 'complaint-resolved':
+                                                        url = 'complaint/' + act.entityId;
+                                                        break;
+                                                    default:
+                                                }
+                                                act.url = url;
+                                            });
+    
+                                            customer.activity = activities;
+                                            $('#customer-activity').html(t_(customer));
+            
+                                        });
+                                    });
+                                    break;
+                                case 'tasks':
+                                    T.render('fieldstaff/customer/tasks', function(t_) {
+
+                                        $('#main').html(t(customer));
+                                        $('#customer-tasks').html(t_(customer));
+
+                                    });
+                                    break;
+
+                                case 'register-visit':
+                                case 'register-proactive':
+                                case 'register-customer':
+    
+                                    var contactType = null;
+
+                                    switch (tab) {
+                                        case 'register-visit':
+                                            contactType = 'visit';
+                                            break;
+                                        case 'register-proactive':
+                                            contactType = 'proactive';
+                                            break;
+                                        case 'register-customer':
+                                            contactType = 'customer-received';
+                                            break;
+                                        default:
+                                    }
+    
+                                    T.render('fieldstaff/activity/register', function(t_) {
+    
+                                        $('#main').html(t(customer));
+                                        $('#customer-activity-create').html(t_());
+    
+    
+                                        $('.activity-action').click(function() {
+    
+                                            switch ($(this).data('item')) {
+                                                case 'activity-add-order':
+                                                    T.render('fieldstaff/order/create', function(t_) {
+                                                        T.render('fieldstaff/order/product', function(t__) {
+                            
+                                                            // Temporarily disable onRequestBegin hook
+                                                            var callback = App.onRequestBegin;
+                                                            App.onRequestBegin = function() {};
+                            
+                                                            Model.getProducts(function(products) {
+                            
+                                                                App.onRequestBegin = callback;
+                            
+                                                                var form = $('<form></form>');
+                                                                form.append(t_({product: products}));
+                                                                $('#form-add-order').html(form);
+    
+                                                                var selected = [];
+    
+                                                                $('#order-validate').click(function() {
+    
+                                                                    var qts = [];
+                                                                    var products = [];
+    
+                                                                    $('.order-product-quantity').each(function(item) {
+                                                                        products.push($(this).data('id'));
+                                                                        qts.push(Number($(this).val()));
+                                                                    });
+    
+                                                                    Storage.process({
+                                                                        type        : 'POST',
+                                                                        resource    : '/calculate-least-weight',
+                                                                        data        : {qts: qts, products: products},
+                                                                        complete    : function(resp) {
+    
+                                                                            console.log(resp);
+    
+                                                                        },
+                                                                    });
+    
+                                                                });
+    
+
+
+                                                                    var update = function(quantity, productId, callback) {
+                                                                        
+//                                                                        var product = products[productId];
+
+                                                                        //
+    
+                                                                        Storage.process({
+                                                                            type        : 'GET',
+                                                                            resource    : '/stock/product/' + productId + '/depot/' + depotId,
+                                                                            success     : function(resp) {
+    
+                                                                                var available = resp.available;
+    
+                                                                                var qts = [];
+                                                                                var products = [];
+        
+                                                                                $('.order-product-quantity').each(function(item) {
+                                                                                    products.push($(this).data('id'));
+                                                                                    qts.push(Number($(this).val()));
+                                                                                });
+    
+                                                                                products.push(Number(productId));
+                                                                                qts.push(quantity);
+    
+                                                                                Storage.process({
+                                                                                       type        : 'POST',
+                                                                                       resource    : '/calculate-least-weight',
+                                                                                       data        : {qts: qts, products: products},
+                                                                                       success     : function(resp) {
+                                                                                           callback(resp.weight, available);
+                                                                                       }
+                                                                                });
+    
+                                                                                //$('input[name="prod-' + productId + '-quantity"]').rules('add', {
+                                                                                //    'required' : true,
+                                                                                //    digits     : true,
+                                                                                //    min        : 1,
+                                                                                //    max        : resp.available
+                                                                                //});
+    
+                                                                            }
+                                                                        });
+     
+    
+                                                                    };
+
+
+
+
+
+
+
+                                                                $('#order-add-product').click(function() {
+
+                                                                    var productId = $('#order-product-select').val(),
+                                                                        product = products[productId];
+
+                                                                    var quantity = Number($('#order-item-add-quantity').val());
+
+                                                                    $('#order-item-add-quantity').val(1);
+
+                                                                    update(quantity, productId, function(weight, available) {
+
+                                                                        if (quantity <= available && weight <= 1) {
+
+                                                                            product.quantity = quantity;
+
+                                                                            $('#order-products tbody').append(t__(product));
+                                                                            $('#order-product-select option[value="' + productId + '"]').remove();
+            
+                                                                            //$('input[name="prod-' + productId + '-quantity"]').rules('add', 'required digits');
+            
+                                                                            selected.push(productId);
+
+                                                                            var price = product.category[customer.priceCatId].price * quantity;
+
+                                                                            alert(quantity);
+
+                                                                            $('#prod-' + productId + '-sub-total').html(price);
+
+                                                                        } else {
+                                                                            var element = $('#order-product-select').parent();
+                                                                            if (quantity > available) {
+                                                                                element.append('Insufficient stock quantity available.');
+                                                                            } else {
+                                                                                element.appaned('The selected quantity is too large for any available vehicle.');
+                                                                            }
+                                                                        }
+
+                                                                    });
+
+                                                                    //
+
+
+                                                                });
+                                                               
+
+                                                                            $('#order-products').on('click', '.order-product-qty-edit', function() {
+                                                                                $(this).parent().hide();
+                                                                                $(this).parent().parent().find('div').first().show();
+                                                                            });
+
+                                                                            $('#order-products').on('click', '.product-remove', function() {
+
+                                                                                var pid = $(this).data('id');
+                                                                                var product = products[pid];
+
+                                                                                $(this).parent().parent().remove();
+                                                                                $('#order-product-select').append('<option value="' + pid + '">' + product.name + '</option>');
+
+                                                                            });
+
+                                                                            $('#order-products').on('click', '.order-product-qty-update', function() {
+
+
+                                                                                var productId = Number($(this).data('id')),
+                                                                                    quantity  = Number($('#prod-' + productId + '-quantity').val()),
+                                                                                    t = $(this);
+                                                                                
+                                                                                update(quantity, productId, function(weight, available) {
+           
+                                                                                    if (quantity <= available && weight <= 1) {
+
+                                                                                        $('#prod-' + productId + '-quantity-text').html($('#prod-' + productId + '-quantity').val());
+
+                                                                                        $(this).parent().hide();
+                                                                                        $(this).parent().parent().find('div').first().next().show();
+
+                                                                                        var product = products[productId];
+
+                                                                                        var price = product.category[customer.priceCatId].price * quantity;
+                                                                                        $('#prod-' + productId + '-sub-total').html(price);
+
+                                                                                    } else {
+                                                                                        if (quantity > available) {
+                                                                                            $('#prod-' + productId + '-sub-total').html('Insufficient stock quantity available.');
+                                                                                        } else {
+                                                                                            $('#prod-' + productId + '-sub-total').html('The selected quantity is too large for any available vehicle.');
+                                                                                        }
+                                                                                    }
+            
+                                                                                }.bind(this));
+
+
+                                                                             });
+
+    
+                                                                //$('.product-remove').on('click', function() {
+                                                                //    alert('x');
+                                                                //});
+    
+                                                                form.validate({
+                                                                    submitHandler: function(form) {
+    
+                                                                        // create order
+    
+                                                                    }
+                                                                });
+    
+                                                            });
+                            
+                                                        });
+                                                    });
+                                                    break;
+                                                case 'activity-service-complaint':
+                                                    T.render('fieldstaff/complaint/service/create', function(t_) {
+                        
+                                                        var form = $('<form></form>').append(t_());
+                                        
+                                                        $('#form-service-complaint').html(form);
+                                        
+                                                        form.validate({
+                                                            rules: {
+                                                                "title"          : "required",
+                                                                "description"    : "required"
+                                                            },
+                                                            submitHandler: function(form) {
+                                        
+                                                                var date = new Date();
+     
+                                                                var data = {
+                                                                    datetime    : date.toISOString(),
+                                                                    title       : form['title'].value,
+                                                                    description : form['description'].value,
+                                                                    userId      : App.user().id,
+                                                                    contactType : contactType
+                                                                };
+                                        
+                                                                Storage.process({
+                                                                    type        : 'POST',
+                                                                    resource    : '!complaint/service/customer/' + id,
+                                                                    data        : data,
+                                                                    description : 'Register new service complaint.',
+                                                                    hint        : 'The service complaint could not be registered: ',
+                                                                    complete: function() {
+                                                                        $('#form-service-complaint').empty();
+                                                                    },
+                                                                    successMsg: 'The service complaint was successfully registered.'
+                                                                });
+                                        
+                                                            }
+                                                        });
+    
+                                                    });
+                                                    break;
+                                                case 'activity-quality-complaint':
+                                                    T.render('fieldstaff/complaint/quality/create', function(t_) {
+                                                        T.render('fieldstaff/complaint/quality/product', function(t__) {
+    
+                                                            // Temporarily disable onRequestBegin hook
+                                                            var callback = App.onRequestBegin;
+                                                            App.onRequestBegin = function() {};
+                            
+                                                            Model.getProducts(function(products) {
+                            
+                                                                App.onRequestBegin = callback;
+        
+                                                                var form = $('<form></form>');
+                                                                form.append(t_({product: products}));
+                                                                $('#form-quality-complaint').html(form);
+        
+                                                                var rules = {
+                                                                    "complaint-title"       : "required",
+                                                                    "complaint-description" : "required"
+                                                                };
+        
+                                                                var selected = [];
+        
+                                                                $('.complaint-add-product').click(function() {
+        
+                                                                    var productId = $('#complaint-product-select').val(),
+                                                                        product = products[productId];
+                                                                
+                                                                    form.append(t__(product));
+        
+                                                                    $('#complaint-product-select option[value="' + productId + '"]').remove();
+        
+                                                                    $('input[name="prod-' + productId + '-title"]').rules('add', 'required');
+                                                                    $('input[name="prod-' + productId + '-quantity"]').rules('add', 'required digits');
+                                                                    $('input[name="prod-' + productId + '-batch-number"]').rules('add', 'required');
+                                                                    $('input[name="prod-' + productId + '-production-date"]').rules('add', 'required date');
+                                                                    $('input[name="prod-' + productId + '-production-time"]').rules('add', 'required time');
+                                                                    $('input[name="prod-' + productId + '-expiry-date"]').rules('add', 'required date');
+        
+                                                                    selected.push(productId);
+        
+                                                                });
+        
+                                                                form.validate({
+                                                                    rules: rules,
+                                                                    submitHandler: function(form) {
+        
+                                                                        var products = [];
+        
+                                                                        _.each(selected, function(id) {
+                                                                            var produced = form['prod-' + id + '-production-date'].value + ' ' + form['prod-' + id + '-production-time'].value;
+                                                                            products.push({
+                                                                                batchNumber : form['prod-' + id + '-batch-number'].value,
+                                                                                productId   : id,
+                                                                                quantity    : form['prod-' + id + '-quantity'].value,
+                                                                                produced    : produced,
+                                                                                expiryDate  : form['prod-' + id + '-expiry-date'].value,
+                                                                                description : form['prod-' + id + '-comment'].value
+                                                                            });
+                                                                        });
+        
+                                                                        var date = new Date();
+        
+                                                                        var data = {
+                                                                            datetime    : date.toISOString(),
+                                                                            title       : form['complaint-title'].value,
+                                                                            description : form['complaint-description'].value,
+                                                                            products    : products,
+                                                                            userId      : App.user().id,
+                                                                            contactType : contactType 
+                                                                        };
+                                                    
+                                                                        Storage.process({
+                                                                            type        : 'POST',
+                                                                            resource    : '!complaint/quality/customer/' + id,
+                                                                            data        : data,
+                                                                            description : 'Register new quality complaint.',
+                                                                            hint        : 'The quality complaint could not be registered: ',
+                                                                            complete: function() {
+                                                                                $('#form-quality-complaint').empty();
+                                                                            },
+                                                                            successMsg: 'The quality complaint was successfully registered.'
+                                                                        });
+         
+                                                                    }
+                                                                });
+                          
+                                                            });
+                                                        });
+                                                    });
+                                                    break;
+                                                case 'activity-add-contact':
+    
+                                                    var customerId = id;
+    
+                                                    T.render('fieldstaff/contact/create', function(t_) {
+                        
+                                                        // Temporarily disable onRequestBegin hook
+                                                        var callback = App.onRequestBegin;
+                                                        App.onRequestBegin = function() {};
+                        
+                                                        Storage.chain(Model.getContactTypes)
+                                                               .chain(Model.getCustomer(customerId))
+                                                               .using(function(contactTypes, customer) {
+                                                
+                                                            App.onRequestBegin = callback;
+                        
+                                                            customer.contactType = contactTypes;
+                                            
+                                                            var form = $('<form></form>').append(t_(customer));
+                                                
+                                                            $('#form-add-contact').html(form);
+                                            
+                                                            form.validate({
+                                                                rules: {
+                                                                    "kind"  : "required",
+                                                                    "datum" : "required"
+                                                                },
+                                                                submitHandler: function(form) {
+                                            
+                                                                    var date = new Date();
+ 
+                                                                    var data = {
+                                                                        kind        : form['kind'].value,
+                                                                        datum       : form['datum'].value, 
+                                                                        meta        : form['meta'].value,
+                                                                        contactType : contactType,
+                                                                        userId      : App.user().id,
+                                                                        datetime    : date.toISOString()
+                                                                    };
+                                            
+                                                                    Storage.process({
+                                                                        type        : 'POST',
+                                                                        resource    : '!contact/customer/' + customerId,
+                                                                        data        : data,
+                                                                        description : 'Create a new customer contact for customer "' + customer.name + '".',
+                                                                        purge       : ['customers', 'contacts-customer-' + customerId],
+                                                                        hint        : 'The customer contact could not be created: ',
+                                                                        complete: function() {
+                                                                            $('#form-add-contact').empty();
+                                                                        },
+                                                                        successMsg: 'The customer contact information was added to customer "<a href="#customer/' + customerId + '">' + customer.name + '</a>".'
+                                                                    });
+                                                                }
+                                                            });
+                                                
+                                                        });
+                        
+                                                    });
+    
+    
+                                                    break;
+                                                case 'activity-call-back':
+                                                    T.render('fieldstaff/callback/create', function(t_) {
+                        
+                                                        var customerId = id;
+
+                                                        var form = $('<form></form>').append(t_());
+
+                                                        $('#form-call-back').html(form);
+
+                                                        form.validate({
+                                                            rules: {
+                                                                'description' : 'required',
+                                                                'date'        : 'required date',
+                                                                'time'        : 'required time'
+                                                            },
+                                                            submitHandler: function(form) {
+
+                                                                var taskType = form['task-type'].value;
+
+                                                                var data = {
+                                                                    datetime    : form['date'].value + ' ' + form['time'].value,
+                                                                    description : form['description'].value,
+                                                                    kind        : (1 == taskType) ? 'scheduled-call-back' : 'scheduled-visit',
+                                                                    userId      : App.user().id,
+                                                                    contactType : contactType,
+                                                                    entityId    : customerId
+                                                                };
+                                            
+                                                                Storage.process({
+                                                                    type        : 'POST',
+                                                                    resource    : 'activity/customer/' + customerId,
+                                                                    data        : data,
+                                                                    description : 'Schedule call back form customer "' + customer.name + '".',
+                                                                    hint        : 'The call back could not be scheduled: ',
+                                                                    complete: function() {
+                                                                        $('#form-call-back').empty();
+                                                                    },
+                                                                    successMsg: 'The call back for customer "' + customer.name + '" has been scheduled.'
+                                                                });
+
+                                                            }
+                                                        });
+                        
+                        
+                                                    });
+                                                    break;
+                                                default:
+                                                    break;
+                                            }
+                        
+    
+                                        });
+    
+    
+                                    });
+                                    break;
+                                case 'select-activity':
+                                    T.render('fieldstaff/activity/type', function(t_) {
+                            
+                                        $('#main').html(t(customer));
+                                        $('#customer-activity-create').html(t_(customer));
+    
+    
+                                    });
+                                    break;
+    
+                                default:
+                                    $('#main').html(t(customer));
+                            }
+                    
+                        });
+            
+                    });
+
+                });
+
             });
+
+
+
+
+        });
+    },
+    fieldstaff_createCustomerContact: function(customerId) {
+        T.render('fieldstaff/contact/create', function(t) {
+
+            Storage.chain(Model.getContactTypes)
+                   .chain(Model.getCustomer(customerId))
+                   .using(function(contactTypes, customer) {
+    
+                customer.contactType = contactTypes;
+
+                var form = $('<form></form>').append(t(customer));
+    
+                $('#main').html(form);
+
+                form.validate({
+                    rules: {
+                        "kind"  : "required",
+                        "datum" : "required"
+                    },
+                    submitHandler: function(form) {
+
+                        var date = new Date();
+
+                        var data = {
+                            kind        : form['kind'].value,
+                            datum       : form['datum'].value, 
+                            meta        : form['meta'].value,
+                            contactType : contactType,
+                            userId      : App.user().id,
+                            datetime    : date.toISOString()
+                        };
+ 
+                        Storage.process({
+                            type        : 'POST',
+                            resource    : '!contact/customer/' + customerId,
+                            data        : data,
+                            description : 'Create a new customer contact for customer "' + customer.name + '".',
+                            purge       : ['customers', 'contacts-customer-' + customerId],
+                            hint        : 'The customer contact could not be created: ',
+                            complete: function() {
+                                window.location.hash = '!f/customer/' + customerId + '/tab/contacts';
+                            },
+                            successMsg: 'The customer contact information was added to customer "<a href="#customer/' + customerId + '">' + customer.name + '</a>".'
+                        });
+                    }
+                });
+    
+            });
+
+        });
+    },
+    fieldstaff_editCustomerContact: function(id) {
+        T.render('fieldstaff/contact/edit', function(t) {
+
+            Storage.chain(Model.getContactTypes)
+                   .chain(Model.getContact(id))
+                   .using(function(contactTypes, contact) {
+
+                var customerId = contact.customerId;
+
+                contact.contactType = contactTypes;
+
+                var form = $('<form></form>').append(t(contact));
+                $('#main').html(form);
+
+                form.validate({
+                    rules: {
+                        "kind"  : "required",
+                        "body"  : "required"
+                    },
+                    submitHandler: function(form) {
+
+                        var data = {
+                            kind       : form['kind'].value,
+                            datum      : form['datum'].value, 
+                            meta       : form['meta'].value
+                        };
+
+                        Storage.process({
+                            type        : 'PUT',
+                            resource    : 'contact/' + id + '/customer/' + customerId,
+                            data        : data,
+                            description : 'Edit customer contact for customer "' + contact.customerName + '".',
+                            purge       : ['contact-' + id, 'contacts-customer-' + customerId],
+                            hint        : 'The customer contact could not be updated: ',
+                            complete: function() {
+                                window.location.hash = '!f/customer/' + customerId + '/tab/contacts';
+                            },
+                            successMsg: 'The customer contact information was updated for customer "<a href="#customer/' + customerId + '">' + contact.customerName + '</a>".'
+                        });
+
+                    }
+                });
+
+            });
+
+        });
+    },
+    fieldstaff_deleteCustomerContact: function(id) {
+        T.render('fieldstaff/contact/delete', function(t) {
+            Model.getContact(id, function(contact) {
+
+                var form = $('<form></form>').append(t(contact));
+                $('#main').html(form);
+
+                $('button.confirm').click(function() {
+                    Storage.process({
+                        type        : 'DELETE',
+                        resource    : 'contact/' + id + '/customer/' + contact.customerId,
+                        data        : '',
+                        description : 'Delete contact for customer "' + contact.customerName + '".',
+                        purge       : ['customers', 'contacts-customer-' + contact.customerId],
+                        hint        : 'Cannot delete contact: ',
+                        complete: function() {
+                            window.location.hash = '!f/customer/' + contact.customerId + '/tab/contacts';
+                        },
+                        successMsg: 'The customer contact information was deleted.'
+                    });
+                });
+
+            });
+        });
+    },
+    fieldstaff_viewComplaint: function(id) {
+        T.render('fieldstaff/complaint/view', function(t) {
+            T.render('fieldstaff/complaint/products', function(t_) {
+                Model.getComplaint(id, function(complaint) {
+
+                    $('#main').html(t(complaint));
+
+                    if ('quality' === complaint.kind) {
+                        $('#main').append(t_(complaint));
+                    }
+ 
+                    $('button.resolve').click(function() {
+    
+                        var date = new Date();
+
+                        Storage.process({
+                            type        : 'PATCH',
+                            resource    : '!complaint/resolve/' + id,
+                            data        : {
+                                datetime    : date.toISOString(),
+                                customerId  : complaint.customerId,
+                                userId      : App.user().id,
+                                description : 'Complaint was resolved.'
+                            },
+                            description : 'Resolve complaint from customer "' + complaint.customer + '".',
+                            purge       : 'complaints',
+                            complete    : App.refresh
+                        });
+ 
+                    });
+
+                });
+            });
+        });
+    },
+    fieldstaff_showProducts: function(customerId) {
+        T.render('fieldstaff/product/index', function(t) {
+
+            Model.getCustomer(customerId, function(customer) {
+                Model.getProducts(function(products) {
+
+                    var priceCatId = customer.priceCatId;
+
+                    var customerProducts = [];
+
+                    for (key in products) {
+                        var product = products[key];
+
+                        if (product.category && product.category.hasOwnProperty(priceCatId)) {
+                            product.customerPrice = product.category[priceCatId].price;
+                            customerProducts.push(product);
+                        }
+                    }
+   
+                    $('#main').html(t({
+                        product: customerProducts
+                    }));
+  
+                });
+            });
+
+        });
+
+    },
+    fieldstaff_viewProduct: function(id) {
+        T.render('fieldstaff/product/view', function(t) {
+            Model.getProduct(id, function(product) {
+
+                $('#main').html(t(product));
+
+            });
+        });
+    },
+    fieldstaff_viewOrder: function(id) {
+        T.render('fieldstaff/order/view', function(t) {
+
+            Model.getOrders(function(orders) {
+                Storage.find(id, orders, function(order) {
+                    Model.getProductsForOrder(id, function(products) { 
+
+                        order.product = products;
+                        $('#main').html(t(order));
+
+                    });
+                });
+            });
+
         });
     },
     fieldstaff_showOrders: function() {
         T.render('fieldstaff/order/index', function(t) {
 
-            Model.getAreasForFieldstaffUser(function(areas) {
+            Model.getAreasForCurrentUser(function(areas) {
                 Model.getOrders(function(orders) {
 
                     var areaOrders = Model.filter(orders, function(item) {
@@ -3246,6 +4419,38 @@ App.init({
 
         });
     },
+    fieldstaff_showOrderActivityLog: function(orderId) {
+        T.render('fieldstaff/order/log', function(t) {
+            Model.getOrderActivity(orderId, function(activities) {
+
+                _.each(activities, function(activity) {
+                    activity.statusName = Model.readableOrderStatus(activity.status);
+                });
+
+                $('#main').html(t({activity: activities}));
+
+            });
+        });
+    },
+    fieldstaff_editOrder: function(id) {
+
+        Model.getOrders(function(orders) {
+            Storage.find(id, orders, function(order) {
+ 
+                if ('placed' !== order.status) {
+                    App.error({
+                        responseJSON: { message: 'This order cannot be edited.' }
+                    });
+                    return;
+                }
+
+                $('#main').html('fs: edit order');
+
+            });
+        });
+
+    },
+
     fieldstaff_showStock: function() {
         T.render('fieldstaff/stock/index', function(t) {
             Model.getDepotForFieldstaffUser(function(depotId) {
@@ -3263,6 +4468,63 @@ App.init({
                 });
             });
         });
+    },
+    fieldstaff_showDispatches: function() {
+        T.render('fieldstaff/dispatch/index', function(t) {
+        
+            $('#main').html(t());
+
+        });
+    },
+    fieldstaff_showTasks: function() {
+        T.render('fieldstaff/task/index', function(t) {
+
+            Model.getFieldstaffUserTasks(function(tasks) {
+
+                $('#main').html(t({task: tasks}));
+
+            });
+        });
+    },
+    driver_showOrders: function() {
+
+        $('#main').html('show orders');
+
+    },
+    driver_showDeliveredOrders: function() {
+
+        $('#main').html('show del. orders');
+
+    },
+    driver_viewDepot: function() {
+
+        $('#main').html('view depot');
+
+    },
+    driver_showStock: function() {
+
+        $('#main').html('show stock');
+
+    },
+    driver_showReturnStock: function() {
+
+        $('#main').html('show return stock');
+
+    },
+    driver_performanceToday: function() {
+
+        $('#main').html('show perf.');
+
+    },
+    driver_performanceWeekly: function() {
+
+        $('#main').html('show perf. weekly');
+
+    },
+    driver_performanceMonthly: function() {
+
+        $('#main').html('show perf. monthly');
+
     },
     callcenter_showCustomers: function() {
         T.render('callcenter/customer/index', function(t) {
@@ -3289,6 +4551,54 @@ App.init({
                     $('#main').html(t({customer: areaCustomers}));
 
                 });
+            });
+
+        });
+    },
+    callcenter_createCustomer: function() {
+        T.render('callcenter/customer/create', function(t) {
+
+            Storage.chain(Model.getAreas)
+                   .chain(Model.getPriceCategories)
+                   .using(function(areas, priceCategories) {
+   
+                var form = $('<form></form>').append(t({
+                    priceCategory : priceCategories,
+                    area          : areas
+                }));
+
+                $('#main').html(form);
+
+                form.validate({
+                    rules: {
+                        "name"           : "required",
+                        "address"        : "required",
+                        "phone"          : "required"
+                    },
+                    submitHandler: function(form) {
+
+                        var data = {
+                            name    : form['name'].value,
+                            phone   : form['phone'].value,
+                            address : form['address'].value,
+                            userId  : App.user().id
+                        };
+
+                        Storage.process({
+                            type        : 'POST',
+                            resource    : 'customer-pending',
+                            data        : data,
+                            description : 'Register new customer: "' + data.name + '".',
+                            hint        : 'The customer could not be registered: ',
+                            complete: function() {
+                                window.location.hash = '!c/customers';
+                            },
+                            successMsg: 'Customer "' + data.name + '" is pending confirmation.'
+                        });
+
+                    }
+                });
+
             });
 
         });
@@ -3323,20 +4633,675 @@ App.init({
         $('#main').html('cs: view contacts for customer');
 
     },
-    callcenter_viewCustomer: function(id) {
+    callcenter_viewCustomer: function(id, tab) {
+        T.render('callcenter/customer/view', function(t) {
 
-        $('#main').html('cs: view customer');
+            Model.getOrderAverageForCustomer(id, function(orderAverage) {
 
+                Model.getDepotForCurrentUser(function(depotId) {
+
+                    Model.getAverageOrderTimeInterval(id, function(timeInterval) {
+                        Model.getCustomer(id, function(customer) {
+    
+                            customer.averageOrderValue   = orderAverage.average;
+                            customer.averageTimeInterval = timeInterval.hours;
+            
+                            switch (tab) {
+                                case 'orders':
+                                    T.render('callcenter/order/index', function(t_) {
+                                        Model.getOrdersForCustomer(id, function(orders) {
+            
+                                            $('#main').html(t(customer));
+                                            $('#customer-orders').html(t_({order: orders}));
+            
+                                        });
+                                    });
+                                    break;
+                                case 'contacts':
+                                    T.render('callcenter/customer/contacts', function(t_) {
+                                        Model.getContactsForCustomer(id, function(contacts) {
+            
+                                            $('#main').html(t(customer));
+                                            customer.contact = contacts;
+                                            $('#customer-contacts').html(t_(customer));
+            
+                                        });
+                                    });
+                                    break;
+                                case 'complaints':
+                                    T.render('callcenter/complaint/index', function(t_) {
+                                        Model.getComplaints(function(complaints) {
+            
+                                            $('#main').html(t(customer));
+    
+                                            var customerComplaints = Model.filter(complaints, function(item) {
+                                                return item.customerId == id;
+                                            });
+            
+                                            $('#customer-complaints').html(t_({
+                                                complaint: customerComplaints
+                                            }));
+            
+                                        });
+                                    });
+                                    break;
+                                case 'activity':
+                                    T.render('callcenter/customer/activity', function(t_) {
+                                        Model.getActivityForCustomer(id, function(activities) {
+            
+                                            $('#main').html(t(customer));
+    
+                                            _.each(activities, function(act) {
+
+                                                switch (act.contactType) {
+                                                    case 'proactive':
+                                                        act.contactType = 'Proactive'
+                                                        break;
+                                                    case 'visit':
+                                                        act.contactType = 'Customer Visit'
+                                                        break;
+                                                    case 'customer-received':
+                                                        act.contactType = 'Received From Customer'
+                                                        break;
+                                                    default:
+                                                        act.contactType = '-';
+                                                }
+   
+                                                var url = null;
+                                                switch (act.kind) {
+                                                    case 'service-complaint':
+                                                    case 'quality-complaint':
+                                                    case 'complaint-resolved':
+                                                        url = 'complaint/' + act.entityId;
+                                                        break;
+                                                    default:
+                                                }
+                                                act.url = url;
+                                            });
+    
+                                            customer.activity = activities;
+                                            $('#customer-activity').html(t_(customer));
+            
+                                        });
+                                    });
+                                    break;
+                                case 'tasks':
+                                    T.render('callcenter/customer/tasks', function(t_) {
+
+                                        Model.getOrdersWithStatus('delivered', function(orders) {
+
+                                            var customerOrders = _.filter(orders, function(order) {
+                                                return order.customerId == id;
+                                            });
+
+                                            $('#main').html(t(customer));
+
+                                            customer.order = customerOrders;
+
+                                            $('#customer-tasks').html(t_(customer));
+
+                                            $('a.order-confirm-delivery').click(function() {
+
+                                                var orderId = $(this).data('id'),
+                                                    date = new Date();
+
+                                                var data = {
+                                                    'status'   : 'confirmed', 
+                                                    'datetime' : date.toISOString()
+                                                }
+
+                                                Storage.process({
+                                                    type        : 'PATCH',
+                                                    resource    : '/!order/status/' + orderId,
+                                                    data        : data,
+                                                    description : 'Confirm order #' + orderId + ' as delivered.',
+                                                    complete: function() {
+                                                        App.refresh();
+                                                    },
+                                                    successMsg: 'The delivery has been confirmed.'
+                                                });
+
+                                            });
+
+                                        });
+
+
+                                    });
+                                    break;
+ 
+                                case 'register-proactive':
+                                case 'register-customer':
+    
+                                    var contactType = null;
+
+                                    switch (tab) {
+                                        case 'register-visit':
+                                            contactType = 'visit';
+                                            break;
+                                        case 'register-proactive':
+                                            contactType = 'proactive';
+                                            break;
+                                        case 'register-customer':
+                                            contactType = 'customer-received';
+                                            break;
+                                        default:
+                                    }
+
+                                    T.render('callcenter/activity/register', function(t_) {
+    
+                                        $('#main').html(t(customer));
+                                        $('#customer-activity-create').html(t_());
+    
+    
+                                        $('.activity-action').click(function() {
+    
+                                            switch ($(this).data('item')) {
+                                                case 'activity-add-order':
+                                                    T.render('callcenter/order/create', function(t_) {
+                                                        T.render('callcenter/order/product', function(t__) {
+                            
+                                                            // Temporarily disable onRequestBegin hook
+                                                            var callback = App.onRequestBegin;
+                                                            App.onRequestBegin = function() {};
+                            
+                                                            Model.getProducts(function(products) {
+                            
+                                                                App.onRequestBegin = callback;
+                            
+                                                                var form = $('<form></form>');
+                                                                form.append(t_({product: products}));
+                                                                $('#form-add-order').html(form);
+    
+                                                                var selected = [];
+    
+                                                                $('#order-validate').click(function() {
+    
+                                                                    var qts = [];
+                                                                    var products = [];
+    
+                                                                    $('.order-product-quantity').each(function(item) {
+                                                                        products.push($(this).data('id'));
+                                                                        qts.push(Number($(this).val()));
+                                                                    });
+    
+                                                                    Storage.process({
+                                                                        type        : 'POST',
+                                                                        resource    : '/calculate-least-weight',
+                                                                        data        : {qts: qts, products: products},
+                                                                        complete    : function(resp) {
+    
+                                                                            console.log(resp);
+    
+                                                                        },
+                                                                    });
+    
+                                                                });
+    
+
+
+                                                                    var update = function(quantity, productId, callback) {
+                                                                        
+//                                                                        var product = products[productId];
+
+                                                                        //
+    
+                                                                        Storage.process({
+                                                                            type        : 'GET',
+                                                                            resource    : '/stock/product/' + productId + '/depot/' + depotId,
+                                                                            success     : function(resp) {
+    
+                                                                                var available = resp.available;
+    
+                                                                                var qts = [];
+                                                                                var products = [];
+        
+                                                                                $('.order-product-quantity').each(function(item) {
+                                                                                    products.push($(this).data('id'));
+                                                                                    qts.push(Number($(this).val()));
+                                                                                });
+    
+                                                                                products.push(Number(productId));
+                                                                                qts.push(quantity);
+    
+                                                                                Storage.process({
+                                                                                       type        : 'POST',
+                                                                                       resource    : '/calculate-least-weight',
+                                                                                       data        : {qts: qts, products: products},
+                                                                                       success     : function(resp) {
+                                                                                           callback(resp.weight, available);
+                                                                                       }
+                                                                                });
+    
+                                                                                //$('input[name="prod-' + productId + '-quantity"]').rules('add', {
+                                                                                //    'required' : true,
+                                                                                //    digits     : true,
+                                                                                //    min        : 1,
+                                                                                //    max        : resp.available
+                                                                                //});
+    
+                                                                            }
+                                                                        });
+     
+    
+                                                                    };
+
+
+
+
+
+
+
+                                                                $('#order-add-product').click(function() {
+
+                                                                    var productId = $('#order-product-select').val(),
+                                                                        product = products[productId];
+
+                                                                    var quantity = Number($('#order-item-add-quantity').val());
+
+                                                                    $('#order-item-add-quantity').val(1);
+
+                                                                    update(quantity, productId, function(weight, available) {
+
+                                                                        if (quantity <= available && weight <= 1) {
+
+                                                                            product.quantity = quantity;
+
+                                                                            $('#order-products tbody').append(t__(product));
+                                                                            $('#order-product-select option[value="' + productId + '"]').remove();
+            
+                                                                            //$('input[name="prod-' + productId + '-quantity"]').rules('add', 'required digits');
+            
+                                                                            selected.push(productId);
+
+                                                                            var price = product.category[customer.priceCatId].price * quantity;
+
+                                                                            alert(quantity);
+
+                                                                            $('#prod-' + productId + '-sub-total').html(price);
+
+                                                                        } else {
+                                                                            var element = $('#order-product-select').parent();
+                                                                            if (quantity > available) {
+                                                                                element.append('Insufficient stock quantity available.');
+                                                                            } else {
+                                                                                element.appaned('The selected quantity is too large for any available vehicle.');
+                                                                            }
+                                                                        }
+
+                                                                    });
+
+                                                                    //
+
+
+                                                                });
+                                                               
+
+                                                                            $('#order-products').on('click', '.order-product-qty-edit', function() {
+                                                                                $(this).parent().hide();
+                                                                                $(this).parent().parent().find('div').first().show();
+                                                                            });
+
+                                                                            $('#order-products').on('click', '.product-remove', function() {
+
+                                                                                var pid = $(this).data('id');
+                                                                                var product = products[pid];
+
+                                                                                $(this).parent().parent().remove();
+                                                                                $('#order-product-select').append('<option value="' + pid + '">' + product.name + '</option>');
+
+                                                                            });
+
+                                                                            $('#order-products').on('click', '.order-product-qty-update', function() {
+
+
+                                                                                var productId = Number($(this).data('id')),
+                                                                                    quantity  = Number($('#prod-' + productId + '-quantity').val()),
+                                                                                    t = $(this);
+                                                                                
+                                                                                update(quantity, productId, function(weight, available) {
+           
+                                                                                    if (quantity <= available && weight <= 1) {
+
+                                                                                        $('#prod-' + productId + '-quantity-text').html($('#prod-' + productId + '-quantity').val());
+
+                                                                                        $(this).parent().hide();
+                                                                                        $(this).parent().parent().find('div').first().next().show();
+
+                                                                                        var product = products[productId];
+
+                                                                                        var price = product.category[customer.priceCatId].price * quantity;
+                                                                                        $('#prod-' + productId + '-sub-total').html(price);
+
+                                                                                    } else {
+                                                                                        if (quantity > available) {
+                                                                                            $('#prod-' + productId + '-sub-total').html('Insufficient stock quantity available.');
+                                                                                        } else {
+                                                                                            $('#prod-' + productId + '-sub-total').html('The selected quantity is too large for any available vehicle.');
+                                                                                        }
+                                                                                    }
+            
+                                                                                }.bind(this));
+
+
+                                                                             });
+
+    
+                                                                //$('.product-remove').on('click', function() {
+                                                                //    alert('x');
+                                                                //});
+    
+                                                                form.validate({
+                                                                    submitHandler: function(form) {
+    
+                                                                        // create order
+    
+                                                                    }
+                                                                });
+    
+                                                            });
+                            
+                                                        });
+                                                    });
+                                                    break;
+                                                case 'activity-service-complaint':
+                                                    T.render('callcenter/complaint/service/create', function(t_) {
+                        
+                                                        var form = $('<form></form>').append(t_());
+                                        
+                                                        $('#form-service-complaint').html(form);
+                                        
+                                                        form.validate({
+                                                            rules: {
+                                                                "title"          : "required",
+                                                                "description"    : "required"
+                                                            },
+                                                            submitHandler: function(form) {
+                                        
+                                                                var date = new Date();
+     
+                                                                var data = {
+                                                                    datetime    : date.toISOString(),
+                                                                    title       : form['title'].value,
+                                                                    description : form['description'].value,
+                                                                    userId      : App.user().id,
+                                                                    contactType : contactType 
+                                                                };
+                                        
+                                                                Storage.process({
+                                                                    type        : 'POST',
+                                                                    resource    : '!complaint/service/customer/' + id,
+                                                                    data        : data,
+                                                                    description : 'Register new service complaint.',
+                                                                    hint        : 'The service complaint could not be registered: ',
+                                                                    complete: function() {
+                                                                        $('#form-service-complaint').empty();
+                                                                    },
+                                                                    successMsg: 'The service complaint was successfully registered.'
+                                                                });
+                                        
+                                                            }
+                                                        });
+    
+                                                    });
+                                                    break;
+                                                case 'activity-quality-complaint':
+                                                    T.render('callcenter/complaint/quality/create', function(t_) {
+                                                        T.render('callcenter/complaint/quality/product', function(t__) {
+    
+                                                            // Temporarily disable onRequestBegin hook
+                                                            var callback = App.onRequestBegin;
+                                                            App.onRequestBegin = function() {};
+                            
+                                                            Model.getProducts(function(products) {
+                            
+                                                                App.onRequestBegin = callback;
+        
+                                                                var form = $('<form></form>');
+                                                                form.append(t_({product: products}));
+                                                                $('#form-quality-complaint').html(form);
+        
+                                                                var rules = {
+                                                                    "complaint-title"       : "required",
+                                                                    "complaint-description" : "required"
+                                                                };
+        
+                                                                var selected = [];
+        
+                                                                $('.complaint-add-product').click(function() {
+        
+                                                                    var productId = $('#complaint-product-select').val(),
+                                                                        product = products[productId];
+                                                                
+                                                                    form.append(t__(product));
+        
+                                                                    $('#complaint-product-select option[value="' + productId + '"]').remove();
+        
+                                                                    $('input[name="prod-' + productId + '-title"]').rules('add', 'required');
+                                                                    $('input[name="prod-' + productId + '-quantity"]').rules('add', 'required digits');
+                                                                    $('input[name="prod-' + productId + '-batch-number"]').rules('add', 'required');
+                                                                    $('input[name="prod-' + productId + '-production-date"]').rules('add', 'required date');
+                                                                    $('input[name="prod-' + productId + '-production-time"]').rules('add', 'required time');
+                                                                    $('input[name="prod-' + productId + '-expiry-date"]').rules('add', 'required date');
+        
+                                                                    selected.push(productId);
+        
+                                                                });
+        
+                                                                form.validate({
+                                                                    rules: rules,
+                                                                    submitHandler: function(form) {
+        
+                                                                        var products = [];
+        
+                                                                        _.each(selected, function(id) {
+                                                                            var produced = form['prod-' + id + '-production-date'].value + ' ' + form['prod-' + id + '-production-time'].value;
+                                                                            products.push({
+                                                                                batchNumber : form['prod-' + id + '-batch-number'].value,
+                                                                                productId   : id,
+                                                                                quantity    : form['prod-' + id + '-quantity'].value,
+                                                                                produced    : produced,
+                                                                                expiryDate  : form['prod-' + id + '-expiry-date'].value,
+                                                                                description : form['prod-' + id + '-comment'].value
+                                                                            });
+                                                                        });
+        
+                                                                        var date = new Date();
+        
+                                                                        var data = {
+                                                                            datetime    : date.toISOString(),
+                                                                            title       : form['complaint-title'].value,
+                                                                            description : form['complaint-description'].value,
+                                                                            products    : products,
+                                                                            userId      : App.user().id,
+                                                                            contactType : contactType
+                                                                        };
+                                                    
+                                                                        Storage.process({
+                                                                            type        : 'POST',
+                                                                            resource    : '!complaint/quality/customer/' + id,
+                                                                            data        : data,
+                                                                            description : 'Register new quality complaint.',
+                                                                            hint        : 'The quality complaint could not be registered: ',
+                                                                            complete: function() {
+                                                                                $('#form-quality-complaint').empty();
+                                                                            },
+                                                                            successMsg: 'The quality complaint was successfully registered.'
+                                                                        });
+         
+                                                                    }
+                                                                });
+                          
+                                                            });
+                                                        });
+                                                    });
+                                                    break;
+                                                case 'activity-add-contact':
+    
+                                                    var customerId = id;
+    
+                                                    T.render('callcenter/contact/create', function(t_) {
+                        
+                                                        // Temporarily disable onRequestBegin hook
+                                                        var callback = App.onRequestBegin;
+                                                        App.onRequestBegin = function() {};
+                        
+                                                        Storage.chain(Model.getContactTypes)
+                                                               .chain(Model.getCustomer(customerId))
+                                                               .using(function(contactTypes, customer) {
+                                                
+                                                            App.onRequestBegin = callback;
+                        
+                                                            customer.contactType = contactTypes;
+                                            
+                                                            var form = $('<form></form>').append(t_(customer));
+                                                
+                                                            $('#form-add-contact').html(form);
+                                            
+                                                            form.validate({
+                                                                rules: {
+                                                                    "kind"  : "required",
+                                                                    "datum" : "required"
+                                                                },
+                                                                submitHandler: function(form) {
+                                            
+                                                                    var data = {
+                                                                        kind        : form['kind'].value,
+                                                                        datum       : form['datum'].value, 
+                                                                        meta        : form['meta'].value
+                                                                    };
+                                            
+                                                                    Storage.process({
+                                                                        type        : 'POST',
+                                                                        resource    : 'contact/customer/' + customerId,
+                                                                        data        : data,
+                                                                        description : 'Create a new customer contact for customer "' + customer.name + '".',
+                                                                        purge       : ['customers', 'contacts-customer-' + customerId],
+                                                                        hint        : 'The customer contact could not be created: ',
+                                                                        complete: function() {
+                                                                            $('#form-add-contact').empty();
+                                                                        },
+                                                                        successMsg: 'The customer contact information was added to customer "<a href="#customer/' + customerId + '">' + customer.name + '</a>".'
+                                                                    });
+                                                                }
+                                                            });
+                                                
+                                                        });
+                        
+                                                    });
+    
+    
+                                                    break;
+                                                case 'activity-call-back':
+                                                    T.render('callcenter/callback/create', function(t_) {
+                        
+                                                        var customerId = id;
+
+                                                        var form = $('<form></form>').append(t_());
+
+                                                        $('#form-call-back').html(form);
+
+                                                        form.validate({
+                                                            rules: {
+                                                                'description' : 'required',
+                                                                'date'        : 'required date',
+                                                                'time'        : 'required time'
+                                                            },
+                                                            submitHandler: function(form) {
+
+                                                                var data = {
+                                                                    datetime    : form['date'].value + ' ' + form['time'].value,
+                                                                    description : form['description'].value,
+                                                                    kind        : 'scheduled-call-back',
+                                                                    userId      : App.user().id,
+                                                                    contactType : contactType,
+                                                                    entityId    : customerId
+                                                                };
+                                            
+                                                                Storage.process({
+                                                                    type        : 'POST',
+                                                                    resource    : 'activity/customer/' + customerId,
+                                                                    data        : data,
+                                                                    description : 'Schedule call back form customer "' + customer.name + '".',
+                                                                    hint        : 'The call back could not be scheduled: ',
+                                                                    complete: function() {
+                                                                        $('#form-call-back').empty();
+                                                                    },
+                                                                    successMsg: 'The call back for customer "' + customer.name + '" has been scheduled.'
+                                                                });
+
+                                                            }
+                                                        });
+                        
+                                                    });
+                                                    break;
+                                                default:
+                                                    break;
+                                            }
+                        
+    
+                                        });
+    
+    
+                                    });
+                                    break;
+                                case 'select-activity':
+                                    T.render('callcenter/activity/type', function(t_) {
+                            
+                                        $('#main').html(t(customer));
+                                        $('#customer-activity-create').html(t_(customer));
+    
+    
+                                    });
+                                    break;
+    
+                                default:
+                                    $('#main').html(t(customer));
+                            }
+                    
+                        });
+            
+                    });
+
+                });
+
+            });
+
+        });
     },
-    callcenter_editCustomer: function(id) {
+    callcenter_viewComplaint: function(id) {
+        T.render('callcenter/complaint/view', function(t) {
+            T.render('callcenter/complaint/products', function(t_) {
+                Model.getComplaint(id, function(complaint) {
 
-        $('#main').html('cs: edit customer');
+                    $('#main').html(t(complaint));
 
-    },
-    callcenter_registerActivity: function() {
+                    if ('quality' === complaint.kind) {
+                        $('#main').append(t_(complaint));
+                    }
+ 
+                    $('button.resolve').click(function() {
+    
+                        var date = new Date();
 
-        $('#main').html('cs: register activity');
+                        Storage.process({
+                            type        : 'PATCH',
+                            resource    : '!complaint/resolve/' + id,
+                            data        : {
+                                datetime    : date.toISOString(),
+                                customerId  : complaint.customerId,
+                                userId      : App.user().id,
+                                description : 'Complaint was resolved.'
+                            },
+                            description : 'Resolve complaint from customer "' + complaint.customer + '".',
+                            purge       : 'complaints',
+                            complete    : App.refresh
+                        });
+ 
+                    });
 
+                });
+            });
+        });
     },
     callcenter_showOrdersForDate: function() {
 
@@ -3344,14 +5309,39 @@ App.init({
 
     },
     callcenter_showOrders: function() {
+        T.render('callcenter/order/index', function(t) {
 
-        $('#main').html('cs: show orders ');
+            Model.getOrders(function(orders) {
 
+                Model.getAreasForCurrentUser(function(areas) {
+
+                    // Filter orders by area
+                    var ordersInAreas = Model.filter(orders, function(item) {
+                        return _.contains(areas, item.areaId);
+                    });
+
+                    $('#main').html(t({order: ordersInAreas}));
+
+                });
+            });
+
+        });
     },
     callcenter_editOrder: function(id) {
+        Model.getOrders(function(orders) {
+            Storage.find(id, orders, function(order) {
+ 
+                if ('placed' !== order.status) {
+                    App.error({
+                        responseJSON: { message: 'This order cannot be edited.' }
+                    });
+                    return;
+                }
 
-        $('#main').html('cs: edit order');
+                $('#main').html('cs: edit order');
 
+            });
+        });
     },
     callcenter_deleteOrder: function(id) {
 
@@ -3359,34 +5349,124 @@ App.init({
 
     },
     callcenter_viewOrder: function(id) {
+        T.render('callcenter/order/view', function(t) {
 
-        $('#main').html('cs: view order');
+            Model.getOrders(function(orders) {
+                Storage.find(id, orders, function(order) {
+                    Model.getProductsForOrder(id, function(products) { 
+
+                        order.product = products;
+                        $('#main').html(t(order));
+
+                    });
+                });
+            });
+
+        });
+    },
+    callcenter_showOrderActivityLog: function(orderId) {
+        T.render('callcenter/order/log', function(t) {
+            Model.getOrderActivity(orderId, function(activities) {
+
+                _.each(activities, function(activity) {
+                    activity.statusName = Model.readableOrderStatus(activity.status);
+                });
+
+                $('#main').html(t({activity: activities}));
+
+            });
+        });
+    },
+    callcenter_createOrder: function() {
+
+        $('#main').html('cs: ..');
 
     },
-    callcenter_showProducts: function() {
+    callcenter_showProducts: function(customerId) {
+        T.render('callcenter/product/index', function(t) {
 
-        $('#main').html('cs: show products');
+            Model.getCustomer(customerId, function(customer) {
+                Model.getProducts(function(products) {
 
+                    var priceCatId = customer.priceCatId;
+
+                    var customerProducts = [];
+
+                    for (key in products) {
+                        var product = products[key];
+
+                        if (product.category && product.category.hasOwnProperty(priceCatId)) {
+                            product.customerPrice = product.category[priceCatId].price;
+                            customerProducts.push(product);
+                        }
+                    }
+   
+                    $('#main').html(t({
+                        product: customerProducts
+                    }));
+  
+                });
+            });
+
+        });
     },
     callcenter_viewProduct: function(id) {
+        T.render('callcenter/product/view', function(t) {
+            Model.getProduct(id, function(product) {
 
-        $('#main').html('cs: view product');
+                $('#main').html(t(product));
+
+            });
+        });
 
     },
     callcenter_showTasks: function() {
+        T.render('callcenter/task/index', function(t) {
+        
+            Model.getCallcenterUserTasks(function(tasks) {
 
-        $('#main').html('cs: show tasks');
+                $('#main').html(t({task: tasks}));
 
+            });
+
+        });
     },
     callcenter_showStockSummary: function() {
+        T.render('callcenter/stock/summary', function(t) {
+            Model.getDepotForCurrentUser(function(depotId) {
 
-        $('#main').html('cs: show stock summary');
+                Model.getStockForDepot(depotId, function(stock) {
+                    $('#main').html(t({item: stock}));
+                });
 
+            });
+        });
     },
     callcenter_showCalendar: function() {
 
         $('#main').html('cs: show calendar');
 
+    },
+    callcenter_viewPerformance: function() {
+        T.render('callcenter/widget/performance', function(t) {
+
+            var userId = App.user().id;
+
+            Model.getTodaysTotalOrderValueForUser(userId, function(value) {
+                Model.getTodaysCustomerCountForUser(userId, function(count) {
+                    Model.getTodaysCommissionForUser(userId, function(sales) {
+
+                        $('#main').html(t({
+                            total      : value.total,
+                            customers  : count.customers,
+                            commission : sales.commission
+                        }));
+
+                    });
+                });
+            });
+
+        });
     },
     depot_showQueuedDispatches: function() {
         T.render('depot/dispatch/index', function(t) {
@@ -4110,10 +6190,164 @@ App.init({
 
         });
     },
+
+    depot_load: function(vehicleId) {
+        T.render('depot/dispatch/load', function(t) {
+            T.render('depot/dispatch/orders', function(t_) {
+                Model.getVehicle(vehicleId, function(vehicle) {
+                    if (vehicle.depotId) {
+                        Model.getAreasForDepot(vehicle.depotId, function(areas) {
+            
+                            $('#main').html(t({
+                                area: areas
+                            }));
+
+                            var areaIds = [];
+                            _.each(areas, function(area) {
+                                areaIds.push(area.id);
+                            });
+
+                            var loadArea = function(area) {
+
+                                // Temporarily disable onRequestBegin hook
+                                var callback = App.onRequestBegin;
+                                App.onRequestBegin = function() {};
+
+                                $('#dispatch-orders').html('Loading');
+
+                                Model.getOrdersWithStatus('placed', function(orders) {
+
+                                    var areaOrders;
+                                    if ('all' == area) {
+                                        areaOrders = _.filter(orders, function(order) {
+                                            return _.contains(areaIds, order.areaId);
+                                        });
+                                    } else {
+                                        areaOrders = _.filter(orders, function(order) {
+                                            return order.areaId == area;
+                                        });
+                                    }
+     
+                                    $('#dispatch-orders').html(t_({
+                                        order: areaOrders 
+                                    }));
+
+                                    App.onRequestBegin = callback;
+
+                                    var getCheckedOrders = function() {
+                                        var ids = [];
+                                        $('.load-order-item:checked').each(function() {
+                                            ids.push($(this).data('id'));
+                                        });
+                                        return ids;
+                                    };
+
+                                    $('.load-order-item').click(function() {
+
+                                        var ids = getCheckedOrders();
+                                        var box = $(this);
+
+                                        if (ids.length) {
+
+                                            Storage.request({
+                                                type: 'POST',
+                                                resource: 'order-load/vehicle/' + vehicleId,
+                                                data: {
+                                                    orderIds: ids
+                                                },
+                                                success: function(resp) {
+                                                    if (resp.load > 1) {
+                                                        alert('Vehicle overloaded!');
+                                                        box.prop('checked', false);
+                                                    } else {
+                                                        var str = (resp.load*100) + '%';
+                                                        $('#dispatch-load-value').html(str);
+                                                    }
+                                                }
+                                            });
+
+                                        }
+
+                                    });
+
+                                    $('#dispatch-create').click(function() {
+
+                                        var orderIds = [];
+                                        _.each(getCheckedOrders(), function(id) {
+                                            orderIds.push({orderId: id});
+                                        });
+                                        
+                                        if (orderIds.length) {
+
+                                            var date = new Date();
+        
+                                            var data = {
+                                                vehicleId : vehicleId,
+                                                datetime  : date.toISOString(),
+                                                orders    : orderIds
+                                            };
+    
+                                            Storage.process({
+                                                type        : 'POST',
+                                                resource    : '!dispatch',
+                                                data        : data,
+                                                description : 'Dispatch orders.',
+                                                success: function() {
+                                                    App.refresh();
+                                                },
+                                                successMsg: 'The dispatch was successfully created.'
+                                            });
+
+                                        }
+
+                                    });
+
+                                });
+                            };
+    
+                            $('#dispatch-load').click(function() {
+                                loadArea($('#main select').val());
+                                $('#dispatch-load-value').empty();
+                            });
+
+                            //loadArea('all');
+        
+                        });
+                    } else {
+                        App.error({
+                            responseJSON: { message: 'This vehicle has not been assigned to any depot.' }
+                        });
+                    }
+                });
+            });
+        });
+    },
+
     queueing_showDispatches: function() {
+        T.render('queueing/dispatch/index', function(t) {
+            Model.getDispatchesWithStatus(['queued', 'loading', 'loaded', 'dispatched'], function(dispatches) {
 
-        $('#main').html('queueing: show dispatches');
+                _.each(dispatches, function(dispatch) {
+                    dispatch.statusName = Model.readableOrderStatus(dispatch.status);
+                });
+    
+                $('#main').html(t({dispatch: dispatches}));
+    
+            });
+        });
+    },
+    queueing_showDispatchHistory: function() {
+        T.render('queueing/dispatch/index', function(t) {
+            Model.getDispatchesWithStatus('confirmed', function(dispatches) {
 
+                _.each(dispatches, function(dispatch) {
+                    dispatch.statusName = Model.readableOrderStatus(dispatch.status);
+                });
+    
+                $('#main').html(t({dispatch: dispatches}));
+    
+            });
+        });
     },
     queueing_showVehicles: function() {
         T.render('queueing/vehicle/index', function(t) {
@@ -4129,30 +6363,334 @@ App.init({
         });
     },
     queueing_viewVehicle: function(id) {
+        T.render('queueing/vehicle/view', function(t) {
+            Model.getVehicle(id, function(vehicle) {
 
-        $('#main').html('queueing: view vehicle');
+                Model.getMaintenanceActivityForVehicle(id, function(maintenance) {
+                    Model.getFuelActivityForVehicle(id, function(fuel) {
 
+                        vehicle.maintenanceActivity = maintenance;
+                        vehicle.fuelActivity = fuel;
+
+                        $('#main').html(t(vehicle));
+
+                    });
+                });
+
+            });
+        });
     },
     queueing_viewDispatch: function(id) {
+        Model.getDispatch(id, function(dispatch) {
+            T.render('queueing/dispatch/details', function(t_) {
+                T.render('queueing/dispatch/order-view', function(t) {
 
-        $('#main').html('queueing: view dispatch');
+                    var div = $('<div></div>');
+                    div.append(t_(dispatch));
 
+                    Model.getOrdersForDispatch(id, function(orders) {
+
+                        var orderActivity = {};
+                        _.each(dispatch.orderActivity, function(activity) {
+                            if (orderActivity.hasOwnProperty(activity.orderId)) {
+                                orderActivity[activity.orderId][activity.status] = activity;
+                            } else {
+                                var o = {};
+                                o[activity.status] = activity;
+                                orderActivity[activity.orderId] = o;
+                            }
+                        });
+
+                        dispatch.order = orders;
+
+                        var ids = [];
+                        _.each(orders, function(order) {
+                            ids.push(order.orderId);
+                            order.timeDelivered = '-';
+                            order.timeConfirmed = '-'; 
+                            if (orderActivity.hasOwnProperty(order.orderId)) {
+                                var activities = orderActivity[order.orderId];
+                                if (activities['delivered']) {
+                                    order.timeDelivered = activities['delivered'].created;
+                                }
+                                if (activities['confirmed']) {
+                                    order.timeConfirmed = activities['confirmed'].created; 
+                                }
+                            }
+                        });
+
+                        div.append(t(dispatch));
+                        $('#main').html(div);
+
+                    });
+
+                });
+
+            });
+
+        });
     },
     queueing_load: function(vehicleId) {
+        T.render('queueing/dispatch/load', function(t) {
+            T.render('queueing/dispatch/orders', function(t_) {
+                Model.getVehicle(vehicleId, function(vehicle) {
+                    if (vehicle.depotId) {
+                        Model.getAreasForDepot(vehicle.depotId, function(areas) {
+            
+                            $('#main').html(t({
+                                area: areas
+                            }));
 
-        $('#main').html('queueing: load');
+                            var areaIds = [];
+                            _.each(areas, function(area) {
+                                areaIds.push(area.id);
+                            });
+
+                            var loadArea = function(area) {
+
+                                // Temporarily disable onRequestBegin hook
+                                var callback = App.onRequestBegin;
+                                App.onRequestBegin = function() {};
+
+                                $('#dispatch-orders').html('Loading');
+
+                                Model.getOrdersWithStatus('placed', function(orders) {
+
+                                    var areaOrders;
+                                    if ('all' == area) {
+                                        areaOrders = _.filter(orders, function(order) {
+                                            return _.contains(areaIds, order.areaId);
+                                        });
+                                    } else {
+                                        areaOrders = _.filter(orders, function(order) {
+                                            return order.areaId == area;
+                                        });
+                                    }
+     
+                                    $('#dispatch-orders').html(t_({
+                                        order: areaOrders 
+                                    }));
+
+                                    App.onRequestBegin = callback;
+
+                                    var getCheckedOrders = function() {
+                                        var ids = [];
+                                        $('.load-order-item:checked').each(function() {
+                                            ids.push($(this).data('id'));
+                                        });
+                                        return ids;
+                                    };
+
+                                    $('.load-order-item').click(function() {
+
+                                        var ids = getCheckedOrders();
+                                        var box = $(this);
+
+                                        if (ids.length) {
+
+                                            Storage.request({
+                                                type: 'POST',
+                                                resource: 'order-load/vehicle/' + vehicleId,
+                                                data: {
+                                                    orderIds: ids
+                                                },
+                                                success: function(resp) {
+                                                    if (resp.load > 1) {
+                                                        alert('Vehicle overloaded!');
+                                                        box.prop('checked', false);
+                                                    } else {
+                                                        var str = (resp.load*100) + '%';
+                                                        $('#dispatch-load-value').html(str);
+                                                    }
+                                                }
+                                            });
+
+                                        }
+
+                                    });
+
+                                    $('#dispatch-create').click(function() {
+
+                                        var orderIds = [];
+                                        _.each(getCheckedOrders(), function(id) {
+                                            orderIds.push({orderId: id});
+                                        });
+                                        
+                                        if (orderIds.length) {
+
+                                            var date = new Date();
         
+                                            var data = {
+                                                vehicleId : vehicleId,
+                                                datetime  : date.toISOString(),
+                                                orders    : orderIds
+                                            };
+    
+                                            Storage.process({
+                                                type        : 'POST',
+                                                resource    : '!dispatch',
+                                                data        : data,
+                                                description : 'Dispatch orders.',
+                                                success: function() {
+                                                    App.refresh();
+                                                },
+                                                successMsg: 'The dispatch was successfully created.'
+                                            });
+
+                                        }
+
+                                    });
+
+                                });
+                            };
+    
+                            $('#dispatch-load').click(function() {
+                                loadArea($('#main select').val());
+                                $('#dispatch-load-value').empty();
+                            });
+
+                            //loadArea('all');
+        
+                        });
+                    } else {
+                        App.error({
+                            responseJSON: { message: 'This vehicle has not been assigned to any depot.' }
+                        });
+                    }
+                });
+            });
+        });
     },
-    queueing_viewVehicle: function(id) {
+    callcenter_editCustomer: function(id) {
 
-        $('#main').html('queueing: view vehicle');
-
-    },
-    queueing_viewOrder: function(id) {
-
-        $('#main').html('queueing: view order');
+        $('#main').html('cs: edit customer');
 
     },
+    callcenter_createCustomerContact: function(customerId) {
+        T.render('callcenter/contact/create', function(t) {
+
+            Storage.chain(Model.getContactTypes)
+                   .chain(Model.getCustomer(customerId))
+                   .using(function(contactTypes, customer) {
+    
+                customer.contactType = contactTypes;
+
+                var form = $('<form></form>').append(t(customer));
+    
+                $('#main').html(form);
+
+                form.validate({
+                    rules: {
+                        "kind"  : "required",
+                        "datum" : "required"
+                    },
+                    submitHandler: function(form) {
+
+                        var data = {
+                            kind        : form['kind'].value,
+                            datum       : form['datum'].value, 
+                            meta        : form['meta'].value
+                        };
+
+                        Storage.process({
+                            type        : 'POST',
+                            resource    : 'contact/customer/' + customerId,
+                            data        : data,
+                            description : 'Create a new customer contact for customer "' + customer.name + '".',
+                            purge       : ['customers', 'contacts-customer-' + customerId],
+                            hint        : 'The customer contact could not be created: ',
+                            complete: function() {
+                                window.location.hash = '#!c/customer/' + customerId + '/tab/contacts';
+                            },
+                            successMsg: 'The customer contact information was added to customer "<a href="#customer/' + customerId + '">' + customer.name + '</a>".'
+                        });
+                    }
+                });
+    
+            });
+
+        });
+    },
+    callcenter_editCustomerContact: function(id) {
+        T.render('callcenter/contact/edit', function(t) {
+
+            Storage.chain(Model.getContactTypes)
+                   .chain(Model.getContact(id))
+                   .using(function(contactTypes, contact) {
+
+                var customerId = contact.customerId;
+
+                contact.contactType = contactTypes;
+
+                var form = $('<form></form>').append(t(contact));
+                $('#main').html(form);
+
+                form.validate({
+                    rules: {
+                        "kind"  : "required",
+                        "body"  : "required"
+                    },
+                    submitHandler: function(form) {
+
+                        var data = {
+                            kind       : form['kind'].value,
+                            datum      : form['datum'].value, 
+                            meta       : form['meta'].value
+                        };
+
+                        Storage.process({
+                            type        : 'PUT',
+                            resource    : 'contact/' + id + '/customer/' + customerId,
+                            data        : data,
+                            description : 'Edit customer contact for customer "' + contact.customerName + '".',
+                            purge       : ['contact-' + id, 'contacts-customer-' + customerId],
+                            hint        : 'The customer contact could not be updated: ',
+                            complete: function() {
+                                window.location.hash = '#!c/customer/' + customerId + '/tab/contacts';
+                            },
+                            successMsg: 'The customer contact information was updated for customer "<a href="#customer/' + customerId + '">' + contact.customerName + '</a>".'
+                        });
+
+                    }
+                });
+
+            });
+
+        });
+    },
+    callcenter_deleteCustomerContact: function(id) {
+        T.render('callcenter/contact/delete', function(t) {
+            Model.getContact(id, function(contact) {
+
+                var form = $('<form></form>').append(t(contact));
+                $('#main').html(form);
+
+                $('button.confirm').click(function() {
+                    Storage.process({
+                        type        : 'DELETE',
+                        resource    : 'contact/' + id + '/customer/' + contact.customerId,
+                        data        : '',
+                        description : 'Delete contact for customer "' + contact.customerName + '".',
+                        purge       : ['customers', 'contacts-customer-' + contact.customerId],
+                        hint        : 'Cannot delete contact: ',
+                        complete: function() {
+                            window.location.hash = '#!c/customer/' + contact.customerId + '/tab/contacts';
+                        },
+                        successMsg: 'The customer contact information was deleted.'
+                    });
+                });
+
+            });
+        });
+    },
+
+//    callcenter_registerActivity: function(customerId) {
+//    },
+//    queueing_viewOrder: function(id) {
+//
+//        $('#main').html('queueing: view order');
+//
+//    },
     queueing_viewProduct: function(id) {
 
         $('#main').html('queueing: view product');

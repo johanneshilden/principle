@@ -1,0 +1,17 @@
+<div>
+    <select>
+        <option value="all">All areas</option>
+        {{#each area}}
+        <option value="{{id}}">{{name}}</option>
+        {{/each}}
+    </select>
+    <button id="dispatch-load">Start loading</button>
+</div>
+
+<div id="dispatch-load-value">
+</div>
+<div id="dispatch-orders" style="border:1px solid black;">
+</div>
+<div>
+<button id="dispatch-create">Dispatch</button>
+</div>

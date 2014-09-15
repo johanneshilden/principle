@@ -1,0 +1,27 @@
+{{#when order}}
+<table>
+    <thead>
+        <tr>
+            <th>Order Id</th>
+            <th></th>
+            <th>Created</th>
+            <th>Delivery time</th>
+            <th>Confirm</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each order}}
+        <tr>
+            <td>{{id}}</td>
+            <td>Follow up on delivered order. <br><a href="#!c/order/{{id}}">View order details</a></td>
+            <td>{{created}}</td>
+            <td>{{lastChange}}</td>
+            <td><a data-id="{{id}}" class="order-confirm-delivery" href="javascript:">Confirm as delivered</a></td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+{{else}}
+No tasks.
+{{/when}}
+

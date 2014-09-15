@@ -1,0 +1,24 @@
+{{#when item}}
+<table>
+    <thead>
+        <tr>
+            <th>Product</th>
+            <th>Available</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each item}}
+        <tr>
+            <td><a href="#!c/product/{{productId}}">{{productName}}</a></td>
+            <td>{{available}}</td>
+        </tr>
+        {{/each}}
+     </tbody>
+</table>
+{{else}}
+No stock availability information available.
+{{/when}}
+
+<div>
+<a href="#!d/stock/activity">Stock movement activity</a>
+</div>

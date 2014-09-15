@@ -157,6 +157,12 @@ var Model = {
 
     },
 
+    getPendingCustomers: function(yield) {
+
+        Storage.collection('pending', 'pending-customers', yield);
+
+    },
+
     getCustomers: function(yield) {
 
         Storage.collection('customer', 'customers', yield);
@@ -262,7 +268,7 @@ var Model = {
                 yield(depotId);
             } else {
                 App.error({
-                    responseJSON: { message: 'No depot assigned to current user. Please contact a system administrator.' }
+                    responseJSON: { message: 'No depot assigned to the current user. Please contact a system administrator.' }
                 });
             }
         });
@@ -318,7 +324,31 @@ var Model = {
 
     getComplaints: function(yield) {
 
-        Storage.collection('complaint', 'complaints', yield);
+        var resources = {
+            complaints : 'complaint',
+            products   : 'complaint-product',
+        };
+
+        var decorator = function(resp) {
+
+            var complaints = Storage.toMap(resp.complaints);
+
+            _.each(complaints, function(complaint) {
+                complaint['products'] = null;
+            });
+
+            // Insert complaint products 
+            _.each(resp.products, function(item) {
+                var a = complaints[item.complaintId]['products'] || {};
+                a[item.id] = item;
+                complaints[item.complaintId]['products'] = a;
+            });
+
+            return complaints;
+
+        };
+
+        Storage.load(resources, 'complaints', yield, decorator);
 
     },
 
@@ -442,6 +472,24 @@ var Model = {
         };
 
         Storage.load(resources, 'products', yield, decorator);
+
+    },
+
+    getProductsInterval: function(interval, yield) {
+
+        if (typeof yield === 'undefined') {
+            return _.partial(arguments.callee, arguments[0]);
+        }
+
+        Model.getProducts(function(products) {
+            yield(_.toArray(products).slice(interval[0] - 1, interval[1]));
+        });
+
+    },
+
+    getProductsCount: function(yield) {
+
+        Storage.load('count/product', 'products-count', yield);
 
     },
 
@@ -688,6 +736,212 @@ var Model = {
 
     },
 
+    getTodaysTotalOrderValueForUser: function(userId, yield) {
+
+        if (typeof yield === 'undefined') {
+            return _.partial(arguments.callee, arguments[0]);
+        }
+
+        Storage.load('/performance/total-today/user/' + userId, 'total-sales-value', yield);
+
+    },
+    
+    getTodaysCustomerCountForUser: function(userId, yield) {
+
+        if (typeof yield === 'undefined') {
+            return _.partial(arguments.callee, arguments[0]);
+        }
+
+        Storage.load('/performance/customer-count/user/' + userId, 'customer-count', yield);
+
+    },
+    getTodaysCommissionForUser: function(userId, yield) {
+
+        if (typeof yield === 'undefined') {
+            return _.partial(arguments.callee, arguments[0]);
+        }
+
+        Storage.load('/performance/commission-value/user/' + userId, 'commission-user', yield);
+
+    },
+    getOrderAverageForCustomer: function(customerId, yield) {
+
+        if (typeof yield === 'undefined') {
+            return _.partial(arguments.callee, arguments[0]);
+        }
+
+        Storage.load('/order-average/customer/' + customerId, 'order-average-' + customerId, yield);
+
+    },
+    getAverageOrderTimeInterval: function(customerId, yield) {
+
+        if (typeof yield === 'undefined') {
+            return _.partial(arguments.callee, arguments[0]);
+        }
+
+        Storage.load('/time-average/customer/' + customerId, 'time-average-' + customerId, yield);
+
+    },
+    getRoleCommissionValues: function(interval, yield) {
+
+        if (typeof yield === 'undefined') {
+            return _.partial(arguments.callee, arguments[0]);
+        }
+
+        var from = interval[0],
+            to   = interval[1];
+
+        Storage.collection('/role-commission/' + from + '/' + to, 'commission-values-' + from + '-' + to, yield);
+
+    },
+    getScheduledCustomerActivity: function(yield) {
+
+        Storage.collection('/activity/scheduled', 'activity-scheduled', yield);
+
+    },
+    getFieldstaffUserTasks: function(yield) {
+
+        var days = 10; // temp
+        var tasks = [];
+
+        Storage.load('/customer-inactive/' + days, 'customer-inactive', function(inactive) {
+
+            Storage.load('/activity/pending/callback', 'activity-pending-callback', function(pending) {
+
+                Storage.load('/activity/pending/visit', 'activity-pending-visit', function(pendingVisit) {
+
+                    Model.getAreasForCurrentUser(function(areas) {
+                        Model.getCustomers(function(customers) {
+
+                            var areaCustomers = Model.filter(customers, function(item) {
+                                return _.contains(areas, item.areaId);
+                            });
+
+                            _.each(pending, function(task) {
+                                if (areaCustomers.hasOwnProperty(task.customerId)) {
+                                    tasks.push({
+                                        type         : 'Scheduled Call Back',
+                                        customerName : task.customerName,
+                                        customerId   : task.customerId
+                                    });
+                                }
+                            });
+
+                            _.each(pendingVisit, function(task) {
+                                if (areaCustomers.hasOwnProperty(task.customerId)) {
+                                    tasks.push({
+                                        type         : 'Scheduled Visit',
+                                        customerName : task.customerName,
+                                        customerId   : task.customerId
+                                    });
+                                }
+                            });
+
+                            _.each(inactive, function(task) {
+                                if (areaCustomers.hasOwnProperty(task.customerId)) {
+                                    tasks.push({
+                                        type         : 'Inactivity Followup',
+                                        customerName : task.customerName,
+                                        customerId   : task.customerId
+                                    });
+                                }
+                            });
+
+                            yield(tasks);
+
+                        });
+                    });
+                });
+            });
+        });
+ 
+    },
+    getCallcenterUserTasks: function(yield) {
+
+        var days = 10; // temp
+        var tasks = [];
+
+        Storage.load('/customer-followup/' + days, 'customer-followup', function(followup) {
+            Storage.load('/customer-inactive/' + days, 'customer-inactive', function(inactive) {
+                Storage.load('/customer-order-followup', 'customer-order-followup', function(average) {
+
+                    Storage.load('/activity/pending/callback', 'activity-pending-callback', function(pending) {
+
+                        Model.getAreasForCurrentUser(function(areas) {
+                           Model.getCustomers(function(customers) {
+
+                                Model.getOrdersWithStatus('delivered', function(orders) {
+            
+                                    var areaCustomers = Model.filter(customers, function(item) {
+                                        return _.contains(areas, item.areaId);
+                                    });
+        
+                                    _.each(pending, function(task) {
+                                        if (areaCustomers.hasOwnProperty(task.customerId)) {
+                                            tasks.push({
+                                                type         : 'Scheduled Call Back',
+                                                customerName : task.customerName,
+                                                customerId   : task.customerId
+                                            });
+                                        }
+                                    });
+
+                                    _.each(followup, function(task) {
+                                        if (areaCustomers.hasOwnProperty(task.customerId)) {
+                                            tasks.push({
+                                                type         : 'Contact Followup',
+                                                customerName : task.customerName,
+                                                customerId   : task.customerId
+                                            });
+                                        }
+                                    });
+                
+                                    _.each(inactive, function(task) {
+                                        if (areaCustomers.hasOwnProperty(task.customerId)) {
+                                            tasks.push({
+                                                type         : 'Inactivity Followup',
+                                                customerName : task.customerName,
+                                                customerId   : task.customerId
+                                            });
+                                        }
+                                    });
+                
+                                    _.each(average, function(task) {
+                                        if (areaCustomers.hasOwnProperty(task.customerId)) {
+                                            tasks.push({
+                                                type         : 'Order Followup',
+                                                customerName : task.customerName,
+                                                customerId   : task.customerId
+                                            });
+                                        }
+                                    });
+                
+                                    _.each(orders, function(task) {
+                                        if (areaCustomers.hasOwnProperty(task.customerId)) {
+                                            tasks.push({
+                                                type         : 'Delivery Confirmation',
+                                                customerName : task.customerName,
+                                                customerId   : task.customerId
+                                            });
+                                        }
+                                    });
+     
+                                    yield(tasks);
+        
+                            });
+
+                            });
+                        });
+    
+
+                    });
+
+
+                });
+            });
+        });
+
+    },
     readableRoleName: function(role) {
         switch (role) {
             case 'field-staff': 

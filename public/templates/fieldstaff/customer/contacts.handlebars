@@ -1,0 +1,15 @@
+{{#if contact}}
+<table>
+{{#each contact}}
+<tr>
+    <td>{{kind}}</td>
+    <td>{{datum}}</td>
+    <td>{{meta}}</td>
+    <td><a href="#!f/contact/{{id}}/edit">Edit</a></td>
+    <td><a href="#!f/contact/{{id}}/delete">Delete</a></td>
+{{/each}}
+</table>
+{{else}}
+- No contacts -
+{{/if}}
+

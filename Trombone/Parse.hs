@@ -8,8 +8,9 @@ module Trombone.Parse
 
 import Control.Monad
 import Data.Aeson                                      ( decode, eitherDecode )
-import Data.List.Utils                                 ( split )
-import Data.Maybe                                      ( catMaybes, mapMaybe )
+import Data.List                                       ( foldl' )
+import Data.List.Utils                                 ( split, replace )
+import Data.Maybe                                      ( maybeToList, catMaybes, mapMaybe )
 import Data.Text                                       ( Text, pack, unpack )
 import Data.Text.Encoding                              ( encodeUtf8 )
 import Network.HTTP.Types.Method
@@ -27,11 +28,11 @@ import qualified Data.ByteString.Lazy.Char8            as L8
 
 -- | Parse an HTTP method.
 method :: GenParser Char st Method
-method = try ( string "GET"     >> return "GET"    )
-     <|> try ( string "POST"    >> return "POST"   )
-     <|> try ( string "PUT"     >> return "PUT"    )
-     <|> try ( string "PATCH"   >> return "PATCH"  )
-     <|> try ( string "DELETE"  >> return "DELETE" )
+method = try ( string "GET"     >> return "GET"     )
+     <|> try ( string "POST"    >> return "POST"    )
+     <|> try ( string "PUT"     >> return "PUT"     )
+     <|> try ( string "PATCH"   >> return "PATCH"   )
+     <|> try ( string "DELETE"  >> return "DELETE"  )
      <|>     ( string "OPTIONS" >> return "OPTIONS" )
 
 -- | Parse a route pattern.
@@ -48,34 +49,81 @@ variable = char ':' >> liftM Variable literal
 atom :: GenParser Char st RouteSegment
 atom = liftM Atom literal
 
--- | Parse a string consisting strictly of alphanumeric characters, dashes, 
--- underscores or exclamation marks.
+-- | Parse a string made up strictly of alphanumeric characters together
+-- with a small subset of the special ascii characters.
 literal :: GenParser Char st Text
 literal = liftM pack $ many1 (alphaNum <|> oneOf "-_!~")
 
 -- | Parse a single line of input, which may be a comment, a blank line, or 
 -- a valid route description.
-line :: GenParser Char st (Maybe Route)
+line :: GenParser Char st [Route]
 line = do
     blankspaces
-    r <- optionMaybe route
+    r <- optionMaybe routeOrBlock
     optional comment
     eol
-    return r
+    return $ concat $ maybeToList r
 
 -- | A comment may appear at the end of any line, and starts with a '#'.
 comment :: GenParser Char st ()
 comment = char '#' >> skipMany (noneOf "\n\r") 
 
+routeOrBlock :: GenParser Char st [Route]
+routeOrBlock = try route <|> dryBlock
+
 -- | Parse a route (i.e., method, uri, and action).
-route :: GenParser Char st Route
+route :: GenParser Char st [Route]
 route = do
     m <- method
     blankspaces
     u <- uri
     blankspaces
     a <- action
-    return $ Route m u a
+    return [Route m u a]
+
+dryBlock :: GenParser Char st [Route]
+dryBlock = do
+    string "DRY"
+    blankspaces
+    s <- many (noneOf "\n\r") 
+    eol
+    openingBracket
+    xs <- sepEndBy (item s) (char ';')
+    eol
+    closingBracket
+    return $ concatMap f xs
+  where 
+    f r = case parse route "" r of
+            Left   _ -> []
+            Right rs -> rs
+
+alone :: Char -> GenParser Char st ()
+alone c = do
+    skip1 (char c)
+    blankspaces
+    skip1 eol
+
+openingBracket :: GenParser Char st ()
+openingBracket = alone '{'
+
+closingBracket :: GenParser Char st ()
+closingBracket = alone '}'
+
+item :: String -> GenParser Char st String
+item s = do
+    m <- segm
+    u <- segm
+    a <- segm
+    blankspaces
+    t <- many (noneOf ";\n\r")
+    return $ concat 
+        [ m , " "
+        , u , " "
+        , a , " "
+        , replace "{{..}}" t s
+        , ";" ] 
+  where 
+    segm = blankspaces >> many (noneOf " \n\r")
 
 -- | Any of the valid route action types.
 action :: GenParser Char st RouteAction
@@ -166,8 +214,8 @@ inspect res = do
         (Just tbl, Just ["*"]) -> resultFromTemplate (res ["*", tbl]) tpl
         (_, Just cs)           -> resultFromTemplate (res cs) tpl
         _                      -> error 
-                "Unable to extract column names from SQL statement. \
-                \Add parameter hints to configuration."
+                "Unable to extract column names from SQL template. \
+                \An explicit parameter list is required in the route configuration."
 
 -- | A PostgreSQL route of type that returns the last inserted id.
 sqlLastInsert :: GenParser Char st RouteAction
@@ -203,7 +251,7 @@ inlineRoute = do
         route (Right p) = RouteInline p
         lines = many jsonLine >>= \p -> lastline >> return p
         firstline = char '{' >> blankspaces >> eol
-        lastline  = char '}' >> blankspaces >> eol
+        lastline  = char '}' >> blankspaces >> eol >> blankspaces
         wrap x = '{':x ++ "}"
 
 jsonLine :: GenParser Char st String
@@ -241,57 +289,61 @@ mkQuery res = DbQuery res . parseDbTemplate . pack
 skip1 :: GenParser Char st a -> GenParser Char st ()
 skip1 = liftM $ const ()
 
+symbol :: String -> GenParser Char st ()
+symbol = skip1 . string 
+
 -- | Symbol to indicate that the route is a PostgreSQL query template of type 
 -- that returns no result.
 symbolSqlNoResult :: GenParser Char st ()
-symbolSqlNoResult = skip1 $ string "--" 
+symbolSqlNoResult = symbol "--" 
 
 -- | Symbol for PostgreSQL query of type that returns a single item.
 symbolSqlItem :: GenParser Char st ()
-symbolSqlItem = skip1 $ string "~>" 
+symbolSqlItem = symbol "~>" 
 
 -- | Symbol for PostgreSQL query of type that returns a single item with
 -- an 'Ok' status message.
 symbolSqlItemOk :: GenParser Char st ()
-symbolSqlItemOk = skip1 $ string "->" 
+symbolSqlItemOk = symbol "->" 
 
 -- | Symbol for PostgreSQL query of type that returns a collection.
 symbolSqlCollection :: GenParser Char st ()
-symbolSqlCollection = skip1 $ string ">>" 
+symbolSqlCollection = symbol ">>" 
 
 -- | Symbol for PostgreSQL query of type that returns the last inserted id.
 symbolSqlLastInsert :: GenParser Char st ()
-symbolSqlLastInsert = skip1 $ string "<>" 
+symbolSqlLastInsert = symbol "<>" 
 
 -- | Symbol for PostgreSQL query of type that returns a row count result.
 symbolSqlCount :: GenParser Char st ()
-symbolSqlCount = skip1 $ string "><" 
+symbolSqlCount = symbol "><" 
 
 -- | Symbol which indicates that the route is a nodejs script.
 -- e.g., GET /resource  <js> myscript
 symbolNodeJs :: GenParser Char st ()
-symbolNodeJs = skip1 $ string "<js>" 
+symbolNodeJs = symbol "<js>" 
 
 -- | Symbol which indicates that the route is a pipeline.
 -- e.g., GET /resource  ||  some-system
 symbolPipeline :: GenParser Char st ()
-symbolPipeline = skip1 $ string "||" 
+symbolPipeline = symbol "||" 
 
 -- | Symbol which indicates that the route is an inline pipeline.
 -- e.g., GET /resource  |>  {"processors":[...],"connections":[...]}
 symbolInline :: GenParser Char st ()
-symbolInline = skip1 $ string "|>" 
+symbolInline = symbol "|>" 
 
 -- | Symbol to denote a static route.
 -- e.g., GET /resource {..} {"hello":"is it me you're looking for?"}
 symbolStatic :: GenParser Char st ()
-symbolStatic = skip1 $ string "{..}" 
+symbolStatic = symbol "{..}" 
 
 -- | Zero or more blank spaces (unlike the default "spaces", this combinator 
 -- accepts only "true" spaces).
 blankspaces :: GenParser Char st ()
 blankspaces = skipMany (char ' ')
 
+-- | End of line.
 eol :: GenParser Char st String
 eol = try (string "\n\r")
   <|> try (string "\r\n")
@@ -306,10 +358,10 @@ parseRoutesFromFile file = do
     chars 80 ' ' >> putStr "|" >> chars 81 '\b'
     r <- readFile file
     let ls = preprocess r
-    x <- liftM catMaybes $ mapM go $ zip (dots $ length ls) ls
+    x <- liftM concat $ mapM go $ zip (dots $ length ls) ls
     putChar '\n'
     return x
-  where go :: (String, String) -> IO (Maybe Route)
+  where go :: (String, String) -> IO [Route]
         go (dots,x) = 
             case parse line "" (x ++ "\n") of
                 Left e   -> error $ show e ++ '\n':x
@@ -324,16 +376,26 @@ parseRoutesFromFile file = do
                 fill x x' = replicate (x' - x - 1) ""
 
 preprocess :: String -> [String]
-preprocess str = let (a, xs) = foldr (f . g) ("", []) (lines str) in a:xs
-  where f a (b, xs) | null a || null b             = ( a' ++ b              , xs   )
-                    | ' ' == head b && '{' /= head a = ( a' ++ ' ':trimLine b , xs   )
-                    | '{' == head a || '}' == head b = ( a' ++ "\n" ++ b       , xs   )
-                    | '{' == head b                = ( ""                  , x:xs )
-                    | otherwise                   = ( a'                  , b:xs )
-            where a' = trimRight a 
-                  x  = a' ++ '\n':b ++ "\n"
-        g "" = ""
-        g s  = head $ split "#" s
+preprocess xs = 
+    let (_, ys) = foldl' f ("", []) $ lines xs ++ ["\n"] 
+    in filter notNull $ reverse ys 
+  where 
+    f :: (String, [String]) -> String -> (String, [String])
+    f (x, xs) y | null y       = (x' ++ y       , xs)
+                | null x       = (x  ++ y'      , xs)
+                | '{' == head y = (x' ++ "\n{\n" , xs)
+                | '}' == head y = (x' ++ "\n}\n" , xs)
+                | ind y        = (x' ++ y'      , xs)
+                | otherwise    = (y', trimLine x:xs)
+      where
+        x' = trimLine x 
+        y' = ' ':trimLine (rc y) 
+        ind y = ' ' == head y || '#' == head y
+        rc "" = ""
+        rc x  = head (split "#" x)
+
+notNull :: String -> Bool
+notNull = not . null
 
 trimLeft :: String -> String
 trimLeft "" = ""

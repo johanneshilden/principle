@@ -1,0 +1,16 @@
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Price</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each product}}
+        <tr>
+            <td><a href="#!c/product/{{id}}">{{name}}</a></td>
+            <td>{{customerPrice}}</td>
+        </tr>
+        {{/each}}
+     </tbody>
+</table>

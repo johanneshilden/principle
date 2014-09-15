@@ -1,0 +1,33 @@
+{{#if_eq status 'placed'}}
+<a href="#!f/order/edit/{{id}}">Edit this order</a>
+{{/if_eq}}
+
+| <a href="#!f/order/{{id}}/log">View order activity log</a>
+<br>
+<br>
+Created: {{created}}
+<br>
+<br>
+Status: {{status}}
+<br>
+<br>
+Customer: <a href="#!f/customer/{{customerId}}">{{customerName}}</a>
+
+<h3>Products</h3>
+<table>
+    <thead>
+        <tr>
+            <th>Product</th>
+            <th>Quantity</th>
+            <th>Price</th>
+        </tr>
+    </thead>
+    {{#each product}}
+    <tr>
+        <td><a href="#!f/product/{{id}}">{{name}}</a></td>
+        <td>{{quantity}}</td>
+        <td>{{price}}</td>
+    </tr>
+    {{/each}}
+</table>
+

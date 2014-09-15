@@ -1,0 +1,13 @@
+<h4>{{title}}</h4>
+<p>
+{{description}}
+</p>
+<p>
+Customer: <a href="#!f/customer/{{customerId}}">{{customer}}</a>
+</p>
+{{#if resolved}}
+This complaint has been resolved.
+{{else}}
+<button class="resolve">Resolve</button>
+{{/if}}
+

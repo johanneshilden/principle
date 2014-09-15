@@ -1,0 +1,17 @@
+<h4>Tasks</h4>
+<table>
+    <thead>
+        <tr>
+            <th>Task Type</th>
+            <th>Customer</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each task}}
+        <tr>
+            <td>{{type}}</td>
+            <td><a href="#!c/customer/{{customerId}}">{{customerName}}</a></td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>

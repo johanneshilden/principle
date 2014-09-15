@@ -1,0 +1,21 @@
+<h2>Create contact</h2>
+
+<select name="kind">
+    {{#each contactType}}
+    <option value="{{@key}}">{{.}}</option>
+    {{/each}}
+</select>
+
+<div>
+Contact
+<input type="text" name="datum">
+</div>
+
+<div>
+Comment
+<input type="text" name="meta">
+</div>
+
+<div>
+<input type="submit">
+</div>

@@ -1,0 +1,27 @@
+{{#when dispatch}}
+<table>
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Driver</th>
+            <th>Created</th>
+            <th>Status</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each dispatch}}
+        <tr>
+            <td>{{id}}</td>
+            <td>{{driverName}}</td>
+            <td>{{created}}</td>
+            <td>{{statusName}}</td>
+            <td><a href="#!q/dispatch/{{id}}">View</a></td>
+         </tr>
+        {{/each}}
+    </tbody>
+</table>
+{{else}}
+No dispatches
+{{/when}}
+

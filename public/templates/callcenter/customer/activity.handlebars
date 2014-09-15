@@ -1,0 +1,29 @@
+{{#when activity}}
+<table>
+    <thead>
+        <tr>
+            <th>Date/Time</th>
+            <th>Description</th>
+            <th>Activity</th>
+            <th>Contact Type</th>
+            <th>User</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each activity}}
+        <tr>
+            <td>{{created}}</td>
+            {{#if url}}
+            <td><a href="#!c/{{url}}">{{description}}</a></td>
+            {{else}}<td>{{description}}</td>{{/if}}
+            <td>{{kind}}</td>
+            <td>{{contactType}}</td>
+            <td>{{user}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+{{else}}
+No activity.
+{{/when}}
+

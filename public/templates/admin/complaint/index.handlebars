@@ -3,7 +3,7 @@
     <thead>
         <tr>
             <th>Id</th>
-            <th>Description</th>
+            <th>Title</th>
             <th>Customer</th>
         </tr>
     </thead>
@@ -11,7 +11,7 @@
         {{#each complaint}}
         <tr>
             <td>{{id}}</td>
-            <td><a href="#complaint/{{id}}">{{description}}</a></td>
+            <td><a href="#complaint/{{id}}">{{title}}</a></td>
             <td>{{#if resolved}}{{resolved}}{{else}}Unresolved{{/if}}</td>
             <td>{{customer}}</td>
         </tr>

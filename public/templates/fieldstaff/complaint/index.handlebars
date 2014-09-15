@@ -1,0 +1,23 @@
+{{#when complaint}}
+<table>
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Title</th>
+            <th>Customer</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each complaint}}
+        <tr>
+            <td>{{id}}</td>
+            <td><a href="#!f/complaint/{{id}}">{{title}}</a></td>
+            <td>{{#if resolved}}{{resolved}}{{else}}Unresolved{{/if}}</td>
+            <td>{{customer}}</td>
+        </tr>
+        {{/each}}
+     </tbody>
+</table>
+{{else}}
+No complaints.
+{{/when}}

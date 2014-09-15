@@ -1,10 +1,9 @@
-<h1>Customer information</h1>
 <h2>{{name}}</h2>
 <div>
 Area:    {{areaName}}
 </div>
 <div>
-Street:    {{streetAddress}}
+Street:    {{address}}
 </div>
 <div>
 Created:    {{created}}
@@ -13,26 +12,45 @@ Created:    {{created}}
 Price cat:    {{priceCategory}}
 </div>
 <div>
-Lat:    {{latitude}}
-</div>
-<div>
-Long:    {{longitude}}
+    Postion:    {{latitude}}:{{longitude}}<br>
+    <a href="https://maps.google.com/?saddr=mylocation&daddr={{latitude}},{{longitude}}">Navigate</a>
 </div>
 <div>
 TIN:    {{tin}}
 </div>
+
 <div>
-contacts
-{{#if contact.length}}
-<table>
-{{#each contact}}
-<tr>
-    <td>{{kind}}</td>
-    <td>{{body}}</td>
-{{/each}}
-</table>
-{{else}}
-- No contacts -
-{{/if}}
+    Average order value: {{averageOrderValue}}
+</div>
+<div>
+    Average time between orders: {{averageTimeInterval}}
 </div>
 
+<br>
+<br>
+
+<a href="#!f/customer/{{id}}/tab/orders">Orders</a><br>
+<div id="customer-orders"></div>
+
+<a href="#!f/customer/{{id}}/tab/contacts">Contact details</a><br>
+<div id="customer-contacts"></div>
+
+<a href="#!f/customer/{{id}}/tab/complaints">Complaints</a><br>
+<div id="customer-complaints"></div>
+
+<a href="#!f/customer/{{id}}/tab/activity">Call activity</a><br>
+<div id="customer-activity"></div>
+
+<a href="#!f/customer/{{id}}/tab/tasks">Tasks</a><br>
+<div id="customer-tasks"></div>
+
+
+<hr>
+
+<a href="#!f/customer/{{id}}/tab/select-activity">Register call activity</a>
+<br>
+
+<div id="customer-activity-create" style="border:1px solid black;"></div>
+
+<a href="#!f/price-list/{{id}}">Product price list</a>
+<br>

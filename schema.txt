@@ -24,6 +24,7 @@ CREATE TABLE complaint (
     id           serial,
     created      timestamp without time zone   DEFAULT now()  NOT NULL,
     customer_id  bigint                                       NOT NULL,
+    title        character varying             DEFAULT ''     NOT NULL,
     description  character varying                            NOT NULL,
     kind         character varying                            NOT NULL,
     resolved     timestamp without time zone
@@ -41,7 +42,9 @@ CREATE TABLE complaint_product (
     complaint_id bigint                                       NOT NULL,
     description  character varying                            NOT NULL,
     product_id   bigint                                       NOT NULL,
-    quantity     bigint                                       NOT NULL
+    quantity     bigint                                       NOT NULL,
+    produced     timestamp without time zone                  NOT NULL,
+    expiry_date  timestamp without time zone                  NOT NULL
 );
 
 ALTER TABLE ONLY complaint_product
@@ -80,7 +83,22 @@ ALTER TABLE ONLY complaint
     ADD CONSTRAINT complaint_customer_id_fkey FOREIGN KEY (customer_id) REFERENCES customer(id);
 
 -------------------------------------------------------------------------------
--- Records customer-related activity.
+-- Registered customers pending confirmation by field staff.
+-------------------------------------------------------------------------------
+CREATE TABLE customer_pending (
+    id           serial,
+    name         character varying                            NOT NULL,
+    phone        character varying                            NOT NULL,
+    address      character varying(255)                       NOT NULL,
+    created      timestamp without time zone   DEFAULT now()  NOT NULL,
+    user_id      bigint                                       NOT NULL
+);
+
+ALTER TABLE ONLY customer_pending
+    ADD CONSTRAINT customer_pending_pkey PRIMARY KEY (id);
+
+-------------------------------------------------------------------------------
+-- Maintains customer-related activity data.
 -------------------------------------------------------------------------------
 CREATE TABLE customer_activity (
     id           serial,
@@ -88,7 +106,9 @@ CREATE TABLE customer_activity (
     customer_id  bigint                                       NOT NULL,
     description  character varying                            NOT NULL,
     kind         character varying                            NOT NULL,
-    user_id      bigint                                       NOT NULL
+    user_id      bigint                                       NOT NULL,
+    contact_type character varying,
+    entity_id    bigint
 );
 
 ALTER TABLE ONLY customer_activity
@@ -186,6 +206,22 @@ ALTER TABLE ONLY dispatch_order
     ADD CONSTRAINT dispatch_order_dispatch_id_fkey FOREIGN KEY (dispatch_id) REFERENCES dispatch(id);
 
 -------------------------------------------------------------------------------
+-- Associates weight values to each weight category and order.
+-------------------------------------------------------------------------------
+CREATE TABLE order_weight (
+    id           serial,
+    order_id     bigint                                       NOT NULL,
+    category_id  bigint                                       NOT NULL,
+    weight       double precision                             NOT NULL
+);
+
+ALTER TABLE ONLY order_weight
+    ADD CONSTRAINT order_weight_pkey PRIMARY KEY (id);
+
+ALTER TABLE ONLY order_weight
+    ADD CONSTRAINT unique_order_weight_category_id UNIQUE (order_id, category_id);
+
+-------------------------------------------------------------------------------
 -- Activity types used to categorize vehicle maintenance.
 -------------------------------------------------------------------------------
 CREATE TABLE maintenance_activity_type (
@@ -235,6 +271,9 @@ ALTER TABLE ONLY dispatch_order
 
 ALTER TABLE ONLY order_activity
     ADD CONSTRAINT order_activity_order_id_fkey FOREIGN KEY (order_id) REFERENCES order_object(id);
+
+ALTER TABLE ONLY order_weight
+    ADD CONSTRAINT order_weight_order_id_fkey FOREIGN KEY (order_id) REFERENCES order_object(id);
 
 -------------------------------------------------------------------------------
 -- Gives details of quantity and price for the products contained in each 
@@ -365,7 +404,7 @@ CREATE TABLE role_commission (
     id           serial,
     product_id   bigint                                       NOT NULL,
     role         character varying                            NOT NULL,
-    value        money                                        NOT NULL
+    value        character varying                            NOT NULL
 );
 
 ALTER TABLE ONLY role_commission
@@ -373,6 +412,9 @@ ALTER TABLE ONLY role_commission
 
 ALTER TABLE ONLY role_commission
     ADD CONSTRAINT role_commission_product_id_fkey FOREIGN KEY (product_id) REFERENCES product(id);
+
+ALTER TABLE ONLY role_commission 
+    ADD CONSTRAINT unique_role_commission_product UNIQUE (product_id, role);
 
 -------------------------------------------------------------------------------
 -- Maintains available and actual stock quantity information for the different 
@@ -477,6 +519,34 @@ ALTER TABLE ONLY order_object
 
 ALTER TABLE ONLY sdrp_user
     ADD CONSTRAINT user_depot_id_fkey FOREIGN KEY (depot_id) REFERENCES depot(id);
+
+-- -------------------------------------------------------------------------------
+-- -- User information.
+-- -------------------------------------------------------------------------------
+-- CREATE TABLE sphere_user (
+--     id           serial,
+--     name         character varying                            NOT NULL,
+--     password     character varying                            NOT NULL,
+--     role         character varying                            NOT NULL,
+--     salt         character varying                            NOT NULL,
+--     username     character varying                            NOT NULL,
+--     depot_id     bigint 
+-- );
+-- 
+-- ALTER TABLE ONLY sphere_user
+--     ADD CONSTRAINT sphere_user_pkey PRIMARY KEY (id);
+-- 
+-- ALTER TABLE ONLY sphere_user
+--     ADD CONSTRAINT sphere_unique_username UNIQUE (username);
+-- 
+-- ALTER TABLE ONLY customer_activity
+--     ADD CONSTRAINT sphere_customer_activity_user_id_fkey FOREIGN KEY (user_id) REFERENCES sphere_user(id);
+-- 
+-- ALTER TABLE ONLY order_object
+--     ADD CONSTRAINT sphere_order_object_user_id_fkey FOREIGN KEY (user_id) REFERENCES sphere_user(id);
+-- 
+-- ALTER TABLE ONLY sphere_user
+--     ADD CONSTRAINT sphere_user_depot_id_fkey FOREIGN KEY (depot_id) REFERENCES depot(id);
 
 -------------------------------------------------------------------------------
 -- Defines field staff and call center area-user relations.
@@ -586,6 +656,9 @@ ALTER TABLE ONLY product_limit
 
 ALTER TABLE ONLY vehicle
     ADD CONSTRAINT vehicle_category_id_fkey FOREIGN KEY (category_id) REFERENCES weight_category(id);
+
+ALTER TABLE ONLY order_weight
+    ADD CONSTRAINT order_weight_category_id_fkey FOREIGN KEY (category_id) REFERENCES weight_category(id);
 
 -------------------------------------------------------------------------------
 -------------------------------------------------------------------------------
