@@ -173,6 +173,7 @@ App.init({
         "!f/customers/pending"          : "fieldstaff_showPendingCustomers",
         "!f/customer/register/:id"      : "fieldstaff_registerCustomer",
         "!f/customers"                  : "fieldstaff_showCustomers",
+        "!f/customer/create"            : "fieldstaff_createCustomer",
         "!f/customer/:id"               : "fieldstaff_viewCustomer",
         "!f/customer/:id/tab/:tab"      : "fieldstaff_viewCustomer",
         // ---------------------------- :
@@ -209,10 +210,10 @@ App.init({
         // task                         :
         // ---------------------------- :
         "!f/tasks"                      : "fieldstaff_showTasks",
-  
         // ---------------------------- :
         // performance                  :
         // ---------------------------- :
+        "!f/performance"                : "fieldstaff_viewPerformance",
  
         // ---------------------------- :
         // user                         :
@@ -229,6 +230,7 @@ App.init({
         "!v/performance/today"          : "driver_performanceToday",
         "!v/performance/weekly"         : "driver_performanceWeekly",
         "!v/performance/monthly"        : "driver_performanceMonthly",
+
 
         // //////////////////////////// :
         // CALL CENTER                  :
@@ -3455,19 +3457,51 @@ App.init({
     editTaskSettings: function() {
         T.render('admin/task/settings', function(t) {
 
-            //var form = $('<form></form>').append(t());
+            Model.getSettings('task', function(settings) {
 
-            //$('#main').html(form);
+                var obj = JSON.parse(settings.value.replace(/\\/g, ''));
+
+                var form = $('<form></form>').append(t({settings: obj}));
+    
+                $('#main').html(form);
+   
+                form.validate({
+                    rules: {
+                        'contact-time-interval'  : 'required digits',
+                        'order-time-interval'    : 'required digits',
+                        'visit-time-interval'    : 'required digits',
+                        'inactive-time-interval' : 'required digits'
+                    },
+                    submitHandler: function(form) {
+
+                        var obj = {
+                            contactTimeInterval  : form['contact-time-interval'].value,
+                            orderTimeInterval    : form['order-time-interval'].value,
+                            visitTimeInterval    : form['visit-time-interval'].value,
+                            inactiveTimeInterval : form['inactive-time-interval'].value
+                        };
+
+                        Storage.process({
+                            type        : 'PUT',
+                            resource    : 'settings/task',
+                            data        : { value: JSON.stringify(obj) },
+                            description : 'Update task settings',
+                            hint        : 'The task settings could not be updated: ',
+                            complete    : function() {
+                                App.refresh();
+                            },
+                            successMsg  : 'Task settings were updated.'
+                        });
 
 
-            //form.validate({
-            //    rules: {
-            //        
-            //    },
-            //    submitHandler: function(form) {
-            //    }
-            //});
+                    }
+                });
+ 
+                
+            });
             
+
+           
 
         });
     },
@@ -3503,7 +3537,7 @@ App.init({
                         var form = $('<form></form>').append(t(customer));
         
                         $('#main').html(form);
-    
+
                         form.validate({
                             rules: {
                                 "name"           : "required",
@@ -3575,6 +3609,80 @@ App.init({
             });
 
         });
+    },
+    fieldstaff_createCustomer: function() {
+
+        T.render('fieldstaff/customer/create', function(t) {
+
+            Storage.chain(Model.getAreas)
+                   .chain(Model.getPriceCategories)
+                   .using(function(areas, priceCategories) {
+   
+                var form = $('<form></form>').append(t({
+                    priceCategory : priceCategories,
+                    area          : areas
+                }));
+
+                $('#main').html(form);
+
+                var geoPos = null;
+
+                if (navigator.geolocation) {
+                    var updatePosition = function(position) {
+                        geoPos = position.coords;
+                        $('input[name="latitude"]').val(geoPos.latitude);
+                        $('input[name="longitude"]').val(geoPos.longitude);
+                        $('#geo-meta').html('Location accuracy: ' + geoPos.accuracy + ' meters');
+                    };
+                    navigator.geolocation.watchPosition(updatePosition, function() {}, {enableHighAccuracy:true}); 
+                    navigator.geolocation.getCurrentPosition(updatePosition, function() {}, {enableHighAccuracy:true, maximumAge:Infinity, timeout:0});
+                } 
+
+                form.validate({
+                    rules: {
+                        "name"           : "required",
+                        "address"        : "required",
+                        "tin"            : "required",
+                        "phone"          : "required"
+                    },
+                    submitHandler: function(form) {
+
+                        var data = {
+                            name          : form['name'].value,
+                            latitude      : form['latitude'].value,
+                            longitude     : form['longitude'].value,
+                            tin           : form['tin'].value,
+                            phone         : form['phone'].value,
+                            address       : form['address'].value,
+                            isActive      : form['is-active'].checked,
+                            areaId        : form['area'].value,
+                            priceCatId    : form['price-category'].value
+                        };
+
+                        Storage.process({
+                            type        : 'POST',
+                            resource    : 'customer',
+                            data        : data,
+                            description : 'Create customer "' + data.name + '".',
+                            purge       : 'customers',
+                            hint        : 'The customer could not be created: ',
+                            feedback    : {
+                                'SQL_UNIQUE_CONSTRAINT_VIOLATION': 'A customer with the name "' + data.name + '" already exists.'
+                            },
+                            complete: function() {
+                                window.location.hash = '!f/customers';
+                            },
+                            successMsg: 'Customer "' + data.name + '" was successfully created.'
+                        });
+
+                    }
+                });
+
+            });
+
+        });
+
+
     },
     fieldstaff_viewCustomer: function(id, tab) {
         T.render('fieldstaff/customer/view', function(t) {
@@ -3712,6 +3820,8 @@ App.init({
                                                     T.render('fieldstaff/order/create', function(t_) {
                                                         T.render('fieldstaff/order/product', function(t__) {
                             
+
+
                                                             // Temporarily disable onRequestBegin hook
                                                             var callback = App.onRequestBegin;
                                                             App.onRequestBegin = function() {};
@@ -3725,29 +3835,31 @@ App.init({
                                                                 $('#form-add-order').html(form);
     
                                                                 var selected = [];
+
+                                                                var productBasket = {};
     
-                                                                $('#order-validate').click(function() {
+                                                                //$('#order-validate').click(function() {
     
-                                                                    var qts = [];
-                                                                    var products = [];
+                                                                //    var qts = [];
+                                                                //    var products = [];
     
-                                                                    $('.order-product-quantity').each(function(item) {
-                                                                        products.push($(this).data('id'));
-                                                                        qts.push(Number($(this).val()));
-                                                                    });
+                                                                //    $('.order-product-quantity').each(function(item) {
+                                                                //        products.push($(this).data('id'));
+                                                                //        qts.push(Number($(this).val()));
+                                                                //    });
     
-                                                                    Storage.process({
-                                                                        type        : 'POST',
-                                                                        resource    : '/calculate-least-weight',
-                                                                        data        : {qts: qts, products: products},
-                                                                        complete    : function(resp) {
+                                                                //    Storage.process({
+                                                                //        type        : 'POST',
+                                                                //        resource    : '/calculate-least-weight',
+                                                                //        data        : {qts: qts, products: products},
+                                                                //        complete    : function(resp) {
     
-                                                                            console.log(resp);
+                                                                //            console.log(resp);
     
-                                                                        },
-                                                                    });
+                                                                //        },
+                                                                //    });
     
-                                                                });
+                                                                //});
     
 
 
@@ -3805,6 +3917,7 @@ App.init({
 
                                                                 $('#order-add-product').click(function() {
 
+
                                                                     var productId = $('#order-product-select').val(),
                                                                         product = products[productId];
 
@@ -3813,6 +3926,7 @@ App.init({
                                                                     $('#order-item-add-quantity').val(1);
 
                                                                     update(quantity, productId, function(weight, available) {
+
 
                                                                         if (quantity <= available && weight <= 1) {
 
@@ -3827,23 +3941,22 @@ App.init({
 
                                                                             var price = product.category[customer.priceCatId].price * quantity;
 
-                                                                            alert(quantity);
-
                                                                             $('#prod-' + productId + '-sub-total').html(price);
+
+                                                                            productBasket[productId] = quantity;
 
                                                                         } else {
                                                                             var element = $('#order-product-select').parent();
                                                                             if (quantity > available) {
                                                                                 element.append('Insufficient stock quantity available.');
                                                                             } else {
-                                                                                element.appaned('The selected quantity is too large for any available vehicle.');
+                                                                                element.append('The selected quantity is too large for any available vehicle.');
                                                                             }
                                                                         }
 
                                                                     });
 
-                                                                    //
-
+                                                                    return false;
 
                                                                 });
                                                                
@@ -3860,6 +3973,8 @@ App.init({
 
                                                                                 $(this).parent().parent().remove();
                                                                                 $('#order-product-select').append('<option value="' + pid + '">' + product.name + '</option>');
+
+                                                                                delete productBasket[pid];
 
                                                                             });
 
@@ -3884,6 +3999,9 @@ App.init({
                                                                                         var price = product.category[customer.priceCatId].price * quantity;
                                                                                         $('#prod-' + productId + '-sub-total').html(price);
 
+                                                                                        productBasket[productId] = quantity;
+
+
                                                                                     } else {
                                                                                         if (quantity > available) {
                                                                                             $('#prod-' + productId + '-sub-total').html('Insufficient stock quantity available.');
@@ -3905,15 +4023,74 @@ App.init({
                                                                 form.validate({
                                                                     submitHandler: function(form) {
     
-                                                                        // create order
-    
-                                                                    }
+                                                                        var qts = [];
+                                                                        var products = [];
+
+                                                                        $('.order-product-quantity').each(function(item) {
+                                                                            products.push($(this).data('id'));
+                                                                            qts.push(Number($(this).val()));
+                                                                        });
+
+                                                                        Storage.process({
+                                                                               type        : 'POST',
+                                                                               resource    : '/calculate-least-weight',
+                                                                               data        : {qts: qts, products: products},
+                                                                               success     : function(resp) {
+
+                                                                                   if (resp.weight <= 1) {
+
+        
+                                                                                        var items = [];
+                
+                                                                                        for (var key in productBasket) {
+                                                                                            items.push({
+                                                                                                productId : key,
+                                                                                                quantity  : productBasket[key]
+                                                                                            });
+                                                                                        }
+                
+                                                                                        var date = new Date();
+                     
+                                                                                        var data = {
+                                                                                            datetime    : date.toISOString(),
+                                                                                            customerId  : id,
+                                                                                            depotId     : depotId,
+                                                                                            userId      : App.user().id,
+                                                                                            contactType : contactType,
+                                                                                            products    : items
+                                                                                        };
+                         
+                                                                                        Storage.process({
+                                                                                            type        : 'POST',
+                                                                                            resource    : '!order',
+                                                                                            data        : data,
+                                                                                            description : 'Create new order for customer "' + customer.name + '".',
+                                                                                            hint        : 'The order could not be created: ',
+                                                                                            complete: function() {
+                                                                                                window.location.hash = '!f/customer/' + id;
+                                                                                            },
+                                                                                            successMsg: 'The order was created.'
+                                                                                        });
+                
+                
+                                                                                    } else {
+                                                                                       alert('This order exceeds the maximum vehicle capacity.');
+                                                                                    }
+
+                                                                               }
+                                                                        });
+
+                                                                        }
+
+                                                                    });
+
                                                                 });
-    
+
                                                             });
-                            
+                                                        
                                                         });
-                                                    });
+
+                            
                                                     break;
                                                 case 'activity-service-complaint':
                                                     T.render('fieldstaff/complaint/service/create', function(t_) {
@@ -4153,6 +4330,34 @@ App.init({
                         
                         
                                                     });
+                                                    break;
+                                                case 'activity-none':
+
+                                                    var customerId = id;
+
+                                                    var date = new Date();
+
+                                                    var data = {
+                                                        datetime    : date.toISOString(),
+                                                        description : 'No associated activity.',
+                                                        kind        : 'no-activity',
+                                                        userId      : App.user().id,
+                                                        contactType : contactType,
+                                                        entityId    : customerId
+                                                    };
+                                
+                                                    Storage.process({
+                                                        type        : 'POST',
+                                                        resource    : 'activity/customer/' + customerId,
+                                                        data        : data,
+                                                        description : 'Register a customer call.',
+                                                        hint        : 'The activity could not be registered: ',
+                                                        complete: function() {
+                                                            window.location.hash = '!f/customer/' + customerId;
+                                                        },
+                                                        successMsg  : 'The customer activity for "' + customer.name + '" has been registered.'
+                                                    });
+
                                                     break;
                                                 default:
                                                     break;
@@ -4452,22 +4657,33 @@ App.init({
     },
 
     fieldstaff_showStock: function() {
-        T.render('fieldstaff/stock/index', function(t) {
-            Model.getDepotForFieldstaffUser(function(depotId) {
-                Model.getDepot(depotId, function(depot) {
 
-                    Storage.load('stock/depot/' + depotId, 'depot-' + depotId + '-stock', function(stock) {
-    
-                        $('#main').html(t({
-                            depot  : depot, 
-                            item   : stock
-                        }));
-    
-                    });
+        T.render('fieldstaff/stock/summary', function(t) {
+            Model.getDepotForCurrentUser(function(depotId) {
 
+                Model.getStockForDepot(depotId, function(stock) {
+                    $('#main').html(t({item: stock}));
                 });
+
             });
         });
+
+        //T.render('fieldstaff/stock/index', function(t) {
+        //    Model.getDepotForFieldstaffUser(function(depotId) {
+        //        Model.getDepot(depotId, function(depot) {
+
+        //            Storage.load('stock/depot/' + depotId, 'depot-' + depotId + '-stock', function(stock) {
+    
+        //                $('#main').html(t({
+        //                    depot  : depot, 
+        //                    item   : stock
+        //                }));
+    
+        //            });
+
+        //        });
+        //    });
+        //});
     },
     fieldstaff_showDispatches: function() {
         T.render('fieldstaff/dispatch/index', function(t) {
@@ -4486,14 +4702,49 @@ App.init({
             });
         });
     },
+    fieldstaff_viewPerformance: function() {
+        
+        T.render('fieldstaff/user/performance', function(t) {
+
+            var userId = App.user().id;
+
+            Model.getTodaysTotalOrderValueForUser(userId, function(value) {
+                Model.getTodaysCustomerCountForUser(userId, function(count) {
+                    Model.getTodaysCommissionForUser(userId, function(sales) {
+
+                        $('#main').html(t({
+                            total      : value.total,
+                            customers  : count.customers,
+                            commission : sales.commission
+                        }));
+
+                    });
+                });
+            });
+
+        });
+
+    },
     driver_showOrders: function() {
 
-        $('#main').html('show orders');
+        Model.getVehicleForCurrentUser(function(vehicle) {
+            Model.getOrders(function(orders) {
+
+                $('#main').html('show orders');
+
+            });
+        });
 
     },
     driver_showDeliveredOrders: function() {
 
-        $('#main').html('show del. orders');
+        Model.getVehicleForCurrentUser(function(vehicle) {
+            Model.getOrders(function(orders) {
+
+                $('#main').html('show del. orders');
+
+            });
+        });
 
     },
     driver_viewDepot: function() {
@@ -4503,7 +4754,13 @@ App.init({
     },
     driver_showStock: function() {
 
-        $('#main').html('show stock');
+        Model.getVehicleForCurrentUser(function(vehicle) {
+
+            console.log(vehicle);
+
+            $('#main').html('driver show stock');
+
+        });
 
     },
     driver_showReturnStock: function() {
@@ -4813,29 +5070,31 @@ App.init({
                                                                 $('#form-add-order').html(form);
     
                                                                 var selected = [];
+
+                                                                var productBasket = {};
     
-                                                                $('#order-validate').click(function() {
+                                                                //$('#order-validate').click(function() {
     
-                                                                    var qts = [];
-                                                                    var products = [];
+                                                                //    var qts = [];
+                                                                //    var products = [];
     
-                                                                    $('.order-product-quantity').each(function(item) {
-                                                                        products.push($(this).data('id'));
-                                                                        qts.push(Number($(this).val()));
-                                                                    });
+                                                                //    $('.order-product-quantity').each(function(item) {
+                                                                //        products.push($(this).data('id'));
+                                                                //        qts.push(Number($(this).val()));
+                                                                //    });
     
-                                                                    Storage.process({
-                                                                        type        : 'POST',
-                                                                        resource    : '/calculate-least-weight',
-                                                                        data        : {qts: qts, products: products},
-                                                                        complete    : function(resp) {
+                                                                //    Storage.process({
+                                                                //        type        : 'POST',
+                                                                //        resource    : '/calculate-least-weight',
+                                                                //        data        : {qts: qts, products: products},
+                                                                //        complete    : function(resp) {
     
-                                                                            console.log(resp);
+                                                                //            console.log(resp);
     
-                                                                        },
-                                                                    });
+                                                                //        },
+                                                                //    });
     
-                                                                });
+                                                                //});
     
 
 
@@ -4893,6 +5152,7 @@ App.init({
 
                                                                 $('#order-add-product').click(function() {
 
+
                                                                     var productId = $('#order-product-select').val(),
                                                                         product = products[productId];
 
@@ -4901,6 +5161,7 @@ App.init({
                                                                     $('#order-item-add-quantity').val(1);
 
                                                                     update(quantity, productId, function(weight, available) {
+
 
                                                                         if (quantity <= available && weight <= 1) {
 
@@ -4915,23 +5176,22 @@ App.init({
 
                                                                             var price = product.category[customer.priceCatId].price * quantity;
 
-                                                                            alert(quantity);
-
                                                                             $('#prod-' + productId + '-sub-total').html(price);
+
+                                                                            productBasket[productId] = quantity;
 
                                                                         } else {
                                                                             var element = $('#order-product-select').parent();
                                                                             if (quantity > available) {
                                                                                 element.append('Insufficient stock quantity available.');
                                                                             } else {
-                                                                                element.appaned('The selected quantity is too large for any available vehicle.');
+                                                                                element.append('The selected quantity is too large for any available vehicle.');
                                                                             }
                                                                         }
 
                                                                     });
 
-                                                                    //
-
+                                                                    return false;
 
                                                                 });
                                                                
@@ -4948,6 +5208,8 @@ App.init({
 
                                                                                 $(this).parent().parent().remove();
                                                                                 $('#order-product-select').append('<option value="' + pid + '">' + product.name + '</option>');
+
+                                                                                delete productBasket[pid];
 
                                                                             });
 
@@ -4972,6 +5234,9 @@ App.init({
                                                                                         var price = product.category[customer.priceCatId].price * quantity;
                                                                                         $('#prod-' + productId + '-sub-total').html(price);
 
+                                                                                        productBasket[productId] = quantity;
+
+
                                                                                     } else {
                                                                                         if (quantity > available) {
                                                                                             $('#prod-' + productId + '-sub-total').html('Insufficient stock quantity available.');
@@ -4993,7 +5258,63 @@ App.init({
                                                                 form.validate({
                                                                     submitHandler: function(form) {
     
-                                                                        // create order
+                                                                        var qts = [];
+                                                                        var products = [];
+
+                                                                        $('.order-product-quantity').each(function(item) {
+                                                                            products.push($(this).data('id'));
+                                                                            qts.push(Number($(this).val()));
+                                                                        });
+
+                                                                        Storage.process({
+                                                                               type        : 'POST',
+                                                                               resource    : '/calculate-least-weight',
+                                                                               data        : {qts: qts, products: products},
+                                                                               success     : function(resp) {
+
+                                                                                   if (resp.weight <= 1) {
+
+        
+                                                                                        var items = [];
+                
+                                                                                        for (var key in productBasket) {
+                                                                                            items.push({
+                                                                                                productId : key,
+                                                                                                quantity  : productBasket[key]
+                                                                                            });
+                                                                                        }
+                
+                                                                                        var date = new Date();
+                     
+                                                                                        var data = {
+                                                                                            datetime    : date.toISOString(),
+                                                                                            customerId  : id,
+                                                                                            depotId     : depotId,
+                                                                                            userId      : App.user().id,
+                                                                                            contactType : contactType,
+                                                                                            products    : items
+                                                                                        };
+                         
+                                                                                        Storage.process({
+                                                                                            type        : 'POST',
+                                                                                            resource    : '!order',
+                                                                                            data        : data,
+                                                                                            description : 'Create new order for customer "' + customer.name + '".',
+                                                                                            hint        : 'The order could not be created: ',
+                                                                                            complete: function() {
+                                                                                                window.location.hash = '!c/customer/' + id;
+                                                                                            },
+                                                                                            successMsg: 'The order was created.'
+                                                                                        });
+                
+                
+                                                                                    } else {
+                                                                                       alert('This order exceeds the maximum vehicle capacity.');
+                                                                                    }
+
+                                                                               }
+                                                                        });
+
     
                                                                     }
                                                                 });
@@ -5234,6 +5555,35 @@ App.init({
                         
                                                     });
                                                     break;
+                                                case 'activity-none':
+
+                                                    var customerId = id;
+
+                                                    var date = new Date();
+
+                                                    var data = {
+                                                        datetime    : date.toISOString(),
+                                                        description : 'No associated activity.',
+                                                        kind        : 'no-activity',
+                                                        userId      : App.user().id,
+                                                        contactType : contactType,
+                                                        entityId    : customerId
+                                                    };
+                                
+                                                    Storage.process({
+                                                        type        : 'POST',
+                                                        resource    : 'activity/customer/' + customerId,
+                                                        data        : data,
+                                                        description : 'Register a customer call.',
+                                                        hint        : 'The call could not be registered: ',
+                                                        complete: function() {
+                                                            window.location.hash = '!c/customer/' + customerId;
+                                                        },
+                                                        successMsg  : 'The customer call for "' + customer.name + '" has been registered.'
+                                                    });
+
+                                                    break;
+
                                                 default:
                                                     break;
                                             }
@@ -6249,22 +6599,25 @@ App.init({
 
                                         if (ids.length) {
 
-                                            Storage.request({
-                                                type: 'POST',
-                                                resource: 'order-load/vehicle/' + vehicleId,
-                                                data: {
-                                                    orderIds: ids
-                                                },
-                                                success: function(resp) {
-                                                    if (resp.load > 1) {
-                                                        alert('Vehicle overloaded!');
-                                                        box.prop('checked', false);
-                                                    } else {
-                                                        var str = (resp.load*100) + '%';
-                                                        $('#dispatch-load-value').html(str);
-                                                    }
-                                                }
-                                            });
+                                            //Storage.load('order-load/vehicle/' + , 'time-average-' + customerId, function() {
+                                            //});
+
+                                            //Storage.request({
+                                            //    type: 'POST',
+                                            //    resource: 'order-load/vehicle/' + vehicleId,
+                                            //    data: {
+                                            //        orderIds: ids
+                                            //    },
+                                            //    success: function(resp) {
+                                            //        if (resp.load > 1) {
+                                            //            alert('Vehicle overloaded!');
+                                            //            box.prop('checked', false);
+                                            //        } else {
+                                            //            var str = (resp.load*100) + '%';
+                                            //            $('#dispatch-load-value').html(str);
+                                            //        }
+                                            //    }
+                                            //});
 
                                         }
 
@@ -6684,13 +7037,6 @@ App.init({
         });
     },
 
-//    callcenter_registerActivity: function(customerId) {
-//    },
-//    queueing_viewOrder: function(id) {
-//
-//        $('#main').html('queueing: view order');
-//
-//    },
     queueing_viewProduct: function(id) {
 
         $('#main').html('queueing: view product');
