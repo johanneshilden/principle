@@ -1,21 +1,25 @@
 <h5>Call center task settings</h5>
 
 <label>Customer contact follow-up time interval</label><br>
-<input type="text">
+<input name="contact-time-interval" type="text" value="{{settings.contactTimeInterval}}">
+days
 <br>
 
-<label>Customer order follow-up time interval</label><br>
-<input type="text">
+<label>Customer order inactive follow-up</label><br>
+<input name="order-time-interval" type="text" value="{{settings.orderTimeInterval}}">
+days
 <br>
 
 <h5>Field staff task settings</h5>
 
-<label>Customer visit time interval</label><br>
-<input type="text">
+<label>Customer not visited time interval</label><br>
+<input name="visit-time-interval" type="text" value="{{settings.visitTimeInterval}}">
+days
 <br>
 
 <label>Order inactivity time interval</label><br>
-<input type="text">
+<input name="inactive-time-interval" type="text" value="{{settings.inactiveTimeInterval}}">
+days
 <br>
 
 <input type="submit">

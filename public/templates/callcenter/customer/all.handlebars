@@ -1,5 +1,6 @@
-<a href="#customer/create">Create new customer</a>
-{{#when customer}}
+<a href="#!c/customer/create">Register customer</a>
+
+<br><br>
 <table>
     <thead>
         <tr>
@@ -9,28 +10,25 @@
             <th>Street</th>
             <th>TIN</th>
             <th>Phone</th>
-            <th>Status</th>
+            <th>Active</th>
             <th>Price class</th>
+            <th>Area</th>
         </tr>
     </thead>
     <tbody>
         {{#each customer}}
         <tr>
             <td>{{id}}</td>
-            <td><a href="#customer/{{id}}">{{name}}</a></td>
+            <td>{{name}}</td>
             <td>{{latitude}}:{{longitude}}</td>
             <td>{{address}}</td>
             <td>{{tin}}</td>
             <td>{{phone}}</td>
-            <td>{{#if isActive}}active{{else}}inactive{{/if}}</td>
+            <td>{{isActive}}</td>
             <td>{{priceCategory}}</td>
-            <td><a href="#customer/edit/{{id}}">Edit</a></td>
-            <td><a href="#complaints/customer/{{id}}">Complaints</a></td>
-            <td><a href="#orders/customer/{{id}}">Orders</a></td>
+            <td>{{areaName}}</td>
         </tr>
         {{/each}}
     </tbody>
 </table>
-{{else}}
-No customers.
-{{/when}}
+

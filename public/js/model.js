@@ -57,7 +57,7 @@ var Model = {
 
         Storage.load('area-user', 'area-users', yield);
 
-    },
+   },
 
     getAreasForCurrentUser: function(yield) {
 
@@ -419,6 +419,21 @@ var Model = {
 
     },
 
+    getVehicleForCurrentUser: function(yield) {
+        Model.getUser(App.user().id, function(user) {
+
+           Storage.load('vehicle/driver/' + user.id, 'vehicle-user-' + user.id, function(vehicle) {
+
+               console.log(vehicle);
+
+               //yield(vehicle);
+
+           });
+
+
+        });
+    },
+
     getProducts: function(yield) {
     
         var resources = {
@@ -564,6 +579,18 @@ var Model = {
     getOrders: function(yield) {
 
         Storage.collection('order', 'orders', yield);
+
+    },
+
+    getOrder: function(id, yield) {
+        
+        if (typeof yield === 'undefined') {
+            return _.partial(arguments.callee, arguments[0]);
+        }
+
+        Model.getOrders(function(orders) {
+            Storage.find(id, orders, yield);
+        });
 
     },
 
@@ -801,77 +828,22 @@ var Model = {
     },
     getFieldstaffUserTasks: function(yield) {
 
-        var days = 10; // temp
         var tasks = [];
 
-        Storage.load('/customer-inactive/' + days, 'customer-inactive', function(inactive) {
+        Model.getSettings('task', function(settings) {
 
-            Storage.load('/activity/pending/callback', 'activity-pending-callback', function(pending) {
+            var obj;
+            try {
+                obj = JSON.parse(settings.value.replace(/\\/g, ''));
 
-                Storage.load('/activity/pending/visit', 'activity-pending-visit', function(pendingVisit) {
-
-                    Model.getAreasForCurrentUser(function(areas) {
-                        Model.getCustomers(function(customers) {
-
-                            var areaCustomers = Model.filter(customers, function(item) {
-                                return _.contains(areas, item.areaId);
-                            });
-
-                            _.each(pending, function(task) {
-                                if (areaCustomers.hasOwnProperty(task.customerId)) {
-                                    tasks.push({
-                                        type         : 'Scheduled Call Back',
-                                        customerName : task.customerName,
-                                        customerId   : task.customerId
-                                    });
-                                }
-                            });
-
-                            _.each(pendingVisit, function(task) {
-                                if (areaCustomers.hasOwnProperty(task.customerId)) {
-                                    tasks.push({
-                                        type         : 'Scheduled Visit',
-                                        customerName : task.customerName,
-                                        customerId   : task.customerId
-                                    });
-                                }
-                            });
-
-                            _.each(inactive, function(task) {
-                                if (areaCustomers.hasOwnProperty(task.customerId)) {
-                                    tasks.push({
-                                        type         : 'Inactivity Followup',
-                                        customerName : task.customerName,
-                                        customerId   : task.customerId
-                                    });
-                                }
-                            });
-
-                            yield(tasks);
-
-                        });
-                    });
-                });
-            });
-        });
- 
-    },
-    getCallcenterUserTasks: function(yield) {
-
-        var days = 10; // temp
-        var tasks = [];
-
-        Storage.load('/customer-followup/' + days, 'customer-followup', function(followup) {
-            Storage.load('/customer-inactive/' + days, 'customer-inactive', function(inactive) {
-                Storage.load('/customer-order-followup', 'customer-order-followup', function(average) {
-
-                    Storage.load('/activity/pending/callback', 'activity-pending-callback', function(pending) {
-
-                        Model.getAreasForCurrentUser(function(areas) {
-                           Model.getCustomers(function(customers) {
-
-                                Model.getOrdersWithStatus('delivered', function(orders) {
-            
+            Storage.load('/customer-inactive/' + obj.inactiveTimeInterval, 'customer-inactive', function(inactive) {
+                Storage.load('/activity/pending/callback', 'activity-pending-callback', function(pending) {
+                    Storage.load('/activity/pending/visit', 'activity-pending-visit', function(pendingVisit) {
+                        Storage.load('/customer-visit-followup/' + obj.visitTimeInterval, 'customer-visit-followup', function(visitFollowup) {
+    
+                            Model.getAreasForCurrentUser(function(areas) {
+                                Model.getCustomers(function(customers) {
+        
                                     var areaCustomers = Model.filter(customers, function(item) {
                                         return _.contains(areas, item.areaId);
                                     });
@@ -885,17 +857,17 @@ var Model = {
                                             });
                                         }
                                     });
-
-                                    _.each(followup, function(task) {
+        
+                                    _.each(pendingVisit, function(task) {
                                         if (areaCustomers.hasOwnProperty(task.customerId)) {
                                             tasks.push({
-                                                type         : 'Contact Followup',
+                                                type         : 'Scheduled Visit',
                                                 customerName : task.customerName,
                                                 customerId   : task.customerId
                                             });
                                         }
                                     });
-                
+        
                                     _.each(inactive, function(task) {
                                         if (areaCustomers.hasOwnProperty(task.customerId)) {
                                             tasks.push({
@@ -905,41 +877,128 @@ var Model = {
                                             });
                                         }
                                     });
-                
-                                    _.each(average, function(task) {
+    
+                                    _.each(visitFollowup, function(task) {
                                         if (areaCustomers.hasOwnProperty(task.customerId)) {
                                             tasks.push({
-                                                type         : 'Order Followup',
+                                                type         : 'Visit Followup',
                                                 customerName : task.customerName,
                                                 customerId   : task.customerId
                                             });
                                         }
                                     });
-                
-                                    _.each(orders, function(task) {
-                                        if (areaCustomers.hasOwnProperty(task.customerId)) {
-                                            tasks.push({
-                                                type         : 'Delivery Confirmation',
-                                                customerName : task.customerName,
-                                                customerId   : task.customerId
-                                            });
-                                        }
-                                    });
-     
+         
                                     yield(tasks);
-        
-                            });
-
+    
+                                });
                             });
                         });
-    
-
                     });
+                });
+            });
 
+            } catch(e) {
 
+                console.log('Invalid task settings.');
+
+            }
+
+        });
+ 
+    },
+    getCallcenterUserTasks: function(yield) {
+
+        var tasks = [];
+
+        Model.getSettings('task', function(settings) {
+
+            var obj = JSON.parse(settings.value.replace(/\\/g, ''));
+
+            Storage.load('/customer-followup/' + obj.contactTimeInterval, 'customer-followup', function(followup) {
+                Storage.load('/customer-inactive/' + obj.orderTimeInterval, 'customer-inactive', function(inactive) {
+                    Storage.load('/customer-order-followup', 'customer-order-followup', function(average) {
+    
+                        Storage.load('/activity/pending/callback', 'activity-pending-callback', function(pending) {
+    
+                            Model.getAreasForCurrentUser(function(areas) {
+                               Model.getCustomers(function(customers) {
+    
+                                    Model.getOrdersWithStatus('delivered', function(orders) {
+                
+                                        var areaCustomers = Model.filter(customers, function(item) {
+                                            return _.contains(areas, item.areaId);
+                                        });
+            
+                                        _.each(pending, function(task) {
+                                            if (areaCustomers.hasOwnProperty(task.customerId)) {
+                                                tasks.push({
+                                                    type         : 'Scheduled Call Back',
+                                                    customerName : task.customerName,
+                                                    customerId   : task.customerId
+                                                });
+                                            }
+                                        });
+    
+                                        _.each(followup, function(task) {
+                                            if (areaCustomers.hasOwnProperty(task.customerId)) {
+                                                tasks.push({
+                                                    type         : 'Contact Followup',
+                                                    customerName : task.customerName,
+                                                    customerId   : task.customerId
+                                                });
+                                            }
+                                        });
+                    
+                                        _.each(inactive, function(task) {
+                                            if (areaCustomers.hasOwnProperty(task.customerId)) {
+                                                tasks.push({
+                                                    type         : 'Inactivity Followup',
+                                                    customerName : task.customerName,
+                                                    customerId   : task.customerId
+                                                });
+                                            }
+                                        });
+                    
+                                        _.each(average, function(task) {
+                                            if (areaCustomers.hasOwnProperty(task.customerId)) {
+                                                tasks.push({
+                                                    type         : 'Order Followup',
+                                                    customerName : task.customerName,
+                                                    customerId   : task.customerId
+                                                });
+                                            }
+                                        });
+                    
+                                        _.each(orders, function(task) {
+                                            if (areaCustomers.hasOwnProperty(task.customerId)) {
+                                                tasks.push({
+                                                    type         : 'Delivery Confirmation',
+                                                    customerName : task.customerName,
+                                                    customerId   : task.customerId
+                                                });
+                                            }
+                                        });
+         
+                                        yield(tasks);
+            
+                                });
+    
+                                });
+                            });
+        
+    
+                        });
+    
+    
+                    });
                 });
             });
         });
+
+    },
+    getSettings: function(key, yield) {
+
+        Storage.load('/settings/' + key, 'settings-' + key, yield);
 
     },
     readableRoleName: function(role) {

@@ -3135,24 +3135,295 @@ App.init({
         });
     },
     editOrder: function(id) {
-        T.render('admin/order/edit', function(t) {
 
-            Model.getOrders(function(orders) {
-                Storage.find(id, orders, function(order) {
-                    Model.getProductsForOrder(id, function(products) { 
-                        Model.getProducts(function(allProducts) {
+            Model.getOrder(id, function(order) {
+            Model.getProductsForOrder(id, function(orderProducts) { 
+            Model.getCustomer(order.customerId, function(customer) {
 
-                            order.product = products;
-                            order.all = allProducts;
+                Model.getProducts(function(products) {
 
-                            $('#main').html(t(order));
+                    T.render('fieldstaff/order/create', function(t_) {
+                        T.render('fieldstaff/order/product', function(t__) {
 
-                        });
-                    });
-                });
-            });
+                            var depotId = order.depotId;
 
-        });
+                            if (!depotId) {
+                                alert('No order depot.');
+                                // ?
+                                return;
+                            }
+
+                                                                var form = $('<form></form>');
+                                                                form.append(t_({product: products}));
+                                                                $('#main').html(form);
+    
+                                                                var selected = [];
+
+                                                                var productBasket = {};
+
+                                                                _.each(orderProducts, function(product) {
+                                                                    productBasket[product.id] = product.quantity;
+                                                                    $('#order-products tbody').append(t__(product));
+                                                                });
+
+                                                                var update = function(quantity, productId, callback) {
+                                                                        
+//                                                                        var product = products[productId];
+
+                                                                        //
+    
+                                                                        Storage.process({
+                                                                            type        : 'GET',
+                                                                            resource    : '/stock/product/' + productId + '/depot/' + depotId,
+                                                                            success     : function(resp) {
+    
+                                                                                var available = resp.available;
+    
+                                                                                var qts = [];
+                                                                                var products = [];
+        
+                                                                                $('.order-product-quantity').each(function(item) {
+                                                                                    products.push($(this).data('id'));
+                                                                                    qts.push(Number($(this).val()));
+                                                                                });
+    
+                                                                                products.push(Number(productId));
+                                                                                qts.push(quantity);
+    
+                                                                                Storage.process({
+                                                                                       type        : 'POST',
+                                                                                       resource    : '/calculate-least-weight',
+                                                                                       data        : {qts: qts, products: products},
+                                                                                       success     : function(resp) {
+                                                                                           callback(resp.weight, available);
+                                                                                       }
+                                                                                });
+    
+                                                                                //$('input[name="prod-' + productId + '-quantity"]').rules('add', {
+                                                                                //    'required' : true,
+                                                                                //    digits     : true,
+                                                                                //    min        : 1,
+                                                                                //    max        : resp.available
+                                                                                //});
+    
+                                                                            }
+                                                                        });
+     
+    
+                                                                    };
+
+
+
+
+
+
+
+                                                                $('#order-add-product').click(function() {
+
+
+                                                                    var productId = $('#order-product-select').val(),
+                                                                        product = products[productId];
+
+                                                                    var quantity = Number($('#order-item-add-quantity').val());
+
+                                                                    $('#order-item-add-quantity').val(1);
+
+                                                                    update(quantity, productId, function(weight, available) {
+
+
+                                                                        if (quantity <= available && weight <= 1) {
+
+                                                                            product.quantity = quantity;
+
+                                                                            $('#order-products tbody').append(t__(product));
+                                                                            $('#order-product-select option[value="' + productId + '"]').remove();
+            
+                                                                            //$('input[name="prod-' + productId + '-quantity"]').rules('add', 'required digits');
+            
+                                                                            selected.push(productId);
+
+                                                                            var price = product.category[customer.priceCatId].price * quantity;
+
+                                                                            $('#prod-' + productId + '-sub-total').html(price);
+
+                                                                            productBasket[productId] = quantity;
+
+                                                                        } else {
+                                                                            var element = $('#order-product-select').parent();
+                                                                            if (quantity > available) {
+                                                                                element.append('Insufficient stock quantity available.');
+                                                                            } else {
+                                                                                element.append('The selected quantity is too large for any available vehicle.');
+                                                                            }
+                                                                        }
+
+                                                                    });
+
+                                                                    return false;
+
+                                                                });
+                                                               
+
+                                                                            $('#order-products').on('click', '.order-product-qty-edit', function() {
+                                                                                $(this).parent().hide();
+                                                                                $(this).parent().parent().find('div').first().show();
+                                                                            });
+
+                                                                            $('#order-products').on('click', '.product-remove', function() {
+
+                                                                                var pid = $(this).data('id');
+                                                                                var product = products[pid];
+
+                                                                                $(this).parent().parent().remove();
+                                                                                $('#order-product-select').append('<option value="' + pid + '">' + product.name + '</option>');
+
+                                                                                delete productBasket[pid];
+
+                                                                            });
+
+                                                                            $('#order-products').on('click', '.order-product-qty-update', function() {
+
+
+                                                                                var productId = Number($(this).data('id')),
+                                                                                    quantity  = Number($('#prod-' + productId + '-quantity').val()),
+                                                                                    t = $(this);
+                                                                                
+                                                                                update(quantity, productId, function(weight, available) {
+           
+                                                                                    if (quantity <= available && weight <= 1) {
+
+                                                                                        $('#prod-' + productId + '-quantity-text').html($('#prod-' + productId + '-quantity').val());
+
+                                                                                        $(this).parent().hide();
+                                                                                        $(this).parent().parent().find('div').first().next().show();
+
+                                                                                        var product = products[productId];
+
+                                                                                        var price = product.category[customer.priceCatId].price * quantity;
+                                                                                        $('#prod-' + productId + '-sub-total').html(price);
+
+                                                                                        productBasket[productId] = quantity;
+
+
+                                                                                    } else {
+                                                                                        if (quantity > available) {
+                                                                                            $('#prod-' + productId + '-sub-total').html('Insufficient stock quantity available.');
+                                                                                        } else {
+                                                                                            $('#prod-' + productId + '-sub-total').html('The selected quantity is too large for any available vehicle.');
+                                                                                        }
+                                                                                    }
+            
+                                                                                }.bind(this));
+
+
+                                                                             });
+
+    
+                                                                //$('.product-remove').on('click', function() {
+                                                                //    alert('x');
+                                                                //});
+    
+                                                                form.validate({
+                                                                    submitHandler: function(form) {
+    
+                                                                        var qts = [];
+                                                                        var products = [];
+
+                                                                        $('.order-product-quantity').each(function(item) {
+                                                                            products.push($(this).data('id'));
+                                                                            qts.push(Number($(this).val()));
+                                                                        });
+
+                                                                        Storage.process({
+                                                                               type        : 'POST',
+                                                                               resource    : '/calculate-least-weight',
+                                                                               data        : {qts: qts, products: products},
+                                                                               success     : function(resp) {
+
+                                                                                   if (resp.weight <= 1) {
+
+        
+                                                                                        var items = [];
+                
+                                                                                        for (var key in productBasket) {
+                                                                                            items.push({
+                                                                                                productId : key,
+                                                                                                quantity  : productBasket[key]
+                                                                                            });
+                                                                                        }
+                
+                                                                                        var date = new Date();
+                     
+                                                                                        var data = {
+                                                                                            datetime    : date.toISOString(),
+                                                                                            customerId  : id,
+                                                                                            depotId     : depotId,
+                                                                                            userId      : App.user().id,
+                                                                                            contactType : contactType,
+                                                                                            products    : items
+                                                                                        };
+                         
+                                                                                        //Storage.process({
+                                                                                        //    type        : 'PUT',
+                                                                                        //    resource    : '!order',
+                                                                                        //    data        : data,
+                                                                                        //    description : 'Create new order for customer "' + customer.name + '".',
+                                                                                        //    hint        : 'The order could not be created: ',
+                                                                                        //    complete: function() {
+                                                                                        //        window.location.hash = '!f/customer/' + id;
+                                                                                        //    },
+                                                                                        //    successMsg: 'The order was created.'
+                                                                                        //});
+                
+                
+                                                                                    } else {
+                                                                                       alert('This order exceeds the maximum vehicle capacity.');
+                                                                                    }
+
+                                                                               }
+                                                                        });
+
+                                                                        }
+
+                                                                    });
+
+                                                                });
+
+                                                            });
+                                                        
+                                                        });
+
+                                                        });
+                                                        });
+                                                        });
+
+
+
+
+
+
+
+
+
+
+        //T.render('admin/order/edit', function(t) {
+
+        //    Model.getOrders(function(orders) {
+        //        Storage.find(id, orders, function(order) {
+        //            Model.getProductsForOrder(id, function(products) { 
+        //                Model.getProducts(function(allProducts) {
+
+        //                    order.product = products;
+        //                    order.all = allProducts;
+
+        //                    $('#main').html(t(order));
+
+        //                });
+        //            });
+        //        });
+        //    });
+
+        //});
     },
     showUsers: function() {
         T.render('admin/user/index', function(t) {
@@ -3459,7 +3730,17 @@ App.init({
 
             Model.getSettings('task', function(settings) {
 
-                var obj = JSON.parse(settings.value.replace(/\\/g, ''));
+                var obj;
+                try {
+                    obj = JSON.parse(settings.value.replace(/\\/g, ''));
+                } catch(e) {
+                    obj = {
+                        contactTimeInterval  : 1,
+                        orderTimeInterval    : 1,
+                        visitTimeInterval    : 1,
+                        inactiveTimeInterval : 1
+                    };
+                }
 
                 var form = $('<form></form>').append(t({settings: obj}));
     
@@ -3493,10 +3774,9 @@ App.init({
                             successMsg  : 'Task settings were updated.'
                         });
 
-
                     }
                 });
- 
+
                 
             });
             
@@ -3506,7 +3786,7 @@ App.init({
         });
     },
     fieldstaff_showAllCustomers: function() {
-        T.render('fieldstaff/customer/index', function(t) {
+        T.render('fieldstaff/customer/all', function(t) {
             Model.getCustomers(function(customers) {
                 $('#main').html(t({customer: customers})); 
             });
@@ -4784,7 +5064,7 @@ App.init({
 
     },
     callcenter_showCustomers: function() {
-        T.render('callcenter/customer/index', function(t) {
+        T.render('callcenter/customer/all', function(t) {
             
             Model.getCustomers(function(customers) {
 
@@ -6602,22 +6882,22 @@ App.init({
                                             //Storage.load('order-load/vehicle/' + , 'time-average-' + customerId, function() {
                                             //});
 
-                                            //Storage.request({
-                                            //    type: 'POST',
-                                            //    resource: 'order-load/vehicle/' + vehicleId,
-                                            //    data: {
-                                            //        orderIds: ids
-                                            //    },
-                                            //    success: function(resp) {
-                                            //        if (resp.load > 1) {
-                                            //            alert('Vehicle overloaded!');
-                                            //            box.prop('checked', false);
-                                            //        } else {
-                                            //            var str = (resp.load*100) + '%';
-                                            //            $('#dispatch-load-value').html(str);
-                                            //        }
-                                            //    }
-                                            //});
+                                            Storage.request({
+                                                type: 'POST',
+                                                resource: 'order-load/vehicle/' + vehicleId,
+                                                data: {
+                                                    orderIds: ids
+                                                },
+                                                success: function(resp) {
+                                                    if (resp.load > 1) {
+                                                        alert('Vehicle overloaded!');
+                                                        box.prop('checked', false);
+                                                    } else {
+                                                        var str = (resp.load*100) + '%';
+                                                        $('#dispatch-load-value').html(str);
+                                                    }
+                                                }
+                                            });
 
                                         }
 
